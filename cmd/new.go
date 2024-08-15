@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"gokid/forge"
 	"gokid/shell"
 	"gokid/vcs"
@@ -35,7 +36,7 @@ func changeInput() forge.IssueTitle {
 func newChange() {
 	issueTitle := changeInput()
 	vcs.NewChange(forge.Issue{Title: issueTitle}, "main", true)
-	shell.Run("gh", "pr", "create", "--title", issueTitle.Content, "--body", " ")
+	shell.Run(fmt.Sprintf("gh pr create --title '%s' --body ''", issueTitle.Content))
 }
 
 // newCmd represents the new command
