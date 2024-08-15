@@ -10,7 +10,7 @@ func Run(
 	command string,
 	args ...string,
 ) error {
-	print("Running command:", command, args)
+	print("\nRunning command:", command, args)
 	cmd := exec.Command(command, args...)
 
 	// Create pipes for stdout and stderr
@@ -51,5 +51,6 @@ func Run(
 		return fmt.Errorf("command finished with error: %v", err)
 	}
 
+	print("Finished command")
 	return nil
 }
