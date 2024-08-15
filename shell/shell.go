@@ -1,7 +1,6 @@
 package shell
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 )
@@ -10,14 +9,12 @@ func Run(
 	command string,
 	args ...string,
 ) error {
-	print("Running command:", command, args)
-	cmd := exec.Command(command, args...)
+	print("\nRunning ", command, args)
+	shell := os.Getenv("SHELL")
+	all_args := append([]string{"-c", command}, args...)
+	cmd := exec.Command(shell, all_args...)
 
-	// Inherit the current environment
-	cmd.Env = os.Environ()
-
-	// Inherit the current working directory
-	cmd.Dir, _ = os.Getwd()
+	// Migrate the path to the new command
 
 	// Set up pipes for standard input, output, and error
 	cmd.Stdin = os.Stdin
@@ -27,7 +24,8 @@ func Run(
 	// Execute the command
 	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("failed to execute command: %w", err)
+		print("\nCommand failed with error:", err)
+		panic(err)
 	}
 
 	print("\nCommand finished successfully\n\n")
