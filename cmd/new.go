@@ -35,7 +35,7 @@ func changeInput() forge.IssueTitle {
 func newChange() {
 	issueTitle := changeInput()
 	vcs.NewChange(forge.Issue{Title: issueTitle}, "main", true)
-	shell.Run("gh", "pr", "create", "--title", issueTitle.Content, "--body", " ")
+	shell.Run("gh pr create --title " + issueTitle.Content + " --body ")
 }
 
 // newCmd represents the new command
