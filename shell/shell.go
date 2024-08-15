@@ -10,6 +10,7 @@ func Run(
 	command string,
 	args ...string,
 ) error {
+	print("Running command:", command, args)
 	cmd := exec.Command(command, args...)
 
 	// Inherit the current environment
