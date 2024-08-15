@@ -4,10 +4,16 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
+	"gokid/shell"
 
 	"github.com/spf13/cobra"
 )
+
+func markReady() {
+	// TODO: Implement
+	shell.Run("gh pr merge --auto --squash")
+
+}
 
 // readyCmd represents the ready command
 var readyCmd = &cobra.Command{
@@ -15,7 +21,7 @@ var readyCmd = &cobra.Command{
 	Short: "Mark a change as ready for review",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("ready called")
+		markReady()
 	},
 }
 
