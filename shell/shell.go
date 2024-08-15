@@ -9,7 +9,6 @@ func Run(
 	command string,
 	args ...string,
 ) error {
-	print("\nRunning ", command, args)
 	shell := os.Getenv("SHELL")
 	all_args := append([]string{"-c", command}, args...)
 	cmd := exec.Command(shell, all_args...)
@@ -24,10 +23,7 @@ func Run(
 	// Execute the command
 	err := cmd.Run()
 	if err != nil {
-		print("\nCommand failed with error:", err)
 		panic(err)
 	}
-
-	print("\nCommand finished successfully\n\n")
 	return nil
 }
