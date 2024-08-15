@@ -1,8 +1,8 @@
 package shell
 
 import (
-	"bufio"
 	"fmt"
+	"os"
 	"os/exec"
 )
 
@@ -10,47 +10,24 @@ func Run(
 	command string,
 	args ...string,
 ) error {
-	print("\nRunning command:", command, args)
 	cmd := exec.Command(command, args...)
 
-	// Create pipes for stdout and stderr
-	stdout, err := cmd.StdoutPipe()
+	// Inherit the current environment
+	cmd.Env = os.Environ()
+
+	// Inherit the current working directory
+	cmd.Dir, _ = os.Getwd()
+
+	// Set up pipes for standard input, output, and error
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	// Execute the command
+	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("error creating stdout pipe: %v", err)
-	}
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return fmt.Errorf("error creating stderr pipe: %v", err)
+		return fmt.Errorf("failed to execute command: %w", err)
 	}
 
-	// Start the command
-	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("error starting command: %v", err)
-	}
-
-	// Create scanners for stdout and stderr
-	outScanner := bufio.NewScanner(stdout)
-	errScanner := bufio.NewScanner(stderr)
-
-	// Print stdout in real-time
-	go func() {
-		for outScanner.Scan() {
-			fmt.Println(outScanner.Text())
-		}
-	}()
-
-	// Print stderr in real-time
-	go func() {
-		for errScanner.Scan() {
-			fmt.Println(errScanner.Text())
-		}
-	}()
-
-	// Wait for the command to finish
-	if err := cmd.Wait(); err != nil {
-		return fmt.Errorf("command finished with error: %v", err)
-	}
-
-	print("Finished command")
 	return nil
 }
