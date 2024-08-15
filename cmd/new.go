@@ -24,7 +24,7 @@ func changeInput() forge.IssueTitle {
 	}
 
 	prompt := promptui.Prompt{
-		Label:    "Number",
+		Label:    "Title of change",
 		Validate: validate,
 	}
 
