@@ -30,5 +30,6 @@ func Run(
 		return fmt.Errorf("failed to execute command: %w", err)
 	}
 
+	print("\nCommand finished successfully\n\n")
 	return nil
 }
