@@ -4,15 +4,36 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"errors"
 	"gokid/forge"
 	"gokid/shell"
 	"gokid/vcs"
+	"strings"
 
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
 
-func newChange(inputTitle string) {
-	issueTitle := forge.ParseIssueTitle(inputTitle)
+func changeInput() forge.IssueTitle {
+	validate := func(input string) error {
+		containsPrefix := strings.Contains(input, ":")
+		if !containsPrefix {
+			return errors.New("invalid change")
+		}
+		return nil
+	}
+
+	prompt := promptui.Prompt{
+		Label:    "Number",
+		Validate: validate,
+	}
+
+	result, _ := prompt.Run()
+	return forge.ParseIssueTitle(result)
+}
+
+func newChange() {
+	issueTitle := changeInput()
 	vcs.NewChange(forge.Issue{Title: issueTitle}, "main", true)
 	shell.Run("gh", "pr", "create", "--title", issueTitle.Content, "--body", " ")
 }
@@ -23,7 +44,7 @@ var newCmd = &cobra.Command{
 	Short: "Create a new change",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		newChange(args[0])
+		newChange()
 	},
 }
 
