@@ -7,12 +7,10 @@ import (
 
 func Run(
 	command string,
-	args ...string,
 ) error {
 	// Figure out the calling shell
 	shell := os.Getenv("SHELL")
-	all_args := append([]string{"-c", command}, args...)
-	cmd := exec.Command(shell, all_args...)
+	cmd := exec.Command(shell, []string{"-c", command}...)
 
 	// Set up pipes for standard input, output, and error
 	cmd.Stdin = os.Stdin
