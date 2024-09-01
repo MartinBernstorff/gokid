@@ -2,7 +2,9 @@ name: goreleaser
 
 on:
   pull_request:
+    branches: [ main ]
   push:
+    branches: [ main ]
 
 permissions:
   contents: write
@@ -30,5 +32,3 @@ jobs:
           args: release --clean --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Your GoReleaser Pro key, if you are using the 'goreleaser-pro' distribution
-          # GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
