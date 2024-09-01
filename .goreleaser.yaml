@@ -49,7 +49,7 @@ brews:
   - name: gokid
     repository:
       owner: martinbernstorff
-      name: gokid
+      name: homebrew-tap
     homepage: "https://github.com/martinbernstorff/gokid"
     description: "A simple CLI to submit changes"
     license: "MIT"
