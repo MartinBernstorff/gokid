@@ -1,6 +1,6 @@
 # GoKid
 
-GoKid is a CLI tool for managing changes, designed to remove the boilerplate work from creating branches, pull requests, and more.
+GoKid is a CLI tool for unifying the management of branches, pull requests etc. as one 'change'.
 
 ## Installation
 Requires the github CLI to be installed under `gh`.
