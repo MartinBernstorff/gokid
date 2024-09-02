@@ -53,6 +53,7 @@ brews:
     homepage: "https://github.com/martinbernstorff/gokid"
     description: "A simple CLI to submit changes"
     license: "MIT"
-    install:
+    install: |
+      bin.install "gk"
       bin.install_symlink bin/"gokid" => "gk"
       bin.install_symlink bin/"gk" => "gokid"
