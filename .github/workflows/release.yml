@@ -8,7 +8,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     # Only if not version tagged
-    if: github.ref == 'refs/heads/main' && github.event.ref != 'refs/tags/v*'
+    if: github.event.ref != 'refs/tags/v*'
 
     steps:
     - uses: actions/checkout@v3
