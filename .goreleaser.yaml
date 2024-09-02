@@ -21,7 +21,7 @@ builds:
       - windows
       - darwin
 
-project_name: gokid
+project_name: gk
 
 archives:
   - format: tar.gz
@@ -53,3 +53,6 @@ brews:
     homepage: "https://github.com/martinbernstorff/gokid"
     description: "A simple CLI to submit changes"
     license: "MIT"
+    install:
+      bin.install_symlink bin/"gokid" => "gk"
+      bin.install_symlink bin/"gk" => "gokid"
