@@ -54,6 +54,5 @@ brews:
     description: "A simple CLI to submit changes"
     license: "MIT"
     install: |
-      bin.install "gk"
       bin.install_symlink bin/"gokid" => "gk"
       bin.install_symlink bin/"gk" => "gokid"
