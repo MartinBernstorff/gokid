@@ -46,7 +46,7 @@ changelog:
       - "^test:"
 
 brews:
-  - name: gokid
+  - name: gk
     repository:
       owner: martinbernstorff
       name: homebrew-tap
