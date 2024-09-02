@@ -26,6 +26,7 @@ jobs:
   semver:
     runs-on: ubuntu-latest
     needs: test
+    if: github.event.ref == 'refs/heads/main' && github.event.ref != '**/v**'
     permissions:
       contents: write
     steps:
