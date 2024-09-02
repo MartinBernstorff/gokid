@@ -9,24 +9,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func markReady() {
-	shell.Run("gh pr merge --auto --squash")
+func markDraft() {
+	shell.Run("gh pr merge --disable-auto")
 
 }
 
-// readyCmd represents the ready command
-var readyCmd = &cobra.Command{
-	Use:   "ready",
-	Short: "Mark a change as ready for review",
+// draftCmd represents the draft command
+var draftCmd = &cobra.Command{
+	Use:   "draft",
+	Short: "Mark a change as draft",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		markReady()
+		markDraft()
 	},
-	Aliases: []string{"r"},
+	Aliases: []string{"draft"},
 }
 
 func init() {
-	rootCmd.AddCommand(readyCmd)
+	rootCmd.AddCommand(draftCmd)
 
 	// Here you will define your flags and configuration settings.
 
