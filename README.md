@@ -3,6 +3,7 @@
 GoKid is a CLI tool for managing changes, designed to remove the boilerplate work from creating branches, pull requests, and more.
 
 ## Installation
+Requires the github CLI to be installed under `gh`.
 
 ```bash
 brew install martinbernstorff/homebrew-tap/gokid
@@ -11,14 +12,14 @@ brew install martinbernstorff/homebrew-tap/gokid
 ## Usage
 
 ```bash
-gokid --help
+gk --help
 ```
 
 Available Commands:
 - `new`: Create a new change
 - `ready`: Mark a change as ready for review
 
-Use `gokid [command] --help` for more information about a command.
+Use `gk [command] --help` for more information about a command.
 
 ## Commands
 
@@ -27,7 +28,7 @@ Use `gokid [command] --help` for more information about a command.
 Create a new change with the following command:
 
 ```bash
-gokid new
+gk new
 ```
 
 This command will:
@@ -40,7 +41,7 @@ This command will:
 Mark a change as ready for review:
 
 ```bash
-gokid ready
+gk ready
 ```
 
 This command will:
