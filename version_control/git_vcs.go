@@ -1,4 +1,4 @@
-package vcs
+package version_control
 
 import (
 	"fmt"

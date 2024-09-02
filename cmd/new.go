@@ -7,7 +7,7 @@ import (
 	"errors"
 	"gokid/forge"
 	"gokid/shell"
-	"gokid/vcs"
+	"gokid/version_control"
 	"strings"
 
 	"github.com/manifoldco/promptui"
@@ -34,7 +34,7 @@ func changeInput() forge.IssueTitle {
 
 func newChange() {
 	issueTitle := changeInput()
-	vcs.NewChange(forge.Issue{Title: issueTitle}, "main", true)
+	version_control.NewChange(forge.Issue{Title: issueTitle}, "main", true)
 	shell.Run("gh pr create --title \"" + issueTitle.Prefix + ": " + issueTitle.Content + "\" --body \"\"")
 }
 
