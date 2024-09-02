@@ -2,32 +2,39 @@ name: goreleaser
 
 on:
   push:
-    tags:
-      - 'v*'
-
-permissions:
-  contents: write
+  pull_request:
 
 jobs:
-  goreleaser:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          fetch-depth: 0
-      -
-        name: Set up Go
-        uses: actions/setup-go@v5
-      -
-        name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
+          go-version: 1.20
+      - uses: golangci/golangci-lint-action@v3
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          # either 'goreleaser' (default) or 'goreleaser-pro'
-          distribution: goreleaser
-          # 'latest', 'nightly', or a semver
-          version: latest
-          args: release --clean
+          go-version: 1.20
+      - run: go test -v ./...
+  release:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.20
+      - uses: go-semantic-release/action@v1
+        with:
+          hooks: goreleaser
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
