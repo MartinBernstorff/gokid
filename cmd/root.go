@@ -14,6 +14,7 @@ var rootCmd = &cobra.Command{
 	Use:   "gokid",
 	Short: "A CLI for managing changes; removes the boilerplate work from creating branches, PRs, etc.",
 	Long:  "A CLI for managing changes; removes the boilerplate work from creating branches, PRs, etc.",
+	Aliases: []string{"gk"},
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
