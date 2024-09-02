@@ -46,12 +46,10 @@ changelog:
       - "^test:"
 
 brews:
-  - name: gokid
+  - name: gk
     repository:
       owner: martinbernstorff
       name: homebrew-tap
     homepage: "https://github.com/martinbernstorff/gokid"
     description: "A simple CLI to submit changes"
     license: "MIT"
-    install:
-      bin.install_symlink bin/"gokid" => "gk"
