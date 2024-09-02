@@ -10,8 +10,6 @@ import (
 )
 
 func markDraft() {
-	// TODO: Implement
-	shell.Run("gh pr ready --draft")
 	shell.Run("gh pr merge --disable-auto")
 
 }

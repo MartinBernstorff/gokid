@@ -10,7 +10,6 @@ import (
 )
 
 func markReady() {
-	// TODO: Implement
 	shell.Run("gh pr merge --auto --squash")
 
 }
