@@ -5,8 +5,7 @@ GoKid is a CLI tool for managing changes, designed to remove the boilerplate wor
 ## Installation
 
 ```bash
-brew tap martinbernstorff/homebrew-tap
-brew update && brew install martinbernstorff/homebrew-tap/gokid
+brew install martinbernstorff/homebrew-tap/gokid
 ```
 
 ## Usage
