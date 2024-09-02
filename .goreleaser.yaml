@@ -8,6 +8,11 @@
 
 version: 2
 
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+
 builds:
   - env:
       - CGO_ENABLED=0
