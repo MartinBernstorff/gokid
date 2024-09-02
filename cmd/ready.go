@@ -23,6 +23,7 @@ var readyCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		markReady()
 	},
+	Aliases: []string{"r"},
 }
 
 func init() {
