@@ -46,6 +46,7 @@ var newCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		newChange()
 	},
+	Aliases: []string{"n"},
 }
 
 func init() {
