@@ -8,7 +8,6 @@ import (
 	"gokid/forge"
 	"gokid/shell"
 	"gokid/version_control"
-	"strings"
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -16,8 +15,7 @@ import (
 
 func changeInput() forge.IssueTitle {
 	validate := func(input string) error {
-		containsPrefix := strings.Contains(input, ":")
-		if !containsPrefix {
+		if len(input) < 1 {
 			return errors.New("invalid change")
 		}
 		return nil
@@ -34,7 +32,7 @@ func changeInput() forge.IssueTitle {
 
 func newChange() {
 	issueTitle := changeInput()
-	version_control.NewChange(forge.Issue{Title: issueTitle}, "main", true)
+	version_control.NewChange(forge.Issue{Title: issueTitle}, "develop", true)
 	shell.Run("gh pr create --title \"" + issueTitle.Prefix + ": " + issueTitle.Content + "\" --body \"\"")
 }
 
