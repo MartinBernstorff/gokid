@@ -29,10 +29,6 @@ func Init() GokidConfig {
 		fmt.Println("No config file found")
 	}
 
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("Error reading config file:", err)
-	}
-
 	return GokidConfig{
 		AutoMerge:     viper.GetBool("automerge"),
 		Draft:         viper.GetBool("draft"),
