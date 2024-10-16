@@ -9,6 +9,7 @@ import (
 )
 
 type GokidConfig struct {
+	Draft         bool
 	Trunk         string
 	MergeStrategy string
 	AutoMerge     bool
@@ -31,6 +32,7 @@ func Init() GokidConfig {
 		Trunk:         viper.GetString("trunk"),
 		MergeStrategy: viper.GetString("merge_strategy"),
 		AutoMerge:     viper.GetBool("automerge"),
+		Draft:         viper.GetBool("draft"),
 	}
 }
 
