@@ -10,7 +10,7 @@ import (
 )
 
 func markReady() {
-	shell.Run("gh pr merge --auto --squash")
+	shell.Run("gh pr ready")
 }
 
 // readyCmd represents the ready command

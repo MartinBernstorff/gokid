@@ -1,1 +1,3 @@
 trunk: main
+merge_strategy: squash
+automerge: true
