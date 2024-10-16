@@ -4,6 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"gokid/config"
 
@@ -12,7 +13,8 @@ import (
 
 func cfg() {
 	cfg := config.Init()
-	fmt.Print(cfg)
+	prettyJSON, _ := json.MarshalIndent(cfg, "", "  ")
+	fmt.Println(string(prettyJSON))
 }
 
 // draftCmd represents the draft command
@@ -28,14 +30,4 @@ var cfgCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(cfgCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// readyCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// readyCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
