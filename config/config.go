@@ -16,8 +16,8 @@ type GokidConfig struct {
 }
 
 func Init() GokidConfig {
-	viper.SetDefault("automerge", "false")
-	viper.SetDefault("draft", "false")
+	viper.SetDefault("automerge", false)
+	viper.SetDefault("draft", false)
 	viper.SetDefault("merge_strategy", "merge")
 	viper.SetDefault("trunk", "main")
 
