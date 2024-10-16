@@ -32,16 +32,14 @@ func merge() {
 	shell.Run(cmd)
 }
 
-var mergeCmd = &cobra.Command{
-	Use:   "merge",
-	Short: "Merge a change",
-	Long:  "",
-	Run: func(cmd *cobra.Command, args []string) {
-		merge()
-	},
-	Aliases: []string{"m"},
-}
-
 func init() {
-	rootCmd.AddCommand(mergeCmd)
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "merge",
+		Short: "Merge a change",
+		Long:  "",
+		Run: func(cmd *cobra.Command, args []string) {
+			merge()
+		},
+		Aliases: []string{"m"},
+	})
 }
