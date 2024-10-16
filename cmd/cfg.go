@@ -17,17 +17,14 @@ func cfg() {
 	fmt.Println(string(prettyJSON))
 }
 
-// draftCmd represents the draft command
-var cfgCmd = &cobra.Command{
-	Use:   "cfg",
-	Short: "Print the identified cfg",
-	Long:  "",
-	Run: func(cmd *cobra.Command, args []string) {
-		cfg()
-	},
-	Aliases: []string{"draft"},
-}
-
 func init() {
-	rootCmd.AddCommand(cfgCmd)
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "cfg",
+		Short: "Print the identified cfg",
+		Long:  "",
+		Run: func(cmd *cobra.Command, args []string) {
+			cfg()
+		},
+		Aliases: []string{"draft"},
+	})
 }

@@ -13,17 +13,14 @@ func markReady() {
 	shell.Run("gh pr ready")
 }
 
-// readyCmd represents the ready command
-var readyCmd = &cobra.Command{
-	Use:   "ready",
-	Short: "Mark a change as ready for review",
-	Long:  "",
-	Run: func(cmd *cobra.Command, args []string) {
-		markReady()
-	},
-	Aliases: []string{"r"},
-}
-
 func init() {
-	rootCmd.AddCommand(readyCmd)
+	rootCmd.AddCommand(&cobra.Command{
+		Use:   "ready",
+		Short: "Mark a change as ready for review",
+		Long:  "",
+		Run: func(cmd *cobra.Command, args []string) {
+			markReady()
+		},
+		Aliases: []string{"r"},
+	})
 }

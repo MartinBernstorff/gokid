@@ -9,13 +9,18 @@ import (
 )
 
 type GokidConfig struct {
-	Draft         bool
-	Trunk         string
-	MergeStrategy string
 	AutoMerge     bool
+	Draft         bool
+	MergeStrategy string
+	Trunk         string
 }
 
 func Init() GokidConfig {
+	viper.SetDefault("automerge", "false")
+	viper.SetDefault("draft", "false")
+	viper.SetDefault("merge_strategy", "merge")
+	viper.SetDefault("trunk", "main")
+
 	configFile := findConfig(".gokid")
 	if configFile != "" {
 		viper.SetConfigFile(configFile)
@@ -29,10 +34,10 @@ func Init() GokidConfig {
 	}
 
 	return GokidConfig{
-		Trunk:         viper.GetString("trunk"),
-		MergeStrategy: viper.GetString("merge_strategy"),
 		AutoMerge:     viper.GetBool("automerge"),
 		Draft:         viper.GetBool("draft"),
+		MergeStrategy: viper.GetString("merge_strategy"),
+		Trunk:         viper.GetString("trunk"),
 	}
 }
 
