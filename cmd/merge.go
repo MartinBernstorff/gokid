@@ -15,6 +15,10 @@ import (
 func merge() {
 	cfg := config.Init()
 
+	if cfg.Draft {
+		shell.Run("gh pr ready")
+	}
+
 	cmd := "gh pr merge"
 
 	allowedStrategies := []string{"squash", "rebase", "merge"}
