@@ -15,35 +15,11 @@ brew update && brew install martinbernstorff/homebrew-tap/gk
 gk --help
 ```
 
-Available Commands:
-- `new`: Create a new change
-- `ready`: Mark a change as ready for review
-
-Use `gk [command] --help` for more information about a command.
-
-## Commands
-
-### New Change
-
-Create a new change with the following command:
+## Configuration
+Write a test config to the current directory:
 
 ```bash
-gk new
+gk config --write
 ```
 
-This command will:
-1. Prompt you for a change title (must contain a colon)
-2. Create a new branch
-3. Create a pull request with the given title
-
-### Mark Ready
-
-Mark a change as ready for review:
-
-```bash
-gk ready
-```
-
-This command will:
-1. Mark the current pull request for auto-merge
-2. Set the merge method to squash
+Gokid looks for configuration files in the current directory, or any parent directory.
