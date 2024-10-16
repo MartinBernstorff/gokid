@@ -1,9 +1,14 @@
 package forge
 
 import (
+	"gokid/shell"
 	"regexp"
 	"strings"
 )
+
+func View() {
+	shell.Run("gh pr view -w")
+}
 
 func ParseIssueTitle(issueTitle string) IssueTitle {
 	// Get all string between start and first ":" or "("
