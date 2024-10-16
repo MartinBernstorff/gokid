@@ -1,10 +1,8 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"errors"
+	"gokid/config"
 	"gokid/forge"
 	"gokid/shell"
 	"gokid/version_control"
@@ -31,8 +29,10 @@ func changeInput() forge.IssueTitle {
 }
 
 func newChange() {
+	cfg := config.Init()
+
 	issueTitle := changeInput()
-	version_control.NewChange(forge.Issue{Title: issueTitle}, "develop", true)
+	version_control.NewChange(forge.Issue{Title: issueTitle}, cfg.Trunk, true)
 	shell.Run("gh pr create --title \"" + issueTitle.Prefix + ": " + issueTitle.Content + "\" --body \"\"")
 }
 

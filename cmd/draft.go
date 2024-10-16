@@ -20,7 +20,7 @@ var draftCmd = &cobra.Command{
 	Short: "Mark a change as draft",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		markDraft()
+		cfg()
 	},
 	Aliases: []string{"draft"},
 }
