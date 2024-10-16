@@ -16,9 +16,7 @@ func cfgCmd(write bool) {
 	cfg := config.Init()
 
 	if write {
-		viper.SetConfigName(".gokid.yml")
-		viper.AddConfigPath(".")
-		viper.SafeWriteConfig()
+		viper.SafeWriteConfigAs(".gokid.yml")
 	} else {
 		prettyJSON, _ := json.MarshalIndent(cfg, "", "  ")
 		fmt.Println(string(prettyJSON))
