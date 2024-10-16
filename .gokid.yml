@@ -1,3 +1,4 @@
-trunk: main
-merge_strategy: squash
 automerge: true
+draft: false
+merge_strategy: squash
+trunk: main
