@@ -4,20 +4,21 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"gokid/shell"
+	"fmt"
+	"gokid/config"
 
 	"github.com/spf13/cobra"
 )
 
-func markDraft() {
-	shell.Run("gh pr merge --disable-auto")
-
+func cfg() {
+	cfg := config.Init()
+	fmt.Print(cfg)
 }
 
 // draftCmd represents the draft command
-var draftCmd = &cobra.Command{
-	Use:   "draft",
-	Short: "Mark a change as draft",
+var cfgCmd = &cobra.Command{
+	Use:   "cfg",
+	Short: "Print the identified cfg",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		cfg()
@@ -26,7 +27,7 @@ var draftCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(draftCmd)
+	rootCmd.AddCommand(cfgCmd)
 
 	// Here you will define your flags and configuration settings.
 

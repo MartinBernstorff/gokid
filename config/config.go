@@ -42,6 +42,7 @@ func findConfig(configName string) string {
 	for {
 		for _, ext := range configExtensions {
 			configPath := filepath.Join(dir, configName+ext)
+			fmt.Println("Exploring ", configPath)
 			if _, err := os.Stat(configPath); err == nil {
 				return configPath
 			}
