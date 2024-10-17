@@ -8,8 +8,14 @@ import (
 	"strings"
 )
 
-func branchTitle(issue forge.Issue) string {
+func branchTitle(issue forge.Issue, prefix string, suffix string) string {
 	title := issue.Title.Content
+	if prefix != "" {
+		title += " " + prefix
+	}
+	if suffix != "" {
+		title += " " + suffix
+	}
 	return strings.ReplaceAll(title, " ", "-")
 }
 
@@ -19,21 +25,22 @@ func gitClean() bool {
 	return err != nil || strings.TrimSpace(string(output)) == ""
 }
 
-func NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool) error {
+func NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error {
 	needsMigration := migrateChanges && !gitClean()
 
 	if needsMigration {
 		shell.Run("git stash")
 	}
 
+	branchTitle := branchTitle(issue, branchPrefix, branchSuffix)
 	shell.Run("git fetch origin")
-	shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchTitle(issue), defaultBranch))
+	shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchTitle, defaultBranch))
 
 	if needsMigration {
 		shell.Run("git stash pop")
 	}
 
-	shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", branchTitle(issue)))
+	shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", branchTitle))
 	shell.Run("git push")
 	return nil
 }

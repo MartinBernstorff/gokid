@@ -32,7 +32,7 @@ func newChange() {
 	cfg := config.Init()
 
 	issueTitle := changeInput()
-	version_control.NewChange(forge.Issue{Title: issueTitle}, cfg.Trunk, true)
+	version_control.NewChange(forge.Issue{Title: issueTitle}, cfg.Trunk, true, cfg.BranchPrefix, cfg.BranchSuffix)
 
 	// Handle forge
 	cmd := "gh pr create --base " + cfg.Trunk
