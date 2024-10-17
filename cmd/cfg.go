@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"gokid/config"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -17,6 +18,22 @@ func cfgCmd(write bool) {
 
 	if write {
 		viper.SafeWriteConfigAs(".gokid.yml")
+
+		// Append gokid to gitignore if it exists
+		gitignorePath := ".gitignore"
+		if _, err := os.Stat(gitignorePath); err == nil {
+			file, err := os.OpenFile(gitignorePath, os.O_APPEND|os.O_WRONLY, 0644)
+			if err != nil {
+				fmt.Println("Error opening .gitignore file:", err)
+				return
+			}
+			defer file.Close()
+			_, err = file.WriteString("\n.gokid.*")
+			if err != nil {
+				fmt.Println("Error writing to .gitignore file:", err)
+				return
+			}
+		}
 	} else {
 		prettyJSON, _ := json.MarshalIndent(cfg, "", "  ")
 		fmt.Println(string(prettyJSON))
