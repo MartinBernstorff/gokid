@@ -30,7 +30,7 @@ func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft b
 
 func Init() GokidConfig {
 	viper.SetDefault("automerge", false)
-	viper.SetDefault("branch_prefix", "")
+	viper.SetDefault("branch_prefix", "asd")
 	viper.SetDefault("branch_suffix", "")
 	viper.SetDefault("draft", false)
 	viper.SetDefault("merge_strategy", "merge")
