@@ -24,6 +24,13 @@ func Init() GokidConfig {
 	configFile := findConfig(".gokid")
 	if configFile != "" {
 		viper.SetConfigFile(configFile)
+		file, err := os.Open(configFile)
+		if err != nil {
+			fmt.Println("Error opening config file:", err)
+			return GokidConfig{}
+		}
+		defer file.Close()
+		viper.ReadConfig(file)
 		fmt.Println("Using config file:", configFile)
 	} else {
 		fmt.Println("No config file found")
