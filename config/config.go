@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
+	"strings"
 
 	"github.com/spf13/viper"
 )
@@ -18,6 +20,8 @@ type GokidConfig struct {
 }
 
 func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, mergeStrategy string, trunk string) GokidConfig {
+	validateMergeStrategy(mergeStrategy)
+
 	return GokidConfig{
 		AutoMerge:     autoMerge,
 		BranchPrefix:  branchPrefix,
@@ -59,6 +63,15 @@ func Init() GokidConfig {
 		viper.GetString("merge_strategy"),
 		viper.GetString("trunk"),
 	)
+}
+
+func validateMergeStrategy(mergeStrategy string) {
+	allowedStrategies := []string{"squash", "rebase", "merge"}
+
+	if !slices.Contains(allowedStrategies, mergeStrategy) {
+		msg := "Merge strategy is not allowed, allowed are: " + strings.Join(allowedStrategies, ", ")
+		panic(msg)
+	}
 }
 
 func findConfig(configName string) string {
