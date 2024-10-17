@@ -33,7 +33,9 @@ func newChange() {
 
 	issueTitle := changeInput()
 	version_control.NewChange(forge.Issue{Title: issueTitle}, cfg.Trunk, true)
-	cmd := "gh pr create"
+
+	// Handle forge
+	cmd := "gh pr create --base " + cfg.Trunk
 
 	if cfg.Draft {
 		cmd += " --draft"
