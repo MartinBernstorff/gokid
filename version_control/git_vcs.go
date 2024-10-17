@@ -11,10 +11,10 @@ import (
 func branchTitle(issue forge.Issue, prefix string, suffix string) string {
 	title := issue.Title.Content
 	if prefix != "" {
-		title += " " + prefix
+		title += prefix + title
 	}
 	if suffix != "" {
-		title += " " + suffix
+		title += suffix
 	}
 	return strings.ReplaceAll(title, " ", "-")
 }
