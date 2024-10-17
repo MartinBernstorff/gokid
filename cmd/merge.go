@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"gokid/config"
 	"gokid/shell"
-	"slices"
 
 	"github.com/spf13/cobra"
 )
@@ -20,14 +19,7 @@ func merge() {
 	}
 
 	cmd := "gh pr merge"
-
-	allowedStrategies := []string{"squash", "rebase", "merge"}
-
-	if !slices.Contains(allowedStrategies, cfg.MergeStrategy) {
-		fmt.Printf("Merge strategy is not allowed, allowed are: %s", allowedStrategies)
-	} else {
-		cmd += fmt.Sprintf(" --%s", cfg.MergeStrategy)
-	}
+	cmd += fmt.Sprintf(" --%s", cfg.MergeStrategy)
 
 	if cfg.AutoMerge {
 		cmd += " --auto"
