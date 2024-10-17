@@ -10,13 +10,28 @@ import (
 
 type GokidConfig struct {
 	AutoMerge     bool
+	BranchPrefix  string
+	BranchSuffix  string
 	Draft         bool
 	MergeStrategy string
 	Trunk         string
 }
 
+func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, mergeStrategy string, trunk string) GokidConfig {
+	return GokidConfig{
+		AutoMerge:     autoMerge,
+		BranchPrefix:  branchPrefix,
+		BranchSuffix:  branchSuffix,
+		Draft:         draft,
+		MergeStrategy: mergeStrategy,
+		Trunk:         trunk,
+	}
+}
+
 func Init() GokidConfig {
 	viper.SetDefault("automerge", false)
+	viper.SetDefault("branch_prefix", "")
+	viper.SetDefault("branch_suffix", "")
 	viper.SetDefault("draft", false)
 	viper.SetDefault("merge_strategy", "merge")
 	viper.SetDefault("trunk", "main")
@@ -36,12 +51,14 @@ func Init() GokidConfig {
 		fmt.Println("No config file found")
 	}
 
-	return GokidConfig{
-		AutoMerge:     viper.GetBool("automerge"),
-		Draft:         viper.GetBool("draft"),
-		MergeStrategy: viper.GetString("merge_strategy"),
-		Trunk:         viper.GetString("trunk"),
-	}
+	return NewConfig(
+		viper.GetBool("automerge"),
+		viper.GetString("branch_prefix"),
+		viper.GetString("branch_suffix"),
+		viper.GetBool("draft"),
+		viper.GetString("merge_strategy"),
+		viper.GetString("trunk"),
+	)
 }
 
 func findConfig(configName string) string {
