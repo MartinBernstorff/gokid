@@ -29,9 +29,9 @@ func cfgCmd(write bool) {
 	// Append gokid to gitignore if it exists
 	gitignorePath := ".gitignore"
 	if _, err := os.Stat(gitignorePath); err == nil {
-		file, err := os.OpenFile(gitignorePath, os.O_APPEND|os.O_WRONLY, 0644) // #nosec G304
-		if err != nil {                                                        // #nosec G304
-			fmt.Println("Error opening .gitignore file:", err) // #nosec G304
+		file, err := os.OpenFile(gitignorePath, os.O_APPEND|os.O_WRONLY, 0644)
+		if err != nil {
+			fmt.Println("Error opening .gitignore file:", err)
 			return
 		}
 		defer file.Close()

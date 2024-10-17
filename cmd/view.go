@@ -12,7 +12,7 @@ func view() {
 
 func init() {
 	rootCmd.AddCommand(&cobra.Command{
-		Use:   "View",
+		Use:   "view",
 		Short: "View the change at the forge",
 		Long:  "",
 		Run: func(cmd *cobra.Command, args []string) {
