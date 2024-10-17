@@ -10,7 +10,7 @@ import (
 
 func branchTitle(issue forge.Issue) string {
 	title := issue.Title.Content
-	return strings.ReplaceAll(title, " ", "_")
+	return strings.ReplaceAll(title, " ", "-")
 }
 
 func gitClean() bool {
