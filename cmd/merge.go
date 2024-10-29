@@ -6,26 +6,31 @@ package cmd
 import (
 	"fmt"
 	"gokid/config"
+	"gokid/forge"
 	"gokid/shell"
 
 	"github.com/spf13/cobra"
 )
 
-func merge() {
-	cfg := config.Load(config.DefaultFileName)
+func merge(cfg config.GokidConfig) {
+	// Execute pre-merge command if set
+	if cfg.PreMergeCommand != "" {
+		shell.Run(cfg.PreMergeCommand)
+	}
+
+	forge := forge.NewGitHub()
 
 	if cfg.Draft {
-		shell.Run("gh pr ready")
+		if err := forge.MarkPullRequestReady(); err != nil {
+			fmt.Println("Error marking PR as ready:", err)
+			return
+		}
 	}
 
-	cmd := "gh pr merge"
-	cmd += fmt.Sprintf(" --%s", cfg.MergeStrategy)
-
-	if cfg.AutoMerge {
-		cmd += " --auto"
+	if err := forge.MergePullRequest(cfg.MergeStrategy, cfg.AutoMerge, cfg.ForceMerge); err != nil {
+		fmt.Println("Error merging PR:", err)
+		return
 	}
-
-	shell.Run(cmd)
 }
 
 func init() {
@@ -34,7 +39,7 @@ func init() {
 		Short: "Merge a change",
 		Long:  "",
 		Run: func(cmd *cobra.Command, args []string) {
-			merge()
+			merge(config.Load(config.DefaultFileName))
 		},
 		Aliases: []string{"m"},
 	})

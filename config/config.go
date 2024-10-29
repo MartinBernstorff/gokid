@@ -12,29 +12,34 @@ import (
 )
 
 type GokidConfig struct {
-	AutoMerge     bool
-	BranchPrefix  string
-	BranchSuffix  string
-	Draft         bool
-	MergeStrategy string
-	Trunk         string
+	AutoMerge       bool
+	BranchPrefix    string
+	BranchSuffix    string
+	Draft           bool
+	ForceMerge      bool
+	MergeStrategy   string
+	PreMergeCommand string
+	Trunk           string
 }
 
-func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, mergeStrategy string, trunk string) GokidConfig {
+func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, trunk string) GokidConfig {
 	validateMergeStrategy(mergeStrategy)
+	validateForceMerge(forceMerge, preMergeCommand, autoMerge)
 
 	return GokidConfig{
-		AutoMerge:     autoMerge,
-		BranchPrefix:  branchPrefix,
-		BranchSuffix:  branchSuffix,
-		Draft:         draft,
-		MergeStrategy: mergeStrategy,
-		Trunk:         trunk,
+		AutoMerge:       autoMerge,
+		BranchPrefix:    branchPrefix,
+		BranchSuffix:    branchSuffix,
+		Draft:           draft,
+		ForceMerge:      forceMerge,
+		MergeStrategy:   mergeStrategy,
+		PreMergeCommand: preMergeCommand,
+		Trunk:           trunk,
 	}
 }
 
 func Defaults() GokidConfig {
-	return NewConfig(false, "", "", false, "merge", "main")
+	return NewConfig(false, "", "", false, false, "merge", "", "main")
 }
 
 func Load(configName string) GokidConfig {
@@ -72,16 +77,29 @@ func Load(configName string) GokidConfig {
 		viper.GetString("branch_prefix"),
 		viper.GetString("branch_suffix"),
 		viper.GetBool("draft"),
+		viper.GetBool("force_merge"),
 		viper.GetString("merge_strategy"),
+		viper.GetString("pre_merge_command"),
 		viper.GetString("trunk"),
 	)
 }
+
 func validateMergeStrategy(mergeStrategy string) {
 	allowedStrategies := []string{"squash", "rebase", "merge"}
 
 	if !slices.Contains(allowedStrategies, mergeStrategy) {
 		msg := "Merge strategy is not allowed, allowed are: " + strings.Join(allowedStrategies, ", ")
 		panic(msg)
+	}
+}
+
+func validateForceMerge(forceMerge bool, preMergeCommand string, autoMerge bool) {
+	if forceMerge && preMergeCommand == "" {
+		panic("Force merge can only be enabled when pre-merge command is set")
+	}
+
+	if autoMerge && forceMerge {
+		panic("Either auto merge or force merge can be enabled, not both")
 	}
 }
 
