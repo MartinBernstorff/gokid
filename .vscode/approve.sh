@@ -6,6 +6,9 @@ set -e
 # Start the benchmark timer
 SECONDS=0
 
+# Run the command
+run "go test ./..."
+
 # Repository introspection
 OWNER=$(gh repo view --json owner --jq .owner.login)
 REPO=$(gh repo view --json name --jq .name)
@@ -31,7 +34,6 @@ if [[ -n $(git status --porcelain) ]]; then
 fi
 
 announce "Attempting to sign off on $SHA in $OWNER/$REPO as $USER" $GREEN
-run "go test ./..."
 
 # Report successful sign off to GitHub
 gh api \
