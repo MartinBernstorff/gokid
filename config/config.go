@@ -74,12 +74,12 @@ func Load(configName string) GokidConfig {
 
 	return NewConfig(
 		viper.GetBool("automerge"),
-		viper.GetString("branch_prefix"),
-		viper.GetString("branch_suffix"),
+		viper.GetString("branchprefix"),
+		viper.GetString("branchsuffix"),
 		viper.GetBool("draft"),
-		viper.GetBool("force_merge"),
-		viper.GetString("merge_strategy"),
-		viper.GetString("pre_merge_command"),
+		viper.GetBool("forcemerge"),
+		viper.GetString("mergestrategy"),
+		viper.GetString("premergecommand"),
 		viper.GetString("trunk"),
 	)
 }
@@ -88,7 +88,7 @@ func validateMergeStrategy(mergeStrategy string) {
 	allowedStrategies := []string{"squash", "rebase", "merge"}
 
 	if !slices.Contains(allowedStrategies, mergeStrategy) {
-		msg := "Merge strategy is not allowed, allowed are: " + strings.Join(allowedStrategies, ", ")
+		msg := fmt.Sprintf("Merge strategy %s not allowed, allowed are: %s", mergeStrategy, strings.Join(allowedStrategies, ", "))
 		panic(msg)
 	}
 }
