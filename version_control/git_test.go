@@ -19,6 +19,7 @@ func TestNewChange(t *testing.T) {
 		// Remote state
 		assert.True(t, git.remoteIsUpdated())
 		assert.Equal(t, "main", git.OriginBranch())
+		assert.True(t, git.isFetched)
 
 		// Local state
 		commits := git.Commits()

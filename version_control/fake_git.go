@@ -40,12 +40,14 @@ type FakeGit struct {
 	isDirty       bool
 	commits       []Commit
 	lastPush      Commit
+	isFetched     bool
 }
 
 func NewFakeGit() *FakeGit {
 	g := &FakeGit{
 		originBranch: "main", // default origin branch
 		commits:      make([]Commit, 0),
+		isFetched:    false,
 	}
 	g.ops = g
 	g.stash = NewFakeStash(g) // Pass git reference to stash
@@ -83,6 +85,7 @@ func (g *FakeGit) isClean() bool {
 }
 
 func (g *FakeGit) fetch(remote string) {
+	g.isFetched = true
 }
 
 func (g *FakeGit) branchFromOrigin(branchName string, origin string) {
