@@ -54,25 +54,8 @@ func (f *FakeVCS) Push() {
 }
 
 func (f *FakeVCS) NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error {
-	needsMigration := migrateChanges && !f.IsClean()
-
-	if needsMigration {
-		f.StashChanges()
-	}
-
-	branchTitle := branchPrefix + issue.Title.Content + branchSuffix
-	branchName := strings.ReplaceAll(branchTitle, " ", "-")
-	
-	f.FetchOrigin()
-	f.CheckoutNewBranch(branchName, defaultBranch)
-
-	if needsMigration {
-		f.PopStash()
-	}
-
-	f.CreateEmptyCommit(branchTitle)
-	f.Push()
-	return nil
+	base := NewBaseVCS(f)
+	return base.NewChange(issue, defaultBranch, migrateChanges, branchPrefix, branchSuffix)
 }
 
 func TestNewChange(t *testing.T) {

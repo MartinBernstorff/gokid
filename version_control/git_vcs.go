@@ -14,10 +14,6 @@ func NewGitVCS() *GitVCS {
 	return &GitVCS{}
 }
 
-func (g *GitVCS) branchTitle(issue forge.Issue, prefix string, suffix string) string {
-	title := prefix + issue.Title.Content + suffix
-	return strings.ReplaceAll(title, " ", "-")
-}
 
 func (g *GitVCS) IsClean() bool {
 	cmd := exec.Command("git", "status", "--porcelain")
@@ -50,21 +46,6 @@ func (g *GitVCS) Push() {
 }
 
 func (g *GitVCS) NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error {
-	needsMigration := migrateChanges && !g.IsClean()
-
-	if needsMigration {
-		g.StashChanges()
-	}
-
-	branchTitle := g.branchTitle(issue, branchPrefix, branchSuffix)
-	g.FetchOrigin()
-	g.CheckoutNewBranch(branchTitle, defaultBranch)
-
-	if needsMigration {
-		g.PopStash()
-	}
-
-	g.CreateEmptyCommit(branchTitle)
-	g.Push()
-	return nil
+	base := NewBaseVCS(g)
+	return base.NewChange(issue, defaultBranch, migrateChanges, branchPrefix, branchSuffix)
 }
