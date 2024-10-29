@@ -13,6 +13,7 @@ type FakeVCS struct {
 	commitMessages []string
 	pushed         bool
 	fetchCalled    bool
+	stashOps       int  // Track total stash operations (stash + pop)
 }
 
 func NewFakeVCS() *FakeVCS {
@@ -30,12 +31,14 @@ func (f *FakeVCS) IsClean() bool {
 func (f *FakeVCS) StashChanges() {
 	f.stash = append(f.stash, "changes")
 	f.clean = true
+	f.stashOps++
 }
 
 func (f *FakeVCS) PopStash() {
 	if len(f.stash) > 0 {
 		f.stash = f.stash[:len(f.stash)-1]
 		f.clean = false
+		f.stashOps++
 	}
 }
 

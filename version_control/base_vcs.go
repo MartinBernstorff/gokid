@@ -15,8 +15,12 @@ func NewBaseVCS(implementation VCS) *BaseVCS {
 	}
 }
 
+func (b *BaseVCS) formatTitle(issue forge.Issue, prefix string, suffix string) string {
+	return prefix + issue.Title.Content + suffix
+}
+
 func (b *BaseVCS) branchTitle(issue forge.Issue, prefix string, suffix string) string {
-	title := prefix + issue.Title.Content + suffix
+	title := b.formatTitle(issue, prefix, suffix)
 	return strings.ReplaceAll(title, " ", "-")
 }
 
@@ -35,7 +39,8 @@ func (b *BaseVCS) NewChange(issue forge.Issue, defaultBranch string, migrateChan
 		b.impl.PopStash()
 	}
 
-	b.impl.CreateEmptyCommit(branchTitle)
+	commitMessage := b.formatTitle(issue, branchPrefix, branchSuffix)
+	b.impl.CreateEmptyCommit(commitMessage)
 	b.impl.Push()
 	return nil
 }
