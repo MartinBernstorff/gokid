@@ -37,7 +37,7 @@ func Defaults() GokidConfig {
 	return NewConfig(false, "", "", false, "merge", "main")
 }
 
-func Load(path string) GokidConfig {
+func Load(configName string) GokidConfig {
 	defaults := Defaults()
 	defaultValue := reflect.ValueOf(defaults)
 
@@ -46,7 +46,7 @@ func Load(path string) GokidConfig {
 		viper.SetDefault(field.Name, defaultValue.FieldByName(field.Name).Interface())
 	}
 
-	configFile := findConfig(path)
+	configFile := findConfig(configName)
 	if configFile != "" {
 		viper.SetConfigFile(configFile)
 		file, err := os.Open(configFile)
@@ -55,7 +55,13 @@ func Load(path string) GokidConfig {
 			return GokidConfig{}
 		}
 		defer file.Close()
-		viper.ReadConfig(file)
+
+		readErr := viper.ReadConfig(file)
+		if readErr != nil {
+			fmt.Println("Error reading config file:", readErr)
+			panic(readErr)
+		}
+
 		fmt.Println("Using config file:", configFile)
 	} else {
 		fmt.Println("No config file found")
@@ -88,6 +94,7 @@ func findConfig(configName string) string {
 		return ""
 	}
 
+	// Look in all parent directories for the config file
 	for {
 		for _, ext := range configExtensions {
 			configPath := filepath.Join(dir, configName+ext)
