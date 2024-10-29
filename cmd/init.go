@@ -17,7 +17,7 @@ func updateGitignore() error {
 
 	// Create .gitignore if it doesn't exist
 	if _, err := os.Stat(gitignorePath); os.IsNotExist(err) {
-		file, err := os.Create(gitignorePath)
+		file, err := os.OpenFile(gitignorePath, os.O_RDWR|os.O_CREATE, 0644)
 		if err != nil {
 			return fmt.Errorf("error creating .gitignore file: %w", err)
 		}
@@ -38,7 +38,7 @@ func updateGitignore() error {
 		return fmt.Errorf("error reading .gitignore file: %w", err)
 	}
 
-	if !strings.Contains(string(contents), ignoreString) {
+	if !strings.Contains(string(contents), ignoreString) || len(contents) == 0 {
 		if !strings.HasSuffix(string(contents), "\n") {
 			ignoreString = "\n" + ignoreString
 		}

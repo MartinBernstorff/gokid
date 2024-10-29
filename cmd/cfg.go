@@ -25,7 +25,12 @@ var cfgCmd = &cobra.Command{
 			cfg = config.Load(".gokid.yml")
 		}
 
-		prettyJSON, _ := json.MarshalIndent(cfg, "", "  ")
+		prettyJSON, err := json.MarshalIndent(cfg, "", "  ")
+		if err != nil {
+			fmt.Println("Error marshalling config:", err)
+			return
+		}
+
 		fmt.Println(string(prettyJSON))
 	},
 	Aliases: []string{"c"},
