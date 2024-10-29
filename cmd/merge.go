@@ -15,7 +15,9 @@ import (
 func merge(cfg config.GokidConfig) {
 	// Execute pre-merge command if set
 	if cfg.PreMergeCommand != "" {
+		fmt.Println("Running pre-merge command:", cfg.PreMergeCommand)
 		shell.Run(cfg.PreMergeCommand)
+		fmt.Println("Pre-merge command completed")
 	}
 
 	forge := forge.NewGitHub()
