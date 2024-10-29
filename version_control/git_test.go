@@ -12,7 +12,7 @@ func TestNewChange(t *testing.T) {
 
 	t.Run("creates new branch with empty commit", func(t *testing.T) {
 		git := NewFakeGit()
-		expectedBranchName := branchTitle(issue, "prefix-", "-suffix")
+		expectedBranchName := branchTitle(issue.Title, "prefix-", "-suffix")
 
 		git.NewChange(issue, "main", false, "prefix-", "-suffix")
 

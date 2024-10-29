@@ -30,7 +30,7 @@ func (g *BaseGit) NewChange(issue forge.Issue, defaultBranch string, migrateChan
 		g.stash.Save()
 	}
 
-	branchTitle := branchTitle(issue, branchPrefix, branchSuffix)
+	branchTitle := branchTitle(issue.Title, branchPrefix, branchSuffix)
 	g.ops.fetch("origin")
 	g.ops.branchFromOrigin(branchTitle, defaultBranch)
 
