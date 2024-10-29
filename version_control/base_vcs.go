@@ -25,9 +25,8 @@ func (b *BaseVCS) branchTitle(issue forge.Issue, prefix string, suffix string) s
 }
 
 func (b *BaseVCS) NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error {
-	needsMigration := migrateChanges && !b.impl.IsClean()
-
-	if needsMigration {
+	isClean := b.impl.IsClean()
+	if !isClean {
 		b.impl.StashChanges()
 	}
 
@@ -35,7 +34,7 @@ func (b *BaseVCS) NewChange(issue forge.Issue, defaultBranch string, migrateChan
 	b.impl.FetchOrigin()
 	b.impl.CheckoutNewBranch(branchTitle, defaultBranch)
 
-	if needsMigration {
+	if !isClean && migrateChanges {
 		b.impl.PopStash()
 	}
 
