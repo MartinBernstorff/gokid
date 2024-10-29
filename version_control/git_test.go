@@ -170,10 +170,7 @@ func TestNewChangeWithFakeVCS(t *testing.T) {
 				t.Error("NewChange() changes were not pushed")
 			}
 
-			actualStashOps := len(vcs.stash)
-			if tt.migrateChanges && !tt.initialClean {
-				actualStashOps++ // Account for the pop operation
-			}
+			actualStashOps := vcs.stashOps
 			if actualStashOps != tt.wantStashOps {
 				t.Errorf("NewChange() stash operations = %v, want %v", actualStashOps, tt.wantStashOps)
 			}
