@@ -5,13 +5,13 @@ import (
 	"gokid/shell"
 )
 
-type GitHub struct{}
+type GitHubForge struct{}
 
-func NewGitHub() *GitHub {
-	return &GitHub{}
+func NewGitHub() *GitHubForge {
+	return &GitHubForge{}
 }
 
-func (g *GitHub) CreatePullRequest(issue Issue, base string, draft bool) error {
+func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) error {
 	cmd := fmt.Sprintf("gh pr create --base %s", base)
 
 	if draft {
@@ -23,6 +23,18 @@ func (g *GitHub) CreatePullRequest(issue Issue, base string, draft bool) error {
 	return shell.Run(cmd)
 }
 
-func (g *GitHub) ViewPullRequest() error {
+func (g *GitHubForge) ViewPullRequest() error {
 	return shell.Run("gh pr view -w")
+}
+
+func (g *GitHubForge) MarkPullRequestReady() error {
+	return shell.Run("gh pr ready")
+}
+
+func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool) error {
+	cmd := fmt.Sprintf("gh pr merge --%s", strategy)
+	if autoMerge {
+		cmd += " --auto"
+	}
+	return shell.Run(cmd)
 }

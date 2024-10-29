@@ -12,29 +12,31 @@ import (
 )
 
 type GokidConfig struct {
-	AutoMerge     bool
-	BranchPrefix  string
-	BranchSuffix  string
-	Draft         bool
-	MergeStrategy string
-	Trunk         string
+	AutoMerge       bool
+	BranchPrefix    string
+	BranchSuffix    string
+	Draft           bool
+	MergeStrategy   string
+	PreMergeCommand string
+	Trunk           string
 }
 
-func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, mergeStrategy string, trunk string) GokidConfig {
+func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, mergeStrategy string, preMergeCommand string, trunk string) GokidConfig {
 	validateMergeStrategy(mergeStrategy)
 
 	return GokidConfig{
-		AutoMerge:     autoMerge,
-		BranchPrefix:  branchPrefix,
-		BranchSuffix:  branchSuffix,
-		Draft:         draft,
-		MergeStrategy: mergeStrategy,
-		Trunk:         trunk,
+		AutoMerge:       autoMerge,
+		BranchPrefix:    branchPrefix,
+		BranchSuffix:    branchSuffix,
+		Draft:           draft,
+		MergeStrategy:   mergeStrategy,
+		PreMergeCommand: preMergeCommand,
+		Trunk:           trunk,
 	}
 }
 
 func Defaults() GokidConfig {
-	return NewConfig(false, "", "", false, "merge", "main")
+	return NewConfig(false, "", "", false, "merge", "", "main")
 }
 
 func Load(configName string) GokidConfig {
@@ -73,6 +75,7 @@ func Load(configName string) GokidConfig {
 		viper.GetString("branch_suffix"),
 		viper.GetBool("draft"),
 		viper.GetString("merge_strategy"),
+		viper.GetString("pre_merge_command"),
 		viper.GetString("trunk"),
 	)
 }
