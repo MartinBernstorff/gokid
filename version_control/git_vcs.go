@@ -2,39 +2,78 @@ package version_control
 
 import (
 	"fmt"
-	"gokid/forge"
 	"gokid/shell"
 	"os/exec"
 	"strings"
 )
 
-func branchTitle(issue forge.Issue, prefix string, suffix string) string {
-	title := prefix + issue.Title.Content + suffix
-	return strings.ReplaceAll(title, " ", "-")
+// gitOperations defines the interface for git operations that can be implemented differently by Git and GitStub
+type gitOperations interface {
+	isClean() bool
+	fetch(remote string)
+	branchFromOrigin(branchName string, defaultBranch string)
+	emptyCommit(message string)
+	push()
 }
 
-func gitClean() bool {
+// BaseGit implements common git functionality
+type BaseGit struct {
+	ops   gitOperations
+	stash Stasher
+}
+
+// Stasher defines the interface for stash operations
+type Stasher interface {
+	Save()
+	Pop()
+}
+
+// Stash handles git stash operations
+type Stash struct{}
+
+func NewStash() *Stash {
+	return &Stash{}
+}
+
+func (s *Stash) Save() {
+	shell.Run("git stash")
+}
+
+func (s *Stash) Pop() {
+	shell.Run("git stash pop")
+}
+
+// Git implements the VCS interface
+type Git struct {
+	BaseGit
+}
+
+// NewGit creates a new Git VCS instance
+func NewGit() *Git {
+	g := &Git{}
+	g.ops = g
+	g.stash = NewStash()
+	return g
+}
+
+func (g *Git) isClean() bool {
 	cmd := exec.Command("git", "status", "--porcelain")
 	output, err := cmd.Output()
 	return err != nil || strings.TrimSpace(string(output)) == ""
 }
 
-func NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error {
-	needsMigration := migrateChanges && !gitClean()
+func (g *Git) fetch(remote string) {
+	shell.Run(fmt.Sprintf("git fetch %s", remote))
+}
 
-	if needsMigration {
-		shell.Run("git stash")
-	}
+func (g *Git) branchFromOrigin(branchName string, defaultBranch string) {
+	shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchName, defaultBranch))
+}
 
-	branchTitle := branchTitle(issue, branchPrefix, branchSuffix)
-	shell.Run("git fetch origin")
-	shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchTitle, defaultBranch))
+func (g *Git) emptyCommit(message string) {
+	shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
+}
 
-	if needsMigration {
-		shell.Run("git stash pop")
-	}
-
-	shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", branchTitle))
+func (g *Git) push() {
 	shell.Run("git push")
-	return nil
 }
