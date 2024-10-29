@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"slices"
 	"strings"
 
@@ -32,15 +33,20 @@ func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft b
 	}
 }
 
-func Init() GokidConfig {
-	viper.SetDefault("automerge", false)
-	viper.SetDefault("branch_prefix", "asd")
-	viper.SetDefault("branch_suffix", "")
-	viper.SetDefault("draft", false)
-	viper.SetDefault("merge_strategy", "merge")
-	viper.SetDefault("trunk", "main")
+func Defaults() GokidConfig {
+	return NewConfig(false, "", "", false, "merge", "main")
+}
 
-	configFile := findConfig(".gokid")
+func Load(path string) GokidConfig {
+	defaults := Defaults()
+	defaultValue := reflect.ValueOf(defaults)
+
+	// Set viper defaults based on struct fields
+	for _, field := range reflect.VisibleFields(reflect.TypeOf(defaults)) {
+		viper.SetDefault(field.Name, defaultValue.FieldByName(field.Name).Interface())
+	}
+
+	configFile := findConfig(path)
 	if configFile != "" {
 		viper.SetConfigFile(configFile)
 		file, err := os.Open(configFile)
@@ -64,7 +70,6 @@ func Init() GokidConfig {
 		viper.GetString("trunk"),
 	)
 }
-
 func validateMergeStrategy(mergeStrategy string) {
 	allowedStrategies := []string{"squash", "rebase", "merge"}
 
