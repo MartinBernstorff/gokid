@@ -11,7 +11,13 @@ type VCS interface {
 }
 
 // branchTitle creates a branch name from an issue title
-func branchTitle(issue forge.Issue, prefix string, suffix string) string {
-	title := prefix + issue.Title.Content + suffix
-	return strings.ReplaceAll(title, " ", "-")
+func branchTitle(issueTitle forge.IssueTitle, prefix string, suffix string) string {
+	title := prefix + issueTitle.Content + suffix
+	// Using a single strings.NewReplacer
+	replacer := strings.NewReplacer(
+		" ", "-",
+		"(", "",
+		")", "",
+	)
+	return replacer.Replace(title)
 }
