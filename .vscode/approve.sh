@@ -30,4 +30,4 @@ gh api \
   /repos/$OWNER/$REPO/statuses/$SHA \
   -f "context=signoff" -f "state=success" -f "description=Signed off by $USER ($SECONDS seconds)"
 
-echo "Signed off on $SHA in $SECONDS seconds" $GREEN
+announce "Signed off on $SHA in $SECONDS seconds" $GREEN
