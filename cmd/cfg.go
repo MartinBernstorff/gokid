@@ -22,7 +22,7 @@ var cfgCmd = &cobra.Command{
 		if showDefaults {
 			cfg = config.Defaults()
 		} else {
-			cfg = config.Load(".gokid.yml")
+			cfg = config.Load(config.DefaultPath)
 		}
 
 		prettyJSON, err := json.MarshalIndent(cfg, "", "  ")
