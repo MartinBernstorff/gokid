@@ -29,12 +29,14 @@ func changeInput() string {
 	return result
 }
 
-func newChange(f forge.Forge, cfg *config.GokidConfig, issueTitle string, versionControl version_control.VCS) error {
-	if err := versionControl.NewChange(forge.Issue{Title: issueTitle}, cfg.Trunk, true, cfg.BranchPrefix, cfg.BranchSuffix); err != nil {
+func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versionControl version_control.VCS) error {
+	parsedTitle := forge.ParseIssueTitle(inputTitle)
+
+	if err := versionControl.NewChange(forge.Issue{Title: parsedTitle}, cfg.Trunk, true, cfg.BranchPrefix, cfg.BranchSuffix); err != nil {
 		return err
 	}
 
-	return f.CreatePullRequest(forge.Issue{Title: issueTitle}, cfg.Trunk, cfg.Draft)
+	return f.CreatePullRequest(forge.Issue{Title: parsedTitle}, cfg.Trunk, cfg.Draft)
 }
 
 func init() {

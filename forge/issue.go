@@ -10,6 +10,11 @@ func View() {
 	shell.Run("gh pr view -w")
 }
 
+type IssueTitle struct {
+	Prefix  string
+	Content string
+}
+
 func ParseIssueTitle(issueTitle string) IssueTitle {
 	// Get all string between start and first ":" or "("
 	prefixMatch := regexp.MustCompile(`^(.*?)[\(:]`).FindStringSubmatch(issueTitle)
