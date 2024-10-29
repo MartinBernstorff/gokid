@@ -5,12 +5,14 @@ import (
 	"testing"
 )
 
+// FakeVCS implements VCS interface for testing
 type FakeVCS struct {
 	clean          bool
 	currentBranch  string
 	stash          []string
 	commitMessages []string
-	pushed        bool
+	pushed         bool
+	fetchCalled    bool
 }
 
 func NewFakeVCS() *FakeVCS {
@@ -38,7 +40,7 @@ func (f *FakeVCS) PopStash() {
 }
 
 func (f *FakeVCS) FetchOrigin() {
-	// No-op for fake
+	f.fetchCalled = true
 }
 
 func (f *FakeVCS) CheckoutNewBranch(branchName string, baseBranch string) {
@@ -58,11 +60,11 @@ func (f *FakeVCS) NewChange(issue forge.Issue, defaultBranch string, migrateChan
 	return base.NewChange(issue, defaultBranch, migrateChanges, branchPrefix, branchSuffix)
 }
 
-func TestNewChange(t *testing.T) {
+func TestNewChangeWithFakeVCS(t *testing.T) {
 	tests := []struct {
 		name           string
-		issue         forge.Issue
-		defaultBranch string
+		issue          forge.Issue
+		defaultBranch  string
 		migrateChanges bool
 		branchPrefix   string
 		branchSuffix   string
@@ -70,9 +72,10 @@ func TestNewChange(t *testing.T) {
 		wantBranch     string
 		wantCommit     string
 		wantDirty      bool
+		wantStashOps   int
 	}{
 		{
-			name: "Clean repository",
+			name: "Clean repository - no migration needed",
 			issue: forge.Issue{
 				Title: forge.IssueTitle{Content: "test feature"},
 			},
@@ -84,6 +87,7 @@ func TestNewChange(t *testing.T) {
 			wantBranch:     "feature/test-feature",
 			wantCommit:     "feature/test feature",
 			wantDirty:      false,
+			wantStashOps:   0,
 		},
 		{
 			name: "Dirty repository with migration",
@@ -98,6 +102,37 @@ func TestNewChange(t *testing.T) {
 			wantBranch:     "feature/test-feature",
 			wantCommit:     "feature/test feature",
 			wantDirty:      true,
+			wantStashOps:   2, // stash + pop
+		},
+		{
+			name: "Dirty repository without migration",
+			issue: forge.Issue{
+				Title: forge.IssueTitle{Content: "test feature"},
+			},
+			defaultBranch:  "main",
+			migrateChanges: false,
+			branchPrefix:   "feature/",
+			branchSuffix:   "",
+			initialClean:   false,
+			wantBranch:     "feature/test-feature",
+			wantCommit:     "feature/test feature",
+			wantDirty:      false,
+			wantStashOps:   0,
+		},
+		{
+			name: "With branch suffix",
+			issue: forge.Issue{
+				Title: forge.IssueTitle{Content: "test feature"},
+			},
+			defaultBranch:  "main",
+			migrateChanges: true,
+			branchPrefix:   "feature/",
+			branchSuffix:   "-dev",
+			initialClean:   true,
+			wantBranch:     "feature/test-feature-dev",
+			wantCommit:     "feature/test feature-dev",
+			wantDirty:      false,
+			wantStashOps:   0,
 		},
 	}
 
@@ -110,6 +145,10 @@ func TestNewChange(t *testing.T) {
 			if err != nil {
 				t.Errorf("NewChange() error = %v", err)
 				return
+			}
+
+			if !vcs.fetchCalled {
+				t.Error("NewChange() did not call FetchOrigin")
 			}
 
 			if vcs.currentBranch != tt.wantBranch {
@@ -126,6 +165,14 @@ func TestNewChange(t *testing.T) {
 
 			if !vcs.pushed {
 				t.Error("NewChange() changes were not pushed")
+			}
+
+			actualStashOps := len(vcs.stash)
+			if tt.migrateChanges && !tt.initialClean {
+				actualStashOps++ // Account for the pop operation
+			}
+			if actualStashOps != tt.wantStashOps {
+				t.Errorf("NewChange() stash operations = %v, want %v", actualStashOps, tt.wantStashOps)
 			}
 		})
 	}
