@@ -7,7 +7,7 @@ set -e
 SECONDS=0
 
 # Progress reporting
-RED=31;
+RED=31; GREEN=32; BLUE=34;
 announce() { echo -e "\033[0;$2m$1\033[0m"; }
 
 # Sign off requires a clean repository
@@ -29,7 +29,9 @@ else
         | jq '[.[] | select(.context=="signoff")] | sort_by(.created_at) | last | .state == "success"')
     
     if [ "$result" != "true" ]; then
-        echo "Status check failed: signoff status is not success"
+        announce "Status check failed: signoff status is not success" $RED
         exit 1
+    else
+        announce "Status check passed: signoff status is success" $GREEN
     fi
 fi
