@@ -15,7 +15,7 @@
 				"kind": "test",
 				"isDefault": true
 			},
-			"detail": "cd /Users/mabe/Desktop/Git/gokid; go test ./..."
+			"detail": "go test ./..."
 		}
 	]
 }
