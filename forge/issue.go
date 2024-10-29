@@ -35,9 +35,11 @@ func ParseIssueTitle(issueTitle string) IssueTitle {
 	return IssueTitle{Prefix: prefix, Content: description}
 }
 
-type IssueTitle struct {
-	Prefix  string
-	Content string
+func (i IssueTitle) String() string {
+	if i.Prefix == "" || i.Content == "" {
+		return i.Prefix + i.Content
+	}
+	return i.Prefix + ": " + i.Content
 }
 
 type Issue struct {

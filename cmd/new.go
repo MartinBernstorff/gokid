@@ -2,16 +2,17 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"gokid/config"
 	"gokid/forge"
-	"gokid/shell"
 	"gokid/version_control"
+	"os"
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
 
-func changeInput() forge.IssueTitle {
+func changeInput() string {
 	validate := func(input string) error {
 		if len(input) < 1 {
 			return errors.New("invalid change")
@@ -25,24 +26,15 @@ func changeInput() forge.IssueTitle {
 	}
 
 	result, _ := prompt.Run()
-	return forge.ParseIssueTitle(result)
+	return result
 }
 
-func newChange() {
-	cfg := config.Init()
-
-	issueTitle := changeInput()
-	version_control.NewGit().NewChange(forge.Issue{Title: issueTitle}, cfg.Trunk, true, cfg.BranchPrefix, cfg.BranchSuffix)
-
-	// Handle forge
-	cmd := "gh pr create --base " + cfg.Trunk
-
-	if cfg.Draft {
-		cmd += " --draft"
+func newChange(f forge.Forge, cfg *config.GokidConfig, issueTitle string, versionControl version_control.VCS) error {
+	if err := versionControl.NewChange(forge.Issue{Title: issueTitle}, cfg.Trunk, true, cfg.BranchPrefix, cfg.BranchSuffix); err != nil {
+		return err
 	}
-	cmd += " --title \"" + issueTitle.Prefix + ": " + issueTitle.Content + "\" --body \"\""
 
-	shell.Run(cmd)
+	return f.CreatePullRequest(forge.Issue{Title: issueTitle}, cfg.Trunk, cfg.Draft)
 }
 
 func init() {
@@ -51,7 +43,11 @@ func init() {
 		Short: "Create a new change",
 		Long:  "",
 		Run: func(cmd *cobra.Command, args []string) {
-			newChange()
+			cfg := config.Init()
+			if err := newChange(forge.NewGitHub(), &cfg, changeInput(), version_control.NewGit()); err != nil {
+				fmt.Fprintf(os.Stderr, "Error creating change: %v\n", err)
+				os.Exit(1)
+			}
 		},
 		Aliases: []string{"n"},
 	})
