@@ -5,6 +5,7 @@ type FakeForge struct {
 	PRs               []PullRequest
 	LastMergeStrategy string
 	LastAutoMerge     bool
+	LastForceMerge    bool
 	WasMarkedReady    bool
 }
 
@@ -41,8 +42,9 @@ func (f *FakeForge) MarkPullRequestReady() error {
 	return nil
 }
 
-func (f *FakeForge) MergePullRequest(strategy string, autoMerge bool) error {
+func (f *FakeForge) MergePullRequest(strategy string, autoMerge bool, forceMerge bool) error {
 	f.LastMergeStrategy = strategy
 	f.LastAutoMerge = autoMerge
+	f.LastForceMerge = forceMerge
 	return nil
 }

@@ -31,10 +31,13 @@ func (g *GitHubForge) MarkPullRequestReady() error {
 	return shell.Run("gh pr ready")
 }
 
-func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool) error {
+func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMerge bool) error {
 	cmd := fmt.Sprintf("gh pr merge --%s", strategy)
 	if autoMerge {
 		cmd += " --auto"
+	}
+	if forceMerge {
+		cmd += " --admin"
 	}
 	return shell.Run(cmd)
 }

@@ -27,7 +27,7 @@ func merge(cfg config.GokidConfig) {
 		}
 	}
 
-	if err := forge.MergePullRequest(cfg.MergeStrategy, cfg.AutoMerge); err != nil {
+	if err := forge.MergePullRequest(cfg.MergeStrategy, cfg.AutoMerge, cfg.ForceMerge); err != nil {
 		fmt.Println("Error merging PR:", err)
 		return
 	}
