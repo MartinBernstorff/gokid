@@ -39,7 +39,16 @@ func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft b
 }
 
 func Defaults() GokidConfig {
-	return NewConfig(false, "", "", false, false, "merge", "", "main")
+	return NewConfig(
+		false,   // Automerge
+		"",      // Branch prefix
+		"",      // Branch suffix
+		false,   // Draft
+		false,   // Force merge
+		"merge", // Merge strategy
+		"",      // Pre merge command
+		"main",  // Trunk
+	)
 }
 
 func Load(configName string) GokidConfig {
