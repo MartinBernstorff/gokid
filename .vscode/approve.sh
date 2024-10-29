@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Abort sign off on any error
-set -e
+set -euo pipefail
 
 # Start the benchmark timer
 SECONDS=0

@@ -3,11 +3,16 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "test",
-			"command": "./.vscode/approve.sh",
+			"label": "test and approve",
+			"command": "${workspaceFolder}/.vscode/approve.sh",
 			"problemMatcher": [
 				"$go"
 			],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			},
 			"group": {
 				"kind": "test",
 				"isDefault": true
