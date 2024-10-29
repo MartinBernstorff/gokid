@@ -12,7 +12,7 @@ import (
 )
 
 func merge() {
-	cfg := config.Init()
+	cfg := config.Load(config.DefaultPath)
 
 	if cfg.Draft {
 		shell.Run("gh pr ready")

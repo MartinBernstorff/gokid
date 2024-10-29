@@ -16,7 +16,15 @@ var cfgCmd = &cobra.Command{
 	Short: "Print the identified config",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		cfg := config.Init()
+		showDefaults, _ := cmd.Flags().GetBool("defaults")
+
+		var cfg config.GokidConfig
+		if showDefaults {
+			cfg = config.Defaults()
+		} else {
+			cfg = config.Load(".gokid.yml")
+		}
+
 		prettyJSON, _ := json.MarshalIndent(cfg, "", "  ")
 		fmt.Println(string(prettyJSON))
 	},
@@ -24,5 +32,6 @@ var cfgCmd = &cobra.Command{
 }
 
 func init() {
+	cfgCmd.Flags().Bool("defaults", false, "Show default configuration values")
 	rootCmd.AddCommand(cfgCmd)
 }
