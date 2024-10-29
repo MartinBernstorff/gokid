@@ -6,18 +6,17 @@ set -e
 # Start the benchmark timer
 SECONDS=0
 
-# Run the command
-run "go test ./..."
-
-# Repository introspection
-OWNER=$(gh repo view --json owner --jq .owner.login)
-REPO=$(gh repo view --json name --jq .name)
-SHA=$(git rev-parse HEAD)
-USER=$(git config user.name)
-
 # Progress reporting
 GREEN=32; RED=31; BLUE=34
 announce() { echo -e "\033[0;$2m$1\033[0m"; }
+
+# Sign off requires a clean repository
+if [[ -n $(git status --porcelain) ]]; then
+  announce "Can't sign off on a dirty repository!" $RED
+  git status
+  exit 1
+fi
+
 run() {
   local SPLIT=$SECONDS
   announce "\nRun $1" $BLUE
@@ -26,12 +25,14 @@ run() {
   announce "Completed $1 in $INTERVAL seconds" $GREEN
 }
 
-# Sign off requires a clean repository
-if [[ -n $(git status --porcelain) ]]; then
-  announce "Can't sign off on a dirty repository!" $RED
-  git status
-  exit 1
-fi
+# Run the command
+run "go test ./..."
+
+# Repository introspection
+OWNER=$(gh repo view --json owner --jq .owner.login)
+REPO=$(gh repo view --json name --jq .name)
+SHA=$(git rev-parse HEAD)
+USER=$(git config user.name)
 
 announce "Attempting to sign off on $SHA in $OWNER/$REPO as $USER" $GREEN
 
