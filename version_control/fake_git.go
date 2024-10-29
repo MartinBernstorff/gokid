@@ -40,6 +40,7 @@ type FakeGit struct {
 	isDirty       bool
 	commits       []Commit
 	lastPush      Commit
+	isFetched     bool
 }
 
 func NewFakeGit() *FakeGit {
@@ -83,6 +84,7 @@ func (g *FakeGit) isClean() bool {
 }
 
 func (g *FakeGit) fetch(remote string) {
+	g.isFetched = true
 }
 
 func (g *FakeGit) branchFromOrigin(branchName string, origin string) {
