@@ -2,6 +2,7 @@ package version_control
 
 import (
 	"fmt"
+	"gokid/forge"
 	"gokid/shell"
 	"os/exec"
 	"strings"
@@ -20,6 +21,26 @@ type gitOperations interface {
 type BaseGit struct {
 	ops   gitOperations
 	stash Stasher
+}
+
+// NewChange implements VCS interface
+func (g *BaseGit) NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error {
+	needsMigration := migrateChanges && !g.ops.isClean()
+	if needsMigration {
+		g.stash.Save()
+	}
+
+	branchTitle := branchTitle(issue, branchPrefix, branchSuffix)
+	g.ops.fetch("origin")
+	g.ops.branchFromOrigin(branchTitle, defaultBranch)
+
+	if needsMigration {
+		g.stash.Pop()
+	}
+
+	g.ops.emptyCommit("Initial commit")
+	g.ops.push()
+	return nil
 }
 
 // Stasher defines the interface for stash operations
