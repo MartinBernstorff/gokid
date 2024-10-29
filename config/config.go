@@ -24,7 +24,7 @@ type GokidConfig struct {
 
 func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, trunk string) GokidConfig {
 	validateMergeStrategy(mergeStrategy)
-	validateForceMerge(forceMerge, preMergeCommand)
+	validateForceMerge(forceMerge, preMergeCommand, autoMerge)
 
 	return GokidConfig{
 		AutoMerge:       autoMerge,
@@ -93,9 +93,13 @@ func validateMergeStrategy(mergeStrategy string) {
 	}
 }
 
-func validateForceMerge(forceMerge bool, preMergeCommand string) {
+func validateForceMerge(forceMerge bool, preMergeCommand string, autoMerge bool) {
 	if forceMerge && preMergeCommand == "" {
 		panic("Force merge can only be enabled when pre-merge command is set")
+	}
+
+	if autoMerge && forceMerge {
+		panic("Either auto merge or force merge can be enabled, not both")
 	}
 }
 
