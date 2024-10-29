@@ -1,5 +1,5 @@
 package config
 
 const (
-	DefaultPath = ".gokid"
+	DefaultFileName = ".gokid"
 )

@@ -22,7 +22,7 @@ var cfgCmd = &cobra.Command{
 		if showDefaults {
 			cfg = config.Defaults()
 		} else {
-			cfg = config.Load(config.DefaultPath)
+			cfg = config.Load(config.DefaultFileName)
 		}
 
 		prettyJSON, err := json.MarshalIndent(cfg, "", "  ")
