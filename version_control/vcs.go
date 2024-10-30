@@ -8,6 +8,7 @@ import (
 // VCS defines the interface for version control operations
 type VCS interface {
 	NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error
+	SyncTrunk(defaultBranch string) error
 }
 
 // branchTitle creates a branch name from an issue title

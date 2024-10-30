@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"gokid/forge"
+	"gokid/version_control"
 	"testing"
 )
 
@@ -11,16 +12,19 @@ func (f *fakeShell) Run(cmd string) error { return nil }
 
 func TestMerge(t *testing.T) {
 	tests := []struct {
-		name           string
-		preMergeCmd    string
-		autoMerge      bool
-		forceMerge     bool
-		draft          bool
-		mergeStrategy  string
-		wantStrategy   string
-		wantAutoMerge  bool
-		wantForceMerge bool
-		wantReady      bool
+		name             string
+		preMergeCmd      string
+		autoMerge        bool
+		forceMerge       bool
+		draft            bool
+		mergeStrategy    string
+		wantStrategy     string
+		wantAutoMerge    bool
+		wantForceMerge   bool
+		wantReady        bool
+		syncTrunkOnMerge bool
+		trunk            string
+		wantSyncCalled   bool
 	}{
 		{
 			name:          "merge strategy is passed to forge",
@@ -42,16 +46,23 @@ func TestMerge(t *testing.T) {
 			draft:     true,
 			wantReady: true,
 		},
+		{
+			name:             "syncs trunk when configured",
+			syncTrunkOnMerge: true,
+			trunk:            "main",
+			wantSyncCalled:   true,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Setup fake forge and shell
+			// Setup fake forge and VCS
 			fakeForge := forge.NewFakeForge()
-			merger := NewMerger(fakeForge)
+			fakeVCS := version_control.NewFakeGit()
+			merger := NewMerger(fakeForge, fakeVCS)
 
 			// Run merge command
-			merger.merge(tt.preMergeCmd, tt.autoMerge, tt.forceMerge, tt.draft, tt.mergeStrategy)
+			merger.merge(tt.preMergeCmd, tt.autoMerge, tt.forceMerge, tt.draft, tt.mergeStrategy, tt.trunk, tt.syncTrunkOnMerge)
 
 			// Verify forge calls
 			if fakeForge.LastMergeStrategy != tt.wantStrategy {
@@ -68,6 +79,10 @@ func TestMerge(t *testing.T) {
 
 			if fakeForge.WasMarkedReady != tt.wantReady {
 				t.Errorf("marked ready = %v, want %v", fakeForge.WasMarkedReady, tt.wantReady)
+			}
+
+			if fakeVCS.SyncTrunkCalled != tt.wantSyncCalled {
+				t.Errorf("sync trunk called = %v, want %v", fakeVCS.SyncTrunkCalled, tt.wantSyncCalled)
 			}
 		})
 	}

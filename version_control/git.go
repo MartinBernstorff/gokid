@@ -105,3 +105,9 @@ func (g *Git) emptyCommit(message string) {
 func (g *Git) push() {
 	g.shell.Run("git push")
 }
+
+func (g *Git) SyncTrunk(defaultBranch string) error {
+	g.shell.Run(fmt.Sprintf("git fetch origin %s", defaultBranch))
+	g.shell.Run(fmt.Sprintf("git merge origin/%s", defaultBranch))
+	return nil
+}
