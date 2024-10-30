@@ -44,8 +44,8 @@ func TestYolo(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Setup fake forge and shell
 			fakeForge := forge.NewFakeForge()
-			fakeShell := &fakeShell{}
-			yoloer := NewYoloer(fakeForge, fakeShell)
+			merger := NewMerger(fakeForge)
+			yoloer := NewYoloer(merger)
 
 			// Run yolo command
 			yoloer.yolo(tt.draft, tt.mergeStrategy, tt.userConfirmed)

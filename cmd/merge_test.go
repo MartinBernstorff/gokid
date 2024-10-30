@@ -48,8 +48,7 @@ func TestMerge(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Setup fake forge and shell
 			fakeForge := forge.NewFakeForge()
-			fakeShell := &fakeShell{}
-			merger := NewMerger(fakeForge, fakeShell)
+			merger := NewMerger(fakeForge)
 
 			// Run merge command
 			merger.merge(tt.preMergeCmd, tt.autoMerge, tt.forceMerge, tt.draft, tt.mergeStrategy)

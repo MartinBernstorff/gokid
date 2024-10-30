@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"gokid/forge"
+	"gokid/shell"
 
 	"github.com/spf13/cobra"
 )
@@ -16,7 +17,7 @@ func init() {
 		Short: "View the change at the forge",
 		Long:  "",
 		Run: func(cmd *cobra.Command, args []string) {
-			view(forge.NewGitHub())
+			view(forge.NewGitHub(shell.New()))
 		},
 		Aliases: []string{"v"},
 	})

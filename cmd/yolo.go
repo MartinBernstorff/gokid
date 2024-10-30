@@ -16,9 +16,9 @@ type Yoloer struct {
 	merger *Merger
 }
 
-func NewYoloer(f forge.Forge, s shell.Shell) *Yoloer {
+func NewYoloer(merger *Merger) *Yoloer {
 	return &Yoloer{
-		merger: NewMerger(f, s),
+		merger: merger,
 	}
 }
 
@@ -43,7 +43,9 @@ func init() {
 			var confirm string
 			fmt.Scanln(&confirm)
 
-			yoloer := NewYoloer(forge.NewGitHub(), shell.New())
+			merger := NewMerger(forge.NewGitHub(shell.New()))
+
+			yoloer := NewYoloer(merger)
 			yoloer.yolo(cfg.Draft, cfg.MergeStrategy, confirm == "y")
 		},
 	})

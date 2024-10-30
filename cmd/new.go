@@ -48,7 +48,7 @@ func init() {
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg := config.Load(config.DefaultFileName)
 			shell := shell.New()
-			if err := newChange(forge.NewGitHub(), &cfg, changeInput(), version_control.NewGit(shell)); err != nil {
+			if err := newChange(forge.NewGitHub(shell), &cfg, changeInput(), version_control.NewGit(shell)); err != nil {
 				fmt.Fprintf(os.Stderr, "Error creating change: %v\n", err)
 				os.Exit(1)
 			}

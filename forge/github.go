@@ -9,9 +9,9 @@ type GitHubForge struct {
 	shell shell.Shell
 }
 
-func NewGitHub() *GitHubForge {
+func NewGitHub(s shell.Shell) *GitHubForge {
 	return &GitHubForge{
-		shell: shell.New(),
+		shell: s,
 	}
 }
 

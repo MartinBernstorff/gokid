@@ -1,23 +1,24 @@
 package cmd
 
 import (
+	"gokid/forge"
 	"gokid/shell"
 
 	"github.com/spf13/cobra"
 )
 
 type Ready struct {
-	shell shell.Shell
+	forge forge.Forge
 }
 
 func NewReady(s shell.Shell) *Ready {
 	return &Ready{
-		shell: s,
+		forge: forge.NewGitHub(s),
 	}
 }
 
 func (r *Ready) markReady() {
-	r.shell.Run("gh pr ready")
+	r.forge.MarkPullRequestReady()
 }
 
 func init() {

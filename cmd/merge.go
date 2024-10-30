@@ -17,10 +17,9 @@ type Merger struct {
 	shell shell.Shell
 }
 
-func NewMerger(f forge.Forge, s shell.Shell) *Merger {
+func NewMerger(f forge.Forge) *Merger {
 	return &Merger{
 		forge: f,
-		shell: s,
 	}
 }
 
@@ -52,7 +51,7 @@ func init() {
 		Long:  "",
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg := config.Load(config.DefaultFileName)
-			merger := NewMerger(forge.NewGitHub(), shell.New())
+			merger := NewMerger(forge.NewGitHub(shell.New()))
 			merger.merge(cfg.PreMergeCommand, cfg.AutoMerge, cfg.ForceMerge, cfg.Draft, cfg.MergeStrategy)
 		},
 		Aliases: []string{"m"},
