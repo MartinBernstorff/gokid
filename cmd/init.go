@@ -62,6 +62,7 @@ var initCmd = &cobra.Command{
 			fmt.Fprintf(os.Stderr, "Error writing config file: %v\n", err)
 			os.Exit(1)
 		}
+		fmt.Println("Created default configuration file:", config.DefaultFileName+".yml")
 
 		if err := updateGitignore(); err != nil {
 			fmt.Fprintf(os.Stderr, "Error updating .gitignore: %v\n", err)
