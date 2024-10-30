@@ -4,19 +4,30 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"gokid/config"
+	"gokid/forge"
+	"gokid/shell"
 
 	"github.com/spf13/cobra"
 )
 
-func yolo(cfg config.GokidConfig) {
-	// Override config for yolo mode
-	cfg.ForceMerge = true
-	cfg.PreMergeCommand = ""
-	cfg.Yolo = true
+type Yoloer struct {
+	merger *Merger
+}
 
-	// Use the existing merge function with our modified config
-	merge(cfg)
+func NewYoloer(f forge.Forge, s shell.Shell) *Yoloer {
+	return &Yoloer{
+		merger: NewMerger(f, s),
+	}
+}
+
+func (y *Yoloer) yolo(draft bool, mergeStrategy string, confirmed bool) {
+	if !confirmed {
+		fmt.Println("Aborted.")
+		return
+	}
+	y.merger.merge("", false, true, draft, mergeStrategy)
 }
 
 func init() {
@@ -25,8 +36,15 @@ func init() {
 		Short: "Merge a change without running checks",
 		Long:  "YOLO mode merges changes without running pre-merge checks. Use with caution!",
 		Run: func(cmd *cobra.Command, args []string) {
-			yolo(config.Load(config.DefaultFileName))
+			cfg := config.Load(config.DefaultFileName)
+
+			fmt.Println("🚀 YOLO mode enabled - merging without checks!")
+			fmt.Println("Are you sure you want to merge? (y/n)")
+			var confirm string
+			fmt.Scanln(&confirm)
+
+			yoloer := NewYoloer(forge.NewGitHub(), shell.New())
+			yoloer.yolo(cfg.Draft, cfg.MergeStrategy, confirm == "y")
 		},
-		Aliases: []string{"y"},
 	})
 }

@@ -20,15 +20,18 @@ func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) er
 
 	cmd += fmt.Sprintf(" --title \"%s\" --body \"\"", issue.Title.String())
 
-	return shell.Run(cmd)
+	myShell := shell.New()
+	return myShell.Run(cmd)
 }
 
 func (g *GitHubForge) ViewPullRequest() error {
-	return shell.Run("gh pr view -w")
+	myShell := shell.New()
+	return myShell.Run("gh pr view -w")
 }
 
 func (g *GitHubForge) MarkPullRequestReady() error {
-	return shell.Run("gh pr ready")
+	myShell := shell.New()
+	return myShell.Run("gh pr ready")
 }
 
 func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMerge bool) error {
@@ -39,5 +42,7 @@ func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMer
 	if forceMerge {
 		cmd += " --admin"
 	}
-	return shell.Run(cmd)
+
+	myShell := shell.New()
+	return myShell.Run(cmd)
 }

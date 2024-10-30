@@ -7,7 +7,8 @@ import (
 )
 
 func markReady() {
-	shell.Run("gh pr ready")
+	myShell := shell.New()
+	myShell.Run("gh pr ready")
 }
 
 func init() {

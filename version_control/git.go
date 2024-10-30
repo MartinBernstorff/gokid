@@ -57,11 +57,13 @@ func NewStash() *Stash {
 }
 
 func (s *Stash) Save() {
-	shell.Run("git stash")
+	myShell := shell.New()
+	myShell.Run("git stash")
 }
 
 func (s *Stash) Pop() {
-	shell.Run("git stash pop")
+	myShell := shell.New()
+	myShell.Run("git stash pop")
 }
 
 // Git implements the VCS interface
@@ -84,17 +86,21 @@ func (g *Git) isClean() bool {
 }
 
 func (g *Git) fetch(remote string) {
-	shell.Run(fmt.Sprintf("git fetch %s", remote))
+	myShell := shell.New()
+	myShell.Run(fmt.Sprintf("git fetch %s", remote))
 }
 
 func (g *Git) branchFromOrigin(branchName string, defaultBranch string) {
-	shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchName, defaultBranch))
+	myShell := shell.New()
+	myShell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchName, defaultBranch))
 }
 
 func (g *Git) emptyCommit(message string) {
-	shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
+	myShell := shell.New()
+	myShell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
 }
 
 func (g *Git) push() {
-	shell.Run("git push")
+	myShell := shell.New()
+	myShell.Run("git push")
 }

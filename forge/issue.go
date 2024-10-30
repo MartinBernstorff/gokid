@@ -7,7 +7,8 @@ import (
 )
 
 func View() {
-	shell.Run("gh pr view -w")
+	myShell := shell.New()
+	myShell.Run("gh pr view -w")
 }
 
 type IssueTitle struct {
