@@ -38,7 +38,8 @@ func (m *Merger) merge(preMergeCommand string, autoMerge bool, forceMerge bool, 
 	// Execute pre-merge command if set
 	if preMergeCommand != "" {
 		fmt.Println("Running pre-merge command:", preMergeCommand)
-		m.shell.Run(preMergeCommand)
+		shell := shell.New()
+		shell.Run(preMergeCommand)
 		fmt.Println("Pre-merge command completed")
 	}
 
