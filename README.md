@@ -1,4 +1,4 @@
-# GoKid - Trunk!
+# GoKid - Trunk + branch 1!
 
 GoKid is a CLI tool for managing changes, designed to remove the boilerplate work from creating branches, pull requests, and more.
 
