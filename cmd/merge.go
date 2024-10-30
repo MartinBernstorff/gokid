@@ -28,6 +28,7 @@ func NewMerger(f forge.Forge, v version_control.VCS) *Merger {
 
 func (m *Merger) merge(preMergeCommand string, autoMerge bool, forceMerge bool, draft bool, mergeStrategy string, trunk string, syncTrunkOnMerge bool) {
 	if syncTrunkOnMerge {
+		fmt.Println("Merging trunk into current branch, trunk is: ", trunk)
 		if err := m.vcs.SyncTrunk(trunk); err != nil {
 			fmt.Println("Error syncing trunk:", err)
 			return
