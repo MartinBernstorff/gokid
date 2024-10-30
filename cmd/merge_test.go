@@ -81,8 +81,8 @@ func TestMerge(t *testing.T) {
 				t.Errorf("marked ready = %v, want %v", fakeForge.WasMarkedReady, tt.wantReady)
 			}
 
-			if fakeVCS.SyncTrunkCalled != tt.wantSyncCalled {
-				t.Errorf("sync trunk called = %v, want %v", fakeVCS.SyncTrunkCalled, tt.wantSyncCalled)
+			if fakeVCS.TrunkSynced != tt.wantSyncCalled {
+				t.Errorf("sync trunk called = %v, want %v", fakeVCS.TrunkSynced, tt.wantSyncCalled)
 			}
 		})
 	}

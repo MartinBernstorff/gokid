@@ -8,6 +8,7 @@ import (
 	"gokid/config"
 	"gokid/forge"
 	"gokid/shell"
+	"gokid/version_control"
 
 	"github.com/spf13/cobra"
 )
@@ -27,7 +28,7 @@ func (y *Yoloer) yolo(draft bool, mergeStrategy string, confirmed bool) {
 		fmt.Println("Aborted.")
 		return
 	}
-	y.merger.merge("", false, true, draft, mergeStrategy)
+	y.merger.merge("", false, true, draft, mergeStrategy, "", false)
 }
 
 func init() {
@@ -43,7 +44,8 @@ func init() {
 			var confirm string
 			fmt.Scanln(&confirm)
 
-			merger := NewMerger(forge.NewGitHub(shell.New()))
+			shell := shell.New()
+			merger := NewMerger(forge.NewGitHub(shell), version_control.NewGit(shell))
 
 			yoloer := NewYoloer(merger)
 			yoloer.yolo(cfg.Draft, cfg.MergeStrategy, confirm == "y")
