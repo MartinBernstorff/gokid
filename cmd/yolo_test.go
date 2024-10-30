@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"gokid/forge"
+	"gokid/version_control"
 	"testing"
 )
 
@@ -44,7 +45,7 @@ func TestYolo(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Setup fake forge and shell
 			fakeForge := forge.NewFakeForge()
-			merger := NewMerger(fakeForge)
+			merger := NewMerger(fakeForge, version_control.NewFakeGit())
 			yoloer := NewYoloer(merger)
 
 			// Run yolo command
