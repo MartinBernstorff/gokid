@@ -12,24 +12,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func merge(cfg config.GokidConfig) {
+type Merger struct {
+	forge forge.Forge
+	shell shell.Shell
+}
+
+func NewMerger(f forge.Forge) *Merger {
+	return &Merger{
+		forge: f,
+	}
+}
+
+func (m *Merger) merge(preMergeCommand string, autoMerge bool, forceMerge bool, draft bool, mergeStrategy string) {
 	// Execute pre-merge command if set
-	if cfg.PreMergeCommand != "" {
-		fmt.Println("Running pre-merge command:", cfg.PreMergeCommand)
-		shell.Run(cfg.PreMergeCommand)
+	if preMergeCommand != "" {
+		fmt.Println("Running pre-merge command:", preMergeCommand)
+		m.shell.Run(preMergeCommand)
 		fmt.Println("Pre-merge command completed")
 	}
 
-	forge := forge.NewGitHub()
-
-	if cfg.Draft {
-		if err := forge.MarkPullRequestReady(); err != nil {
+	if draft {
+		if err := m.forge.MarkPullRequestReady(); err != nil {
 			fmt.Println("Error marking PR as ready:", err)
 			return
 		}
 	}
 
-	if err := forge.MergePullRequest(cfg.MergeStrategy, cfg.AutoMerge, cfg.ForceMerge); err != nil {
+	if err := m.forge.MergePullRequest(mergeStrategy, autoMerge, forceMerge); err != nil {
 		fmt.Println("Error merging PR:", err)
 		return
 	}
@@ -41,7 +50,9 @@ func init() {
 		Short: "Merge a change",
 		Long:  "",
 		Run: func(cmd *cobra.Command, args []string) {
-			merge(config.Load(config.DefaultFileName))
+			cfg := config.Load(config.DefaultFileName)
+			merger := NewMerger(forge.NewGitHub(shell.New()))
+			merger.merge(cfg.PreMergeCommand, cfg.AutoMerge, cfg.ForceMerge, cfg.Draft, cfg.MergeStrategy)
 		},
 		Aliases: []string{"m"},
 	})

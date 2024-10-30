@@ -1,26 +1,35 @@
 package shell
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 )
 
-func Run(
-	command string,
-) error {
+type Shell interface {
+	Run(cmd string) error
+}
+
+type RealShell struct{}
+
+func New() Shell {
+	return &RealShell{}
+}
+
+func (s *RealShell) Run(cmd string) error {
 	// Figure out the calling shell
 	shell := os.Getenv("SHELL")
-	cmd := exec.Command(shell, []string{"-c", command}...)
+	command := exec.Command(shell, "-c", cmd)
 
 	// Set up pipes for standard input, output, and error
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	command.Stdin = os.Stdin
+	command.Stdout = os.Stdout
+	command.Stderr = os.Stderr
 
 	// Execute the command
-	err := cmd.Run()
+	err := command.Run()
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("error running command: %w", err)
 	}
 	return nil
 }
