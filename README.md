@@ -28,4 +28,4 @@ Write the default config to the current directory, and you are ready to go! 🚀
 gk init
 ```
 
-Gokid looks for configuration files in the current directory, or any parent directory.
+Gokid looks for configuration files in the current directory, or any parent directory. It uses the values from the first config it encounters.
