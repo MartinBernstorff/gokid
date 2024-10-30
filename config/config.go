@@ -20,11 +20,13 @@ type GokidConfig struct {
 	MergeStrategy   string
 	PreMergeCommand string
 	Trunk           string
+	SkipChecks      bool
 }
 
-func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, trunk string) GokidConfig {
+func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, trunk string, skipChecks bool) GokidConfig {
 	validateMergeStrategy(mergeStrategy)
 	validateForceMerge(forceMerge, preMergeCommand, autoMerge)
+	validateSkipChecks(skipChecks, forceMerge)
 
 	return GokidConfig{
 		AutoMerge:       autoMerge,
@@ -35,6 +37,7 @@ func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft b
 		MergeStrategy:   mergeStrategy,
 		PreMergeCommand: preMergeCommand,
 		Trunk:           trunk,
+		SkipChecks:      skipChecks,
 	}
 }
 
@@ -48,6 +51,7 @@ func Defaults() GokidConfig {
 		"merge", // Merge strategy
 		"",      // Pre merge command
 		"main",  // Trunk
+		false,   // Skip checks
 	)
 }
 
@@ -90,6 +94,7 @@ func Load(configName string) GokidConfig {
 		viper.GetString("mergestrategy"),
 		viper.GetString("premergecommand"),
 		viper.GetString("trunk"),
+		viper.GetBool("skipchecks"),
 	)
 }
 
@@ -109,6 +114,12 @@ func validateForceMerge(forceMerge bool, preMergeCommand string, autoMerge bool)
 
 	if autoMerge && forceMerge {
 		panic("Either auto merge or force merge can be enabled, not both")
+	}
+}
+
+func validateSkipChecks(skipChecks bool, forceMerge bool) {
+	if skipChecks && !forceMerge {
+		panic("Skip checks requires force merge to be enabled")
 	}
 }
 

@@ -31,7 +31,7 @@ func (g *GitHubForge) MarkPullRequestReady() error {
 	return shell.Run("gh pr ready")
 }
 
-func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMerge bool) error {
+func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMerge bool, skipChecks bool) error {
 	cmd := fmt.Sprintf("gh pr merge --%s", strategy)
 	if autoMerge {
 		cmd += " --auto"
@@ -39,5 +39,10 @@ func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMer
 	if forceMerge {
 		cmd += " --admin"
 	}
+
+	if !skipChecks {
+		// Wait for checks logic here
+	}
+
 	return shell.Run(cmd)
 }
