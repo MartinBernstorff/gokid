@@ -20,11 +20,12 @@ type GokidConfig struct {
 	MergeStrategy   string
 	PreMergeCommand string
 	Trunk           string
+	Yolo            bool
 }
 
-func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, trunk string) GokidConfig {
+func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, trunk string, yolo bool) GokidConfig {
 	validateMergeStrategy(mergeStrategy)
-	validateForceMerge(forceMerge, preMergeCommand, autoMerge)
+	validateForceMerge(forceMerge, preMergeCommand, autoMerge, yolo)
 
 	return GokidConfig{
 		AutoMerge:       autoMerge,
@@ -35,6 +36,7 @@ func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft b
 		MergeStrategy:   mergeStrategy,
 		PreMergeCommand: preMergeCommand,
 		Trunk:           trunk,
+		Yolo:            yolo,
 	}
 }
 
@@ -48,6 +50,7 @@ func Defaults() GokidConfig {
 		"merge", // Merge strategy
 		"",      // Pre merge command
 		"main",  // Trunk
+		false,   // Yolo
 	)
 }
 
@@ -81,7 +84,7 @@ func Load(configName string) GokidConfig {
 		fmt.Println("No config file found")
 	}
 
-	return NewConfig(
+	cfg := NewConfig(
 		viper.GetBool("automerge"),
 		viper.GetString("branchprefix"),
 		viper.GetString("branchsuffix"),
@@ -90,7 +93,15 @@ func Load(configName string) GokidConfig {
 		viper.GetString("mergestrategy"),
 		viper.GetString("premergecommand"),
 		viper.GetString("trunk"),
+		viper.GetBool("yolo"),
 	)
+
+	if cfg.Yolo {
+		cfg.ForceMerge = true
+		cfg.PreMergeCommand = ""
+	}
+
+	return cfg
 }
 
 func validateMergeStrategy(mergeStrategy string) {
@@ -102,8 +113,8 @@ func validateMergeStrategy(mergeStrategy string) {
 	}
 }
 
-func validateForceMerge(forceMerge bool, preMergeCommand string, autoMerge bool) {
-	if forceMerge && preMergeCommand == "" {
+func validateForceMerge(forceMerge bool, preMergeCommand string, autoMerge bool, yolo bool) {
+	if forceMerge && preMergeCommand == "" && !yolo {
 		panic("Force merge can only be enabled when pre-merge command is set")
 	}
 
