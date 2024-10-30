@@ -15,7 +15,7 @@ Can then be installed by:
 brew update && brew install martinbernstorff/homebrew-tap/gk
 ```
 
-## Usage - Trunk!
+## Usage
 
 ```bash
 gk --help
