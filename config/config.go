@@ -20,12 +20,11 @@ type GokidConfig struct {
 	MergeStrategy   string
 	PreMergeCommand string
 	Trunk           string
-	Yolo            bool
 }
 
-func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, trunk string, yolo bool) GokidConfig {
+func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, trunk string) GokidConfig {
 	validateMergeStrategy(mergeStrategy)
-	validateForceMerge(forceMerge, preMergeCommand, autoMerge, yolo)
+	validateForceMerge(forceMerge, preMergeCommand, autoMerge)
 
 	return GokidConfig{
 		AutoMerge:       autoMerge,
@@ -36,7 +35,6 @@ func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft b
 		MergeStrategy:   mergeStrategy,
 		PreMergeCommand: preMergeCommand,
 		Trunk:           trunk,
-		Yolo:            yolo,
 	}
 }
 
@@ -50,7 +48,6 @@ func Defaults() GokidConfig {
 		"merge", // Merge strategy
 		"",      // Pre merge command
 		"main",  // Trunk
-		false,   // Yolo
 	)
 }
 
@@ -93,7 +90,6 @@ func Load(configName string) GokidConfig {
 		viper.GetString("mergestrategy"),
 		viper.GetString("premergecommand"),
 		viper.GetString("trunk"),
-		viper.GetBool("yolo"),
 	)
 }
 
@@ -106,9 +102,9 @@ func validateMergeStrategy(mergeStrategy string) {
 	}
 }
 
-func validateForceMerge(forceMerge bool, preMergeCommand string, autoMerge bool, yolo bool) {
-	if forceMerge && preMergeCommand == "" && !yolo {
-		panic("Force merge can only be enabled when pre-merge command is set (unless yolo mode is enabled)")
+func validateForceMerge(forceMerge bool, preMergeCommand string, autoMerge bool) {
+	if forceMerge && preMergeCommand == "" {
+		panic("Force merge can only be enabled when pre-merge command is set")
 	}
 
 	if autoMerge && forceMerge {
