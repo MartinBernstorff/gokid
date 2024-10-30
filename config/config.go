@@ -97,7 +97,7 @@ func validateMergeStrategy(mergeStrategy string) {
 	allowedStrategies := []string{"squash", "rebase", "merge"}
 
 	if !slices.Contains(allowedStrategies, mergeStrategy) {
-		msg := fmt.Sprintf("Merge strategy %s not allowed, allowed are: %s", mergeStrategy, strings.Join(allowedStrategies, ", "))
+		msg := fmt.Sprintf("Merge strategy '%s' not allowed, allowed are: %s", mergeStrategy, strings.Join(allowedStrategies, ", "))
 		panic(msg)
 	}
 }
