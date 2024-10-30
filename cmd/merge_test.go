@@ -58,12 +58,15 @@ func TestMerge(t *testing.T) {
 			if fakeForge.LastMergeStrategy != tt.wantStrategy {
 				t.Errorf("merge strategy = %v, want %v", fakeForge.LastMergeStrategy, tt.wantStrategy)
 			}
+
 			if fakeForge.LastAutoMerge != tt.wantAutoMerge {
 				t.Errorf("auto merge = %v, want %v", fakeForge.LastAutoMerge, tt.wantAutoMerge)
 			}
+
 			if fakeForge.LastForceMerge != tt.wantForceMerge {
 				t.Errorf("force merge = %v, want %v", fakeForge.LastForceMerge, tt.wantForceMerge)
 			}
+
 			if fakeForge.WasMarkedReady != tt.wantReady {
 				t.Errorf("marked ready = %v, want %v", fakeForge.WasMarkedReady, tt.wantReady)
 			}
