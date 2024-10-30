@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gokid/config"
 	"gokid/forge"
+	"gokid/shell"
 	"gokid/version_control"
 	"os"
 
@@ -46,7 +47,8 @@ func init() {
 		Long:  "",
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg := config.Load(config.DefaultFileName)
-			if err := newChange(forge.NewGitHub(), &cfg, changeInput(), version_control.NewGit()); err != nil {
+			shell := shell.New()
+			if err := newChange(forge.NewGitHub(), &cfg, changeInput(), version_control.NewGit(shell)); err != nil {
 				fmt.Fprintf(os.Stderr, "Error creating change: %v\n", err)
 				os.Exit(1)
 			}
