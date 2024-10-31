@@ -23,12 +23,12 @@ func NewYoloer(merger *Merger) *Yoloer {
 	}
 }
 
-func (y *Yoloer) yolo(draft bool, mergeStrategy string, confirmed bool) {
+func (y *Yoloer) yolo(draft bool, mergeStrategy string, confirmed bool, preYoloCommand string) {
 	if !confirmed {
 		fmt.Println("Aborted.")
 		return
 	}
-	y.merger.merge("", false, true, draft, mergeStrategy, "", false)
+	y.merger.merge(preYoloCommand, false, true, draft, mergeStrategy, "", false)
 }
 
 func init() {
