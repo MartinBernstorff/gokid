@@ -19,12 +19,13 @@ type GokidConfig struct {
 	ForceMerge       bool
 	MergeStrategy    string
 	PreMergeCommand  string
+	PreYoloCommand   string
 	Trunk            string
 	Yolo             bool
 	SyncTrunkOnMerge bool
 }
 
-func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, trunk string, yolo bool, syncTrunkOnMerge bool) GokidConfig {
+func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, preYoloCommand string, trunk string, yolo bool, syncTrunkOnMerge bool) GokidConfig {
 	validateMergeStrategy(mergeStrategy)
 	validateForceMerge(forceMerge, preMergeCommand, autoMerge, yolo)
 
@@ -36,6 +37,7 @@ func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft b
 		ForceMerge:       forceMerge,
 		MergeStrategy:    mergeStrategy,
 		PreMergeCommand:  preMergeCommand,
+		PreYoloCommand:   preYoloCommand,
 		Trunk:            trunk,
 		Yolo:             yolo,
 		SyncTrunkOnMerge: syncTrunkOnMerge,
@@ -51,6 +53,7 @@ func Defaults() GokidConfig {
 		false,   // Force merge
 		"merge", // Merge strategy
 		"",      // Pre merge command
+		"",      // Pre yolo command
 		"main",  // Trunk
 		false,   // Yolo
 		false,   // SyncTrunkOnMerge
@@ -95,6 +98,7 @@ func Load(configName string) GokidConfig {
 		viper.GetBool("forcemerge"),
 		viper.GetString("mergestrategy"),
 		viper.GetString("premergecommand"),
+		viper.GetString("preyolocommand"),
 		viper.GetString("trunk"),
 		viper.GetBool("yolo"),
 		viper.GetBool("syncTrunkOnMerge"),
