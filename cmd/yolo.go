@@ -39,7 +39,12 @@ func init() {
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg := config.Load(config.DefaultFileName)
 
-			fmt.Println("🚀 YOLO mode enabled - merging without checks!")
+			fmt.Println("🚀 YOLO mode enabled - using admin on forge to override branch protection!")
+			if cfg.PreYoloCommand != "" {
+				fmt.Println("Will run the following command before merging: ", cfg.PreYoloCommand)
+			} else {
+				fmt.Println("No premergecommand set in config, so no safety net at all! ☠️")
+			}
 			fmt.Println("Are you sure you want to merge? (y/n)")
 			var confirm string
 			fmt.Scanln(&confirm)
