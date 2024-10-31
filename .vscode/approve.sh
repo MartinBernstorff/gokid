@@ -36,11 +36,11 @@ USER=$(git config user.name)
 
 announce "Attempting to sign off on $SHA in $OWNER/$REPO as $USER" $GREEN
 
-# Report successful sign off to GitHub
-gh api \
-  --method POST --silent \
-  -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" \
-  /repos/$OWNER/$REPO/statuses/$SHA \
-  -f "context=signoff" -f "state=success" -f "description=Signed off by $USER ($SECONDS seconds)"
+# # Report successful sign off to GitHub
+# gh api \
+#   --method POST --silent \
+#   -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" \
+#   /repos/$OWNER/$REPO/statuses/$SHA \
+#   -f "context=signoff" -f "state=success" -f "description=Signed off by $USER ($SECONDS seconds)"
 
 announce "Signed off on $SHA in $SECONDS seconds" $GREEN
