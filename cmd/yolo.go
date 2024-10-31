@@ -48,7 +48,7 @@ func init() {
 			merger := NewMerger(forge.NewGitHub(shell), version_control.NewGit(shell))
 
 			yoloer := NewYoloer(merger)
-			yoloer.yolo(cfg.Draft, cfg.MergeStrategy, confirm == "y")
+			yoloer.yolo(cfg.Draft, cfg.MergeStrategy, confirm == "y", cfg.PreYoloCommand)
 		},
 	})
 }
