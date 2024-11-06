@@ -45,7 +45,8 @@ func TestYolo(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Setup fake forge and shell
 			fakeForge := forge.NewFakeForge()
-			merger := NewMerger(fakeForge, version_control.NewFakeGit())
+			fakeVCS := version_control.NewFakeGit()
+			merger := NewMerger(fakeForge, fakeVCS)
 			yoloer := NewYoloer(merger)
 
 			// Run yolo command
@@ -71,6 +72,10 @@ func TestYolo(t *testing.T) {
 			}
 			if tt.wantDraft && fakeForge.WasMarkedReady != tt.wantDraft {
 				t.Errorf("marked ready = %v, want %v", fakeForge.WasMarkedReady, tt.wantDraft)
+			}
+
+			if fakeVCS.DiffSummaryCalls != 1 {
+				t.Errorf("diff summary calls = %v, want %v", fakeVCS.DiffSummaryCalls, 1)
 			}
 		})
 	}

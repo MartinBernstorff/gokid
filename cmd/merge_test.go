@@ -6,10 +6,6 @@ import (
 	"testing"
 )
 
-type fakeShell struct{}
-
-func (f *fakeShell) Run(cmd string) error { return nil }
-
 func TestMerge(t *testing.T) {
 	tests := []struct {
 		name             string
@@ -83,6 +79,10 @@ func TestMerge(t *testing.T) {
 
 			if fakeVCS.TrunkSynced != tt.wantSyncCalled {
 				t.Errorf("sync trunk called = %v, want %v", fakeVCS.TrunkSynced, tt.wantSyncCalled)
+			}
+
+			if fakeVCS.DiffSummaryCalls != 1 {
+				t.Errorf("diff summary calls = %v, want %v", fakeVCS.DiffSummaryCalls, 1)
 			}
 		})
 	}
