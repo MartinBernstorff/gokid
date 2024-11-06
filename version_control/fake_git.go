@@ -124,7 +124,7 @@ func (g *FakeGit) SyncTrunk(defaultBranch string) error {
 	return nil
 }
 
-func (g *FakeGit) ShowDiffSummary() error {
+func (g *FakeGit) ShowDiffSummary(branch string) error {
 	g.DiffSummaryCalls += 1
 	return nil
 }

@@ -26,7 +26,7 @@ func NewMerger(f forge.Forge, v version_control.VCS) *Merger {
 }
 
 func (m *Merger) merge(preMergeCommand string, autoMerge bool, forceMerge bool, draft bool, mergeStrategy string, trunk string, syncTrunkOnMerge bool) {
-	m.vcs.ShowDiffSummary()
+	m.vcs.ShowDiffSummary(trunk)
 
 	if syncTrunkOnMerge {
 		fmt.Println("Merging trunk into current branch, trunk is: ", trunk)
