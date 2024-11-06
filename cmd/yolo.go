@@ -23,7 +23,9 @@ func NewYoloer(merger *Merger) *Yoloer {
 	}
 }
 
-func (y *Yoloer) yolo(draft bool, mergeStrategy string, confirmed bool, preYoloCommand string) {
+func (y *Yoloer) yolo(draft bool, mergeStrategy string, confirmed bool, preYoloCommand string, trunk string) {
+	y.merger.vcs.ShowDiffSummary(trunk)
+
 	if !confirmed {
 		fmt.Println("Aborted.")
 		return
@@ -43,7 +45,6 @@ func init() {
 			vcs := version_control.NewGit(shell)
 
 			fmt.Println("🚀 YOLO mode enabled - using admin on forge to override branch protection!")
-			vcs.ShowDiffSummary(cfg.Trunk)
 
 			if cfg.PreYoloCommand != "" {
 				fmt.Println("🦺 Will run the following command before merging: ", cfg.PreYoloCommand)
@@ -57,7 +58,7 @@ func init() {
 			merger := NewMerger(forge.NewGitHub(shell), vcs)
 
 			yoloer := NewYoloer(merger)
-			yoloer.yolo(cfg.Draft, cfg.MergeStrategy, confirm == "y", cfg.PreYoloCommand)
+			yoloer.yolo(cfg.Draft, cfg.MergeStrategy, confirm == "y", cfg.PreYoloCommand, cfg.Trunk)
 		},
 	})
 }
