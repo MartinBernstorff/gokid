@@ -24,8 +24,6 @@ func NewYoloer(merger *Merger) *Yoloer {
 }
 
 func (y *Yoloer) yolo(draft bool, mergeStrategy string, confirmed bool, preYoloCommand string, trunk string) {
-	y.merger.vcs.ShowDiffSummary(trunk)
-
 	if !confirmed {
 		fmt.Println("Aborted.")
 		return
