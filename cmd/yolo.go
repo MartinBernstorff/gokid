@@ -23,7 +23,7 @@ func NewYoloer(merger *Merger) *Yoloer {
 	}
 }
 
-func (y *Yoloer) yolo(draft bool, mergeStrategy string, confirmed bool, preYoloCommand string, trunk string) {
+func (y *Yoloer) yolo(draft bool, mergeStrategy string, confirmed bool, preYoloCommand string) {
 	if !confirmed {
 		fmt.Println("Aborted.")
 		return
@@ -55,7 +55,7 @@ func init() {
 			merger := NewMerger(forge.NewGitHub(shell), vcs)
 
 			yoloer := NewYoloer(merger)
-			yoloer.yolo(cfg.Draft, cfg.MergeStrategy, confirm == "y", cfg.PreYoloCommand, cfg.Trunk)
+			yoloer.yolo(cfg.Draft, cfg.MergeStrategy, confirm == "y", cfg.PreYoloCommand)
 		},
 	})
 }
