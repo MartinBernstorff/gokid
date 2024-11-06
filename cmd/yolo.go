@@ -45,7 +45,6 @@ func init() {
 			vcs := version_control.NewGit(shell)
 
 			fmt.Println("🚀 YOLO mode enabled - using admin on forge to override branch protection!")
-
 			if cfg.PreYoloCommand != "" {
 				fmt.Println("🦺 Will run the following command before merging: ", cfg.PreYoloCommand)
 			} else {
