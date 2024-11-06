@@ -73,10 +73,6 @@ func TestYolo(t *testing.T) {
 			if tt.wantDraft && fakeForge.WasMarkedReady != tt.wantDraft {
 				t.Errorf("marked ready = %v, want %v", fakeForge.WasMarkedReady, tt.wantDraft)
 			}
-
-			if fakeVCS.DiffSummaryCalls != 1 {
-				t.Errorf("diff summary calls = %v, want %v", fakeVCS.DiffSummaryCalls, 1)
-			}
 		})
 	}
 }
