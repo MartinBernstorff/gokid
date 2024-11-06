@@ -39,7 +39,12 @@ func init() {
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg := config.Load(config.DefaultFileName)
 
+			shell := shell.New()
+			vcs := version_control.NewGit(shell)
+
 			fmt.Println("🚀 YOLO mode enabled - using admin on forge to override branch protection!")
+			vcs.ShowDiffSummary(cfg.Trunk)
+
 			if cfg.PreYoloCommand != "" {
 				fmt.Println("🦺 Will run the following command before merging: ", cfg.PreYoloCommand)
 			} else {
@@ -49,8 +54,7 @@ func init() {
 			var confirm string
 			fmt.Scanln(&confirm)
 
-			shell := shell.New()
-			merger := NewMerger(forge.NewGitHub(shell), version_control.NewGit(shell))
+			merger := NewMerger(forge.NewGitHub(shell), vcs)
 
 			yoloer := NewYoloer(merger)
 			yoloer.yolo(cfg.Draft, cfg.MergeStrategy, confirm == "y", cfg.PreYoloCommand)

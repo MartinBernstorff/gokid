@@ -84,6 +84,11 @@ func NewGit(s shell.Shell) *Git {
 	return g
 }
 
+func (g *Git) ShowDiffSummary(branch string) error {
+	g.shell.Run(fmt.Sprintf("git diff --stat --name-only %s", branch))
+	return nil
+}
+
 func (g *Git) isClean() bool {
 	cmd := exec.Command("git", "status", "--porcelain")
 	output, err := cmd.Output()
