@@ -85,7 +85,7 @@ func NewGit(s shell.Shell) *Git {
 }
 
 func (g *Git) ShowDiffSummary(branch string) error {
-	g.shell.Run(fmt.Sprintf("git diff --stat --name-only %s", branch))
+	g.shell.Run(fmt.Sprintf("git diff --stat %s", branch))
 	return nil
 }
 

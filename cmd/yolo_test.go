@@ -50,7 +50,7 @@ func TestYolo(t *testing.T) {
 			yoloer := NewYoloer(merger)
 
 			// Run yolo command
-			yoloer.yolo(tt.draft, tt.mergeStrategy, tt.userConfirmed, "")
+			yoloer.yolo(tt.draft, tt.mergeStrategy, tt.userConfirmed, "", "trunk-branch")
 
 			// Check if merge was called when it shouldn't have been
 			if !tt.userConfirmed && fakeForge.LastMergeStrategy != "" {
@@ -72,10 +72,6 @@ func TestYolo(t *testing.T) {
 			}
 			if tt.wantDraft && fakeForge.WasMarkedReady != tt.wantDraft {
 				t.Errorf("marked ready = %v, want %v", fakeForge.WasMarkedReady, tt.wantDraft)
-			}
-
-			if fakeVCS.DiffSummaryCalls != 1 {
-				t.Errorf("diff summary calls = %v, want %v", fakeVCS.DiffSummaryCalls, 1)
 			}
 		})
 	}

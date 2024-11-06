@@ -17,6 +17,20 @@
 				"kind": "test",
 				"isDefault": true
 			},
+		},
+		{
+			"type": "shell",
+			"label": "merge",
+			"command": "go run main.go m",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": true
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
 		}
 	]
 }
