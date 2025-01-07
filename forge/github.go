@@ -28,7 +28,7 @@ func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) er
 }
 
 func (g *GitHubForge) ViewPullRequest() error {
-	return g.shell.Run("gh pr view -w")
+	return g.shell.Run("gh pr view --web || gh repo view --web")
 }
 
 func (g *GitHubForge) MarkPullRequestReady() error {
