@@ -18,7 +18,7 @@ func New() Shell {
 
 func (s *RealShell) Run(cmd string) error {
 	// Figure out the calling shell
-	fmt.Print(cmd)
+	fmt.Printf(cmd)
 	shell := os.Getenv("SHELL")
 	command := exec.Command(shell, "-c", cmd)
 
