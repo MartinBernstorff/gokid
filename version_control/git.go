@@ -50,31 +50,43 @@ type Stasher interface {
 }
 
 // Stash handles git stash operations
-type Stash struct{}
+type Stash struct {
+	shell shell.Shell
+}
 
-func NewStash() *Stash {
-	return &Stash{}
+func NewStash(s shell.Shell) *Stash {
+	return &Stash{
+		shell: s,
+	}
 }
 
 func (s *Stash) Save() {
-	shell.Run("git stash")
+	s.shell.Run("git stash")
 }
 
 func (s *Stash) Pop() {
-	shell.Run("git stash pop")
+	s.shell.Run("git stash pop")
 }
 
 // Git implements the VCS interface
 type Git struct {
 	BaseGit
+	shell shell.Shell
 }
 
 // NewGit creates a new Git VCS instance
-func NewGit() *Git {
-	g := &Git{}
+func NewGit(s shell.Shell) *Git {
+	g := &Git{
+		shell: s,
+	}
 	g.ops = g
-	g.stash = NewStash()
+	g.stash = NewStash(s)
 	return g
+}
+
+func (g *Git) ShowDiffSummary(branch string) error {
+	g.shell.Run(fmt.Sprintf("git diff --stat %s", branch))
+	return nil
 }
 
 func (g *Git) isClean() bool {
@@ -84,17 +96,23 @@ func (g *Git) isClean() bool {
 }
 
 func (g *Git) fetch(remote string) {
-	shell.Run(fmt.Sprintf("git fetch %s", remote))
+	g.shell.Run(fmt.Sprintf("git fetch %s", remote))
 }
 
 func (g *Git) branchFromOrigin(branchName string, defaultBranch string) {
-	shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchName, defaultBranch))
+	g.shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchName, defaultBranch))
 }
 
 func (g *Git) emptyCommit(message string) {
-	shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
+	g.shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
 }
 
 func (g *Git) push() {
-	shell.Run("git push")
+	g.shell.Run("git push")
+}
+
+func (g *Git) SyncTrunk(defaultBranch string) error {
+	g.shell.Run(fmt.Sprintf("git fetch origin %s", defaultBranch))
+	g.shell.Run(fmt.Sprintf("git merge origin/%s", defaultBranch))
+	return nil
 }

@@ -21,11 +21,11 @@ brew update && brew install martinbernstorff/homebrew-tap/gk
 gk --help
 ```
 
-## Configuration
-Write a test config to the current directory:
+## Setup
+Write the default config to the current directory, and you are ready to go! 🚀
 
 ```bash
-gk config --write
+gk init
 ```
 
-Gokid looks for configuration files in the current directory, or any parent directory.
+Gokid looks for configuration files in the current directory, or any parent directory. It uses the values from the first config it encounters.

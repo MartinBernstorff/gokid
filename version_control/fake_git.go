@@ -35,19 +35,23 @@ type FakeGit struct {
 	BaseGit
 
 	// Repository state
-	currentBranch string
-	originBranch  string
-	isDirty       bool
-	commits       []Commit
-	lastPush      Commit
-	isFetched     bool
+	currentBranch    string
+	originBranch     string
+	isDirty          bool
+	commits          []Commit
+	lastPush         Commit
+	isFetched        bool
+	TrunkSynced      bool
+	DiffSummaryCalls int
 }
 
 func NewFakeGit() *FakeGit {
 	g := &FakeGit{
-		originBranch: "main", // default origin branch
-		commits:      make([]Commit, 0),
-		isFetched:    false,
+		originBranch:     "main", // default origin branch
+		commits:          make([]Commit, 0),
+		isFetched:        false,
+		TrunkSynced:      false,
+		DiffSummaryCalls: 0,
 	}
 	g.ops = g
 	g.stash = NewFakeStash(g) // Pass git reference to stash
@@ -113,4 +117,14 @@ func (g *FakeGit) AddCommit(title string, empty bool) {
 
 func (g *FakeGit) remoteIsUpdated() bool {
 	return g.lastPush.Title == g.commits[len(g.commits)-1].Title
+}
+
+func (g *FakeGit) SyncTrunk(defaultBranch string) error {
+	g.TrunkSynced = true
+	return nil
+}
+
+func (g *FakeGit) ShowDiffSummary(branch string) error {
+	g.DiffSummaryCalls += 1
+	return nil
 }

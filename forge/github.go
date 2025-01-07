@@ -5,10 +5,14 @@ import (
 	"gokid/shell"
 )
 
-type GitHubForge struct{}
+type GitHubForge struct {
+	shell shell.Shell
+}
 
-func NewGitHub() *GitHubForge {
-	return &GitHubForge{}
+func NewGitHub(s shell.Shell) *GitHubForge {
+	return &GitHubForge{
+		shell: s,
+	}
 }
 
 func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) error {
@@ -20,15 +24,15 @@ func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) er
 
 	cmd += fmt.Sprintf(" --title \"%s\" --body \"\"", issue.Title.String())
 
-	return shell.Run(cmd)
+	return g.shell.Run(cmd)
 }
 
 func (g *GitHubForge) ViewPullRequest() error {
-	return shell.Run("gh pr view -w")
+	return g.shell.Run("gh pr view -w")
 }
 
 func (g *GitHubForge) MarkPullRequestReady() error {
-	return shell.Run("gh pr ready")
+	return g.shell.Run("gh pr ready")
 }
 
 func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMerge bool) error {
@@ -39,5 +43,6 @@ func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMer
 	if forceMerge {
 		cmd += " --admin"
 	}
-	return shell.Run(cmd)
+
+	return g.shell.Run(cmd)
 }
