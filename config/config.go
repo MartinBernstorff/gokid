@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"gokid/shell"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -90,16 +91,35 @@ func Load(configName string) GokidConfig {
 		fmt.Println("No config file found")
 	}
 
+	shell := shell.New()
+
+	// Helper function to run shell command if it matches the pattern
+	replaceWithShellCommand := func(value string) string {
+		if strings.HasPrefix(value, "$(") && strings.HasSuffix(value, ")") {
+			cmd := value[2 : len(value)-1]
+			val, err := shell.RunWithOutput(cmd)
+			if err != nil {
+				panic(err)
+			}
+			return strings.TrimSpace(val)
+		}
+		return value
+	}
+
+	trunk := replaceWithShellCommand(viper.GetString("trunk"))
+	branchPrefix := replaceWithShellCommand(viper.GetString("branchprefix"))
+	branchSuffix := replaceWithShellCommand(viper.GetString("branchsuffix"))
+
 	return NewConfig(
 		viper.GetBool("automerge"),
-		viper.GetString("branchprefix"),
-		viper.GetString("branchsuffix"),
+		branchPrefix,
+		branchSuffix,
 		viper.GetBool("draft"),
 		viper.GetBool("forcemerge"),
 		viper.GetString("mergestrategy"),
 		viper.GetString("premergecommand"),
 		viper.GetString("preyolocommand"),
-		viper.GetString("trunk"),
+		trunk,
 		viper.GetBool("yolo"),
 		viper.GetBool("syncTrunkOnMerge"),
 	)
@@ -149,6 +169,21 @@ func findConfig(configName string) string {
 			break
 		}
 		dir = parent
+	}
+
+	// If no config file is found, look in ~/.config/gokid/
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println("Error getting home directory:", err)
+		return ""
+	}
+
+	configDir := filepath.Join(homeDir, ".config", "gokid")
+	for _, ext := range configExtensions {
+		configPath := filepath.Join(configDir, configName+ext)
+		if _, err := os.Stat(configPath); err == nil {
+			return configPath
+		}
 	}
 
 	return ""
