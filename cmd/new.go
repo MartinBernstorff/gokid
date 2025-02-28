@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func changeInput() string {
+func changeNamePrompt() string {
 	validate := func(input string) error {
 		if len(input) < 1 {
 			return errors.New("invalid change")
@@ -39,20 +39,32 @@ func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versio
 
 	return f.CreatePullRequest(forge.Issue{Title: parsedTitle}, cfg.Trunk, cfg.Draft)
 }
-
 func init() {
-	rootCmd.AddCommand(&cobra.Command{
-		Use:   "new",
+	newCmd := &cobra.Command{
+		Use:   "new [title]",
 		Short: "Create a new change",
 		Long:  "",
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg := config.Load(config.DefaultFileName)
 			shell := shell.New()
-			if err := newChange(forge.NewGitHub(shell), &cfg, changeInput(), version_control.NewGit(shell)); err != nil {
+
+			var title string
+			switch len(args) {
+			case 0:
+				title = changeNamePrompt()
+			case 1:
+				title = args[0]
+			default:
+				fmt.Fprintf(os.Stderr, "Error: Too many arguments\n")
+				os.Exit(1)
+			}
+
+			if err := newChange(forge.NewGitHub(shell), &cfg, title, version_control.NewGit(shell)); err != nil {
 				fmt.Fprintf(os.Stderr, "Error creating change: %v\n", err)
 				os.Exit(1)
 			}
 		},
 		Aliases: []string{"n"},
-	})
+	}
+	rootCmd.AddCommand(newCmd)
 }
