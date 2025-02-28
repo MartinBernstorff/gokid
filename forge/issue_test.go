@@ -22,11 +22,6 @@ func TestParseIssueTitle(t *testing.T) {
 			expected: IssueTitle{Prefix: "", Content: "Application crashes on startup"},
 		},
 		{
-			name:     "Prefix with parenthesis",
-			input:    "FEATURE(UI): Add dark mode",
-			expected: IssueTitle{Prefix: "FEATURE", Content: "Add dark mode"},
-		},
-		{
 			name:     "Multiple colons in description",
 			input:    "TEST: Verify login: success and failure cases",
 			expected: IssueTitle{Prefix: "TEST", Content: "Verify login: success and failure cases"},
@@ -40,6 +35,11 @@ func TestParseIssueTitle(t *testing.T) {
 			name:     "Only prefix, no description",
 			input:    "TODO:",
 			expected: IssueTitle{Prefix: "TODO", Content: ""},
+		},
+		{
+			name:     "Monorepo-style",
+			input:    "fix(component): context",
+			expected: IssueTitle{Prefix: "fix(component)", Content: "context"},
 		},
 	}
 

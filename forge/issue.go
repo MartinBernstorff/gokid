@@ -27,7 +27,7 @@ type IssueTitle struct {
 
 func ParseIssueTitle(issueTitle string) IssueTitle {
 	// Get all string between start and first ":" or "("
-	prefixMatch := regexp.MustCompile(`^(.*?)[\(:]`).FindStringSubmatch(issueTitle)
+	prefixMatch := regexp.MustCompile(`^(.*?)[:]`).FindStringSubmatch(issueTitle)
 
 	if len(prefixMatch) < 2 {
 		// No prefix found, return without prefix
