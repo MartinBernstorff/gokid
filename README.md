@@ -31,4 +31,5 @@ gk init
 Gokid looks for configuration files in the current directory, or any parent directory. It uses the values from the first config it encounters.
 
 ## Roadmap
+* Support creating a PR from an existing branch. Prompt for confirmation.
 * Add rollback in case of failure. Architecture is likely a command-pattern.
