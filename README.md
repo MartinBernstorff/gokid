@@ -31,10 +31,12 @@ gk init
 Gokid looks for configuration files in the current directory, or any parent directory. It uses the values from the first config it encounters.
 
 ## Roadmap
-p1: Make branch name creation more robust
+
+* p1: Make branch name creation more robust
     * Perhaps Git has a regex to validate them?
     * Example failure: `migrate-telecom-cardinality-to-0..1`
-p3: Support creating a PR from an existing branch. Prompt for confirmation.
-p2: Plan-execute-rollback. 
+* Error if un-quoted "$(some_command_here)" in config
+* p3: Support creating a PR from an existing branch. Prompt for confirmation.
+* p2: Plan-execute-rollback. 
     * Architecture is likely a command-pattern.
     * Each command can have flightplan-checks. E.g. for "create branch" that the branch does not already exist. This means we can fail gracefully before we have made any state-changes.
