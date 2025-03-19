@@ -99,11 +99,12 @@ func NewBranchName(name string) (BranchName, error) {
 		"[", "",
 	)
 
-	err := ValidateBranch(replacer.Replace(name))
+	replacedName := replacer.Replace(name)
+	err := ValidateBranch(replacedName)
 	if err != nil {
 		return "", err
 	}
-	return BranchName(name), nil
+	return BranchName(replacedName), nil
 }
 
 func (b BranchName) String() string {
