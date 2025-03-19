@@ -1,5 +1,11 @@
 package versioncontrol
 
+import (
+	"fmt"
+
+	"github.com/samber/lo"
+)
+
 // FakeStash maintains a simple stash counter and manages dirty state
 type FakeStash struct {
 	stashCount int
@@ -39,6 +45,7 @@ type FakeGit struct {
 	// Repository state
 	currentBranch    string
 	originBranch     string
+	branches         []string
 	isDirty          bool
 	commits          []Commit
 	lastPush         Commit
@@ -60,22 +67,44 @@ func NewFakeGit() *FakeGit {
 	return g
 }
 
-func (g *FakeGit) BranchExists(_ string) (bool, error) {
-	// p2: Improve the fake implementation; add a list of all branches, which we can then test here
-	return g.currentBranch != "", nil
+func (g *FakeGit) BranchExists(branchName string) (bool, error) {
+	for _, branch := range g.branches {
+		if branch == branchName {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
-func (g *FakeGit) DeleteBranch(_ string) error {
+func (g *FakeGit) DeleteBranch(branchName string) error {
+	filteredBranches := lo.Filter(g.branches, func(branch string, _ int) bool {
+		return branch != branchName
+	})
+
+	if len(filteredBranches) == len(g.branches) {
+		return fmt.Errorf("branch %s not found", branchName)
+	}
+
+	g.branches = filteredBranches
 	g.currentBranch = ""
 	return nil
 }
 
-// Helper methods to inspect repository state
-func (g *FakeGit) CurrentBranch() string {
-	return g.currentBranch
+func (g *FakeGit) CurrentBranch() (string, error) {
+	return g.currentBranch, nil
 }
 
 func (g *FakeGit) SwitchBranch(branchName string) error {
+	exists, err := g.BranchExists(branchName)
+
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		return fmt.Errorf("branch %s not found", branchName)
+	}
+
 	g.currentBranch = branchName
 	return nil
 }
@@ -111,8 +140,10 @@ func (g *FakeGit) Fetch(_ string) error {
 }
 
 func (g *FakeGit) BranchFromOrigin(branchName string, origin string) error {
+	g.branches = append(g.branches, branchName)
 	g.currentBranch = branchName
 	g.originBranch = origin
+
 	return nil
 }
 

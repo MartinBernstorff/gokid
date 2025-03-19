@@ -14,6 +14,7 @@ type gitOperations interface {
 	BranchExists(branchName string) (bool, error)
 	DeleteBranch(branchName string) error
 	SwitchBranch(branchName string) error
+	CurrentBranch() (string, error)
 	EmptyCommit(message string) error
 	Push() error
 }
@@ -23,41 +24,12 @@ type BaseGit struct {
 	Stash Stasher
 }
 
-type Stasher interface {
-	Save() error
-	Pop() error
-}
-
-// Stash handles git stash operations
-type Stash struct {
-	shell shell.Shell
-}
-
-func NewStash(s shell.Shell) *Stash {
-	return &Stash{
-		shell: s,
-	}
-}
-
-func (s *Stash) Save() error {
-	_, err := s.shell.Run("git stash")
-	return err
-}
-
-func (s *Stash) Pop() error {
-	_, err := s.shell.Run("git stash pop")
-	return err
-}
-
-// Git implements the VCS interface
 type Git struct {
 	BaseGit
 	shell shell.Shell
 }
 
-// NewGit creates a new Git VCS instance
 func NewGit(s shell.Shell) *Git {
-	// p2: Check shell is in a Git repository
 	g := &Git{
 		shell: s,
 	}
@@ -80,6 +52,15 @@ func (g *Git) BranchExists(branchName string) (bool, error) {
 	}
 
 	return strings.TrimSpace(string(output)) != "", err
+}
+
+func (g *Git) CurrentBranch() (string, error) {
+	cmd := exec.Command("git", "branch", "--show-current")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(output)), nil
 }
 
 func (g *Git) SwitchBranch(branchName string) error {

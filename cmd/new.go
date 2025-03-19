@@ -31,14 +31,14 @@ func changeNamePrompt() string {
 	return result
 }
 
-func newChange(cfg *config.GokidConfig, inputTitle string, versionControl versioncontrol.VCS) error {
+func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, versionControl versioncontrol.VCS) error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 
 	executables := []commands.Command{
-		commands.NewFetchOriginCommand(),
-		commands.NewCreateBranchCommand(parsedTitle, cfg.Trunk),
-		commands.NewEmptyCommitCommand(),
-		commands.NewPushCommand(),
+		commands.NewFetchOriginCommand(git),
+		commands.NewCreateBranchCommand(git, parsedTitle, cfg.Trunk),
+		commands.NewEmptyCommitCommand(git),
+		commands.NewPushCommand(git),
 	}
 
 	clean, err := versionControl.IsClean()
@@ -48,14 +48,15 @@ func newChange(cfg *config.GokidConfig, inputTitle string, versionControl versio
 
 	if !clean {
 		// Add to the stash first
-		executables = append([]commands.Command{commands.NewStashCommand()}, executables...)
+		executables = append([]commands.Command{commands.NewStashCommand(git)}, executables...)
 
 		// Remember to pop the stash at the end
-		executables = append(executables, commands.NewPopStashCommand())
+		executables = append(executables, commands.NewPopStashCommand(git))
 	}
 
 	// Create the PR
 	executables = append(executables, commands.NewPullRequestCommand(
+		github,
 		parsedTitle,
 		cfg.Trunk,
 		cfg.Draft,
@@ -88,7 +89,9 @@ func init() {
 				os.Exit(1)
 			}
 
-			if err := newChange(&cfg, title, versioncontrol.NewGit(shell)); err != nil {
+			git := versioncontrol.NewGit(shell)
+			github := forge.NewGitHub(shell)
+			if err := newChange(*git, *github, &cfg, title, versioncontrol.NewGit(shell)); err != nil {
 				fmt.Fprintf(os.Stderr, "Error creating change: %v\n", err)
 				os.Exit(1)
 			}
