@@ -13,35 +13,33 @@ import (
 )
 
 type GokidConfig struct {
-	AutoMerge        bool
-	BranchPrefix     string
-	BranchSuffix     string
-	Draft            bool
-	ForceMerge       bool
-	MergeStrategy    string
-	PreMergeCommand  string
-	PreYoloCommand   string
-	Trunk            string
-	Yolo             bool
-	SyncTrunkOnMerge bool
+	AutoMerge       bool
+	BranchPrefix    string
+	BranchSuffix    string
+	Draft           bool
+	ForceMerge      bool
+	MergeStrategy   string
+	PreMergeCommand string
+	PreYoloCommand  string
+	Trunk           string
+	Yolo            bool
 }
 
-func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, preYoloCommand string, trunk string, yolo bool, syncTrunkOnMerge bool) GokidConfig {
+func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, preYoloCommand string, trunk string, yolo bool) GokidConfig {
 	validateMergeStrategy(mergeStrategy)
 	validateForceMerge(forceMerge, preMergeCommand, autoMerge, yolo)
 
 	return GokidConfig{
-		AutoMerge:        autoMerge,
-		BranchPrefix:     branchPrefix,
-		BranchSuffix:     branchSuffix,
-		Draft:            draft,
-		ForceMerge:       forceMerge,
-		MergeStrategy:    mergeStrategy,
-		PreMergeCommand:  preMergeCommand,
-		PreYoloCommand:   preYoloCommand,
-		Trunk:            trunk,
-		Yolo:             yolo,
-		SyncTrunkOnMerge: syncTrunkOnMerge,
+		AutoMerge:       autoMerge,
+		BranchPrefix:    branchPrefix,
+		BranchSuffix:    branchSuffix,
+		Draft:           draft,
+		ForceMerge:      forceMerge,
+		MergeStrategy:   mergeStrategy,
+		PreMergeCommand: preMergeCommand,
+		PreYoloCommand:  preYoloCommand,
+		Trunk:           trunk,
+		Yolo:            yolo,
 	}
 }
 
@@ -57,7 +55,6 @@ func Defaults() GokidConfig {
 		"",      // Pre yolo command
 		"main",  // Trunk
 		false,   // Yolo
-		false,   // SyncTrunkOnMerge
 	)
 }
 
@@ -121,7 +118,6 @@ func Load(configName string) GokidConfig {
 		viper.GetString("preyolocommand"),
 		trunk,
 		viper.GetBool("yolo"),
-		viper.GetBool("syncTrunkOnMerge"),
 	)
 }
 

@@ -7,7 +7,7 @@ import (
 	"gokid/config"
 	"gokid/forge"
 	"gokid/shell"
-	"gokid/version_control"
+	"gokid/versioncontrol"
 	"os"
 
 	"github.com/manifoldco/promptui"
@@ -31,7 +31,7 @@ func changeNamePrompt() string {
 	return result
 }
 
-func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versionControl version_control.VCS) error {
+func newChange(cfg *config.GokidConfig, inputTitle string, versionControl versioncontrol.VCS) error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 
 	executables := []commands.Command{
@@ -73,7 +73,7 @@ func init() {
 		Use:   "new [title]",
 		Short: "Create a new change",
 		Long:  "",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, args []string) {
 			cfg := config.Load(config.DefaultFileName)
 			shell := shell.New()
 
@@ -88,7 +88,7 @@ func init() {
 				os.Exit(1)
 			}
 
-			if err := newChange(forge.NewGitHub(shell), &cfg, title, version_control.NewGit(shell)); err != nil {
+			if err := newChange(&cfg, title, versioncontrol.NewGit(shell)); err != nil {
 				fmt.Fprintf(os.Stderr, "Error creating change: %v\n", err)
 				os.Exit(1)
 			}

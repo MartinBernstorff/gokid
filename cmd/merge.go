@@ -8,39 +8,34 @@ import (
 	"gokid/config"
 	"gokid/forge"
 	"gokid/shell"
-	"gokid/version_control"
+	"gokid/versioncontrol"
 
 	"github.com/spf13/cobra"
 )
 
 type Merger struct {
 	forge forge.Forge
-	vcs   version_control.VCS
+	vcs   versioncontrol.VCS
 }
 
-func NewMerger(f forge.Forge, v version_control.VCS) *Merger {
+func NewMerger(f forge.Forge, v versioncontrol.VCS) *Merger {
 	return &Merger{
 		forge: f,
 		vcs:   v,
 	}
 }
 
-func (m *Merger) merge(preMergeCommand string, autoMerge bool, forceMerge bool, draft bool, mergeStrategy string, trunk string, syncTrunkOnMerge bool) {
-	m.vcs.ShowDiffSummary(trunk)
-
-	if syncTrunkOnMerge {
-		fmt.Println("Merging trunk into current branch, trunk is: ", trunk)
-		if err := m.vcs.SyncTrunk(trunk); err != nil {
-			fmt.Println("Error syncing trunk:", err)
-			return
-		}
-	}
-
+func (m *Merger) merge(preMergeCommand string, autoMerge bool, forceMerge bool, draft bool, mergeStrategy string) {
 	// Execute pre-merge command if set
 	if preMergeCommand != "" {
 		fmt.Println("Running pre-merge command:", preMergeCommand)
 		shell := shell.New()
-		shell.Run(preMergeCommand)
+		_, err := shell.Run(preMergeCommand)
+		if err != nil {
+			fmt.Println("Error running pre-merge command:", err)
+			return
+		}
+
 		fmt.Println("Pre-merge command completed")
 	}
 
@@ -62,12 +57,12 @@ func init() {
 		Use:   "merge",
 		Short: "Merge a change",
 		Long:  "",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			cfg := config.Load(config.DefaultFileName)
 			shell := shell.New()
-			git := version_control.NewGit(shell)
+			git := versioncontrol.NewGit(shell)
 			merger := NewMerger(forge.NewGitHub(shell), git)
-			merger.merge(cfg.PreMergeCommand, cfg.AutoMerge, cfg.ForceMerge, cfg.Draft, cfg.MergeStrategy, cfg.Trunk, cfg.SyncTrunkOnMerge)
+			merger.merge(cfg.PreMergeCommand, cfg.AutoMerge, cfg.ForceMerge, cfg.Draft, cfg.MergeStrategy)
 		},
 		Aliases: []string{"m"},
 	})

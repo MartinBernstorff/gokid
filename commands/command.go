@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gokid/forge"
 	"gokid/shell"
-	"gokid/version_control"
+	"gokid/versioncontrol"
 )
 
 type Command struct {
@@ -22,9 +22,8 @@ func NewFetchOriginCommand() Command {
 			// p2: Hacky implementation, should this be a "CreateFetchOriginCommand" which takes the shell as an argument?
 			// If we ever need to support more than one forge/vcs, that's definitely the case.
 			// p3: Perhaps the commands should be the only thing that's exported, not the methods? If so, the commands need to be in the same package as the methods.
-			git := version_control.NewGit(shell.New())
-			git.Ops.Fetch("origin")
-			return nil
+			git := versioncontrol.NewGit(shell.New())
+			return git.Ops.Fetch("origin")
 		},
 		revert: nil,
 	}
@@ -38,7 +37,7 @@ func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) C
 		description: fmt.Sprintf("Create branch %s", newBranchName),
 		assumptions: []func() error{
 			func() error {
-				git := version_control.NewGit(shell.New())
+				git := versioncontrol.NewGit(shell.New())
 				exists, err := git.Ops.BranchExists(newBranchName.String())
 				if err != nil {
 					return err
@@ -51,15 +50,16 @@ func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) C
 			},
 		},
 		action: func() error {
-			git := version_control.NewGit(shell.New())
-			git.Ops.BranchFromOrigin(newBranchName.String(), defaultBranch)
-			return nil
+			git := versioncontrol.NewGit(shell.New())
+			return git.Ops.BranchFromOrigin(newBranchName.String(), defaultBranch)
 		},
 		revert: func() error {
-			git := version_control.NewGit(shell.New())
-			git.Ops.SwitchBranch(defaultBranch)
-			git.Ops.DeleteBranch(newBranchName.String())
-			return nil
+			git := versioncontrol.NewGit(shell.New())
+			err := git.Ops.SwitchBranch(defaultBranch)
+			if err != nil {
+				return err
+			}
+			return git.Ops.DeleteBranch(newBranchName.String())
 		},
 	}
 }
@@ -69,9 +69,8 @@ func NewEmptyCommitCommand() Command {
 		description: "Create an empty commit",
 		assumptions: []func() error{},
 		action: func() error {
-			git := version_control.NewGit(shell.New())
-			git.Ops.EmptyCommit("Initial commit")
-			return nil
+			git := versioncontrol.NewGit(shell.New())
+			return git.Ops.EmptyCommit("Initial commit")
 		},
 		revert: nil,
 	}
@@ -82,9 +81,8 @@ func NewPushCommand() Command {
 		description: "Push to origin",
 		assumptions: []func() error{},
 		action: func() error {
-			git := version_control.NewGit(shell.New())
-			git.Ops.Push()
-			return nil
+			git := versioncontrol.NewGit(shell.New())
+			return git.Ops.Push()
 		},
 		revert: nil,
 	}
@@ -95,14 +93,12 @@ func NewStashCommand() Command {
 		description: "Stash changes",
 		assumptions: []func() error{},
 		action: func() error {
-			git := version_control.NewGit(shell.New())
-			git.Stash.Save()
-			return nil
+			git := versioncontrol.NewGit(shell.New())
+			return git.Stash.Save()
 		},
 		revert: func() error {
-			git := version_control.NewGit(shell.New())
-			git.Stash.Pop()
-			return nil
+			git := versioncontrol.NewGit(shell.New())
+			return git.Stash.Pop()
 		},
 	}
 }
@@ -112,9 +108,8 @@ func NewPopStashCommand() Command {
 		description: "Pop stash",
 		assumptions: []func() error{},
 		action: func() error {
-			git := version_control.NewGit(shell.New())
-			git.Stash.Pop()
-			return nil
+			git := versioncontrol.NewGit(shell.New())
+			return git.Stash.Pop()
 		},
 		revert: nil,
 	}
@@ -127,8 +122,7 @@ func NewPullRequestCommand(title forge.IssueTitle, trunk string, draft bool) Com
 		description: fmt.Sprintf("Create pull request %s", title),
 		assumptions: []func() error{},
 		action: func() error {
-			f.CreatePullRequest(forge.Issue{Title: title}, trunk, draft)
-			return nil
+			return f.CreatePullRequest(forge.Issue{Title: title}, trunk, draft)
 		},
 		// p2: Close the PR
 		revert: nil,

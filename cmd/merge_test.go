@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"gokid/forge"
-	"gokid/version_control"
+	"gokid/versioncontrol"
 	"testing"
 )
 
@@ -42,23 +42,17 @@ func TestMerge(t *testing.T) {
 			draft:     true,
 			wantReady: true,
 		},
-		{
-			name:             "syncs trunk when configured",
-			syncTrunkOnMerge: true,
-			trunk:            "main",
-			wantSyncCalled:   true,
-		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Setup fake forge and VCS
 			fakeForge := forge.NewFakeForge()
-			fakeVCS := version_control.NewFakeGit()
+			fakeVCS := versioncontrol.NewFakeGit()
 			merger := NewMerger(fakeForge, fakeVCS)
 
 			// Run merge command
-			merger.merge(tt.preMergeCmd, tt.autoMerge, tt.forceMerge, tt.draft, tt.mergeStrategy, tt.trunk, tt.syncTrunkOnMerge)
+			merger.merge(tt.preMergeCmd, tt.autoMerge, tt.forceMerge, tt.draft, tt.mergeStrategy)
 
 			// Verify forge calls
 			if fakeForge.LastMergeStrategy != tt.wantStrategy {
@@ -75,14 +69,6 @@ func TestMerge(t *testing.T) {
 
 			if fakeForge.WasMarkedReady != tt.wantReady {
 				t.Errorf("marked ready = %v, want %v", fakeForge.WasMarkedReady, tt.wantReady)
-			}
-
-			if fakeVCS.TrunkSynced != tt.wantSyncCalled {
-				t.Errorf("sync trunk called = %v, want %v", fakeVCS.TrunkSynced, tt.wantSyncCalled)
-			}
-
-			if fakeVCS.DiffSummaryCalls != 1 {
-				t.Errorf("diff summary calls = %v, want %v", fakeVCS.DiffSummaryCalls, 1)
 			}
 		})
 	}

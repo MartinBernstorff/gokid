@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"gokid/forge"
-	"gokid/version_control"
+	"gokid/versioncontrol"
 	"testing"
 )
 
@@ -45,12 +45,12 @@ func TestYolo(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Setup fake forge and shell
 			fakeForge := forge.NewFakeForge()
-			fakeVCS := version_control.NewFakeGit()
+			fakeVCS := versioncontrol.NewFakeGit()
 			merger := NewMerger(fakeForge, fakeVCS)
 			yoloer := NewYoloer(merger)
 
 			// Run yolo command
-			yoloer.yolo(tt.draft, tt.mergeStrategy, tt.userConfirmed, "", "trunk-branch")
+			yoloer.yolo(tt.draft, tt.mergeStrategy, tt.userConfirmed, "")
 
 			// Check if merge was called when it shouldn't have been
 			if !tt.userConfirmed && fakeForge.LastMergeStrategy != "" {

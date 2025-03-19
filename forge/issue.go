@@ -1,24 +1,9 @@
 package forge
 
 import (
-	"gokid/shell"
 	"regexp"
 	"strings"
 )
-
-type IssueViewer struct {
-	shell shell.Shell
-}
-
-func NewIssueViewer(s shell.Shell) *IssueViewer {
-	return &IssueViewer{
-		shell: s,
-	}
-}
-
-func (iv *IssueViewer) View() {
-	iv.shell.Run("gh pr view -w")
-}
 
 type IssueTitle struct {
 	Prefix  string
