@@ -125,3 +125,13 @@ func NewPullRequestCommand(title forge.IssueTitle, trunk string, draft bool) Com
 		revert: nil,
 	}
 }
+
+func NewFailCommand() Command {
+	return Command{
+		assumptions: []func() error{},
+		action: func() error {
+			return fmt.Errorf("fail")
+		},
+		revert: nil,
+	}
+}
