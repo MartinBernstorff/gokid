@@ -35,7 +35,6 @@ func (s *RealShell) run(cmd string, quiet bool) (string, error) {
 
 	if !quiet {
 		command.Stdin = os.Stdin
-		command.Stdout = os.Stdout
 		command.Stderr = os.Stderr
 	}
 
