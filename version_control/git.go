@@ -7,7 +7,6 @@ import (
 	"strings"
 )
 
-// p2: Change these methods to return errors, rather than panic on error
 type gitOperations interface {
 	IsClean() (bool, error)
 	Fetch(remote string) error
