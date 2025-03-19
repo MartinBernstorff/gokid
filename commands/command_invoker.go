@@ -31,8 +31,8 @@ func Execute(commands []Command) []error {
 			// Revert commands from most recently executed to
 			// least recently
 			for i := range completedCommands {
-				fmt.Println("Reverting: " + completedCommands[i].description)
 				index := (len(completedCommands) - 1) - i
+				fmt.Println("Reverting: " + completedCommands[index].description)
 				completedCommands[index].revert()
 				// p2: if the revert fails, error out
 			}
