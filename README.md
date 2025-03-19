@@ -41,7 +41,7 @@ Gokid looks for configuration files in the current directory, or any parent dire
 
 * p2: Setup golint with reasonable rules
 
-* Error if un-quoted "$(some_command_here)" in config
+* p2: Error if un-quoted "$(some_command_here)" in config
 
 * p3: Support creating a PR from an existing branch. Prompt for confirmation.
 
