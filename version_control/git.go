@@ -87,8 +87,9 @@ func (g *Git) IsClean() (bool, error) {
 	return strings.TrimSpace(string(output)) == "", nil
 }
 
-func (g *Git) Fetch(remote string) {
-	g.shell.Run(fmt.Sprintf("git fetch %s", remote))
+func (g *Git) Fetch(remote string) error {
+	_, err := g.shell.Run(fmt.Sprintf("git fetch %s", remote))
+	return err
 }
 
 func (g *Git) BranchFromOrigin(branchName string, defaultBranch string) error {
@@ -102,8 +103,9 @@ func (g *Git) EmptyCommit(message string) error {
 
 }
 
-func (g *Git) Push() {
-	g.shell.Run("git push")
+func (g *Git) Push() error {
+	_, err := g.shell.Run("git push")
+	return err
 }
 
 func (g *Git) SyncTrunk(defaultBranch string) error {
