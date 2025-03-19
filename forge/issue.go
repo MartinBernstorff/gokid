@@ -57,6 +57,16 @@ func (i IssueTitle) String() string {
 	return i.Prefix + ": " + i.Content
 }
 
+func (i IssueTitle) ToBranchName() (BranchName, error) {
+	return NewBranchName(i.Content)
+}
+
+func ValidateBranch(branch string) error {
+	s := shell.New()
+	_, err := s.Run("git check-ref-format --branch " + branch)
+	return err
+}
+
 type Issue struct {
 	Title IssueTitle
 	Body  string
@@ -69,4 +79,19 @@ type RemoteIssue struct {
 
 type LocalIssue struct {
 	Title IssueTitle
+}
+
+type BranchName string
+
+func NewBranchName(name string) (BranchName, error) {
+	replacer := strings.NewReplacer(" ", "-", ":", "-", "/", "-", "..", "-", "(", "", ")", "")
+	err := ValidateBranch(replacer.Replace(name))
+	if err != nil {
+		return "", err
+	}
+	return BranchName(name), nil
+}
+
+func (b BranchName) String() string {
+	return string(b)
 }
