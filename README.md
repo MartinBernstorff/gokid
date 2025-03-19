@@ -40,6 +40,8 @@ Gokid looks for configuration files in the current directory, or any parent dire
 
 * p3: Support creating a PR from an existing branch. Prompt for confirmation.
 
+* p4: Support deleting the current change
+
 * p2: Plan-execute-rollback. 
     * Print out the plan before executing
     * Print the name of each step as it's executing
