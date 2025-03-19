@@ -33,6 +33,12 @@ func Execute(commands []Command) []error {
 			for i := range completedCommands {
 				index := (len(completedCommands) - 1) - i
 				fmt.Println("Reverting: " + completedCommands[index].description)
+
+				cmd := completedCommands[index]
+				if cmd.revert == nil {
+					continue
+				}
+
 				completedCommands[index].revert()
 				// p2: if the revert fails, error out
 			}
