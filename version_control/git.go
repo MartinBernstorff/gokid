@@ -13,6 +13,7 @@ type gitOperations interface {
 	BranchFromOrigin(branchName string, defaultBranch string) error
 	BranchExists(branchName string) (bool, error)
 	DeleteBranch(branchName string) error
+	SwitchBranch(branchName string) error
 	EmptyCommit(message string) error
 	Push() error
 }
@@ -76,6 +77,11 @@ func (g *Git) BranchExists(branchName string) (bool, error) {
 	}
 
 	return strings.TrimSpace(string(output)) != "", err
+}
+
+func (g *Git) SwitchBranch(branchName string) error {
+	_, err := g.shell.Run(fmt.Sprintf("git checkout %s", branchName))
+	return err
 }
 
 func (g *Git) DeleteBranch(branchName string) error {

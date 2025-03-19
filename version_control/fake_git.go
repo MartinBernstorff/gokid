@@ -73,6 +73,11 @@ func (g *FakeGit) CurrentBranch() string {
 	return g.currentBranch
 }
 
+func (g *FakeGit) SwitchBranch(branchName string) error {
+	g.currentBranch = branchName
+	return nil
+}
+
 func (g *FakeGit) OriginBranch() string {
 	return g.originBranch
 }

@@ -32,14 +32,14 @@ func NewFetchOriginCommand() Command {
 
 func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) Command {
 	// Parse the branch title in the same way as currently
-	branchName := version_control.BranchTitle(issueTitle, "", "")
+	newBranchName := version_control.BranchTitle(issueTitle, "", "")
 
 	return Command{
-		description: fmt.Sprintf("Create branch %s", branchName),
+		description: fmt.Sprintf("Create branch %s", newBranchName),
 		assumptions: []func() error{
 			func() error {
 				git := version_control.NewGit(shell.New())
-				exists, err := git.Ops.BranchExists(branchName)
+				exists, err := git.Ops.BranchExists(newBranchName)
 				if err != nil {
 					return err
 				}
@@ -52,13 +52,13 @@ func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) C
 		},
 		action: func() error {
 			git := version_control.NewGit(shell.New())
-			git.Ops.BranchFromOrigin(branchName, defaultBranch)
+			git.Ops.BranchFromOrigin(newBranchName, defaultBranch)
 			return nil
 		},
-		// p2: Delete the branch
 		revert: func() error {
 			git := version_control.NewGit(shell.New())
-			git.Ops.DeleteBranch(branchName)
+			git.Ops.SwitchBranch(defaultBranch)
+			git.Ops.DeleteBranch(newBranchName)
 			return nil
 		},
 	}
