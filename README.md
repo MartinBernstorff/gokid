@@ -31,12 +31,6 @@ gk init
 Gokid looks for configuration files in the current directory, or any parent directory. It uses the values from the first config it encounters.
 
 ## Roadmap
-
-* p1: Make branch name creation more robust
-    * Perhaps Git has a regex to validate them?
-    * Write a test that does input -> branch name, and validates that the branch name is valid
-    * Example failure: `migrate-telecom-cardinality-to-0..1`
-
 * p1: Ensure shell run returns err if exit code is not 0
 
 * p2: Setup golint with reasonable rules
