@@ -15,6 +15,12 @@ Can then be installed by:
 brew update && brew install martinbernstorff/homebrew-tap/gk
 ```
 
+or by cloning the repository, and:
+
+```bash
+cd gokid && go install .
+```
+
 ## Usage
 
 ```bash
