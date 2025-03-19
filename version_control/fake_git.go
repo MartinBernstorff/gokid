@@ -54,7 +54,7 @@ func NewFakeGit() *FakeGit {
 		DiffSummaryCalls: 0,
 	}
 	g.Ops = g
-	g.stash = NewFakeStash(g) // Pass git reference to stash
+	g.Stash = NewFakeStash(g) // Pass git reference to stash
 	return g
 }
 
@@ -77,7 +77,7 @@ func (g *FakeGit) IsDirty() bool {
 }
 
 func (g *FakeGit) StashCount() int {
-	return g.stash.(*FakeStash).stashCount
+	return g.Stash.(*FakeStash).stashCount
 }
 
 func (g *FakeGit) Commits() []Commit {

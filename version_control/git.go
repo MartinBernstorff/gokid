@@ -21,14 +21,14 @@ type gitOperations interface {
 // BaseGit implements common git functionality
 type BaseGit struct {
 	Ops   gitOperations
-	stash Stasher
+	Stash Stasher
 }
 
 // NewChange implements VCS interface
 func (g *BaseGit) NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error {
 	needsMigration := migrateChanges && !g.Ops.IsClean()
 	if needsMigration {
-		g.stash.Save()
+		g.Stash.Save()
 	}
 
 	branchTitle := BranchTitle(issue.Title, branchPrefix, branchSuffix)
@@ -36,7 +36,7 @@ func (g *BaseGit) NewChange(issue forge.Issue, defaultBranch string, migrateChan
 	g.Ops.BranchFromOrigin(branchTitle, defaultBranch)
 
 	if needsMigration {
-		g.stash.Pop()
+		g.Stash.Pop()
 	}
 
 	g.Ops.EmptyCommit("Initial commit")
@@ -81,7 +81,7 @@ func NewGit(s shell.Shell) *Git {
 		shell: s,
 	}
 	g.Ops = g
-	g.stash = NewStash(s)
+	g.Stash = NewStash(s)
 	return g
 }
 

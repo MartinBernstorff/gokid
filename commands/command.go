@@ -80,6 +80,34 @@ func NewPushCommand() Command {
 	}
 }
 
+func NewStashCommand() Command {
+	return Command{
+		assumptions: []func() error{},
+		action: func() error {
+			git := version_control.NewGit(shell.New())
+			git.Stash.Save()
+			return nil
+		},
+		inverse: func() error {
+			git := version_control.NewGit(shell.New())
+			git.Stash.Pop()
+			return nil
+		},
+	}
+}
+
+func NewPopStashCommand() Command {
+	return Command{
+		assumptions: []func() error{},
+		action: func() error {
+			git := version_control.NewGit(shell.New())
+			git.Stash.Pop()
+			return nil
+		},
+		inverse: nil,
+	}
+}
+
 func NewPullRequestCommand(title forge.IssueTitle, trunk string, draft bool) Command {
 	f := forge.NewGitHub(shell.New())
 

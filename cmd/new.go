@@ -44,12 +44,22 @@ func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versio
 		commands.NewCreateBranchCommand(parsedTitle, cfg.Trunk),
 		commands.NewEmptyCommitCommand(),
 		commands.NewPushCommand(),
-		commands.NewPullRequestCommand(
-			parsedTitle,
-			cfg.Trunk,
-			cfg.Draft,
-		),
 	}
+
+	if !versionControl.IsClean() {
+		// Add to the stash first
+		executables = append([]commands.Command{commands.NewStashCommand()}, executables...)
+
+		// Remember to pop the stash at the end
+		executables = append(executables, commands.NewPopStashCommand())
+	}
+
+	// Create the PR
+	executables = append(executables, commands.NewPullRequestCommand(
+		parsedTitle,
+		cfg.Trunk,
+		cfg.Draft,
+	))
 
 	errors := commands.Execute(executables)
 	if len(errors) > 0 {

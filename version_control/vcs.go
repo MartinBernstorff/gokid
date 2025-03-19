@@ -10,6 +10,7 @@ type VCS interface {
 	NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error
 	SyncTrunk(defaultBranch string) error
 	ShowDiffSummary(branch string) error
+	IsClean() bool
 }
 
 // BranchTitle creates a branch name from an issue title
