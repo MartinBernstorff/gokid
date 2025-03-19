@@ -18,12 +18,17 @@ func Execute(commands []Command) []error {
 	var completedCommands []Command
 	for _, command := range commands {
 		err := command.action()
+
 		if err != nil {
-			for _, completedCommand := range completedCommands {
-				completedCommand.inverse()
+			// Revert commands from most recently executed to
+			// least recently
+			for i := range completedCommands {
+				index := (len(completedCommands) - 1) - i
+				completedCommands[index].revert()
 			}
 			return []error{err}
 		}
+
 		completedCommands = append(completedCommands, command)
 	}
 

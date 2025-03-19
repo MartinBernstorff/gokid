@@ -10,7 +10,7 @@ import (
 type Command struct {
 	assumptions []func() error
 	action      func() error
-	inverse     func() error
+	revert      func() error
 }
 
 func NewFetchOriginCommand() Command {
@@ -24,7 +24,7 @@ func NewFetchOriginCommand() Command {
 			git.Ops.Fetch("origin")
 			return nil
 		},
-		inverse: nil,
+		revert: nil,
 	}
 }
 
@@ -53,7 +53,7 @@ func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) C
 			return nil
 		},
 		// p2: Delete the branch
-		inverse: nil,
+		revert: nil,
 	}
 }
 
@@ -65,7 +65,7 @@ func NewEmptyCommitCommand() Command {
 			git.Ops.EmptyCommit("Initial commit")
 			return nil
 		},
-		inverse: nil,
+		revert: nil,
 	}
 }
 
@@ -77,7 +77,7 @@ func NewPushCommand() Command {
 			git.Ops.Push()
 			return nil
 		},
-		inverse: nil,
+		revert: nil,
 	}
 }
 
@@ -89,7 +89,7 @@ func NewStashCommand() Command {
 			git.Stash.Save()
 			return nil
 		},
-		inverse: func() error {
+		revert: func() error {
 			git := version_control.NewGit(shell.New())
 			git.Stash.Pop()
 			return nil
@@ -105,7 +105,7 @@ func NewPopStashCommand() Command {
 			git.Stash.Pop()
 			return nil
 		},
-		inverse: nil,
+		revert: nil,
 	}
 }
 
@@ -118,6 +118,6 @@ func NewPullRequestCommand(title forge.IssueTitle, trunk string, draft bool) Com
 			f.CreatePullRequest(forge.Issue{Title: title}, trunk, draft)
 			return nil
 		},
-		inverse: nil,
+		revert: nil,
 	}
 }
