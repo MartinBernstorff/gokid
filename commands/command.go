@@ -122,6 +122,7 @@ func NewPullRequestCommand(title forge.IssueTitle, trunk string, draft bool) Com
 			f.CreatePullRequest(forge.Issue{Title: title}, trunk, draft)
 			return nil
 		},
+		// p2: Close the PR
 		revert: nil,
 	}
 }
