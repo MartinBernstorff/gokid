@@ -58,6 +58,11 @@ func NewFakeGit() *FakeGit {
 	return g
 }
 
+func (g *FakeGit) BranchExists(branchName string) bool {
+	// p2: Improve the fake implementation; add a list of all branches, which we can then test here
+	return g.currentBranch != ""
+}
+
 // Helper methods to inspect repository state
 func (g *FakeGit) CurrentBranch() string {
 	return g.currentBranch

@@ -90,6 +90,12 @@ func (g *Git) ShowDiffSummary(branch string) error {
 	return nil
 }
 
+func (g *Git) BranchExists(branchName string) bool {
+	cmd := exec.Command("git", "branch", "--list", branchName)
+	output, err := cmd.Output()
+	return err == nil && strings.TrimSpace(string(output)) != ""
+}
+
 func (g *Git) IsClean() bool {
 	cmd := exec.Command("git", "status", "--porcelain")
 	output, err := cmd.Output()
