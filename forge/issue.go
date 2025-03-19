@@ -84,7 +84,21 @@ type LocalIssue struct {
 type BranchName string
 
 func NewBranchName(name string) (BranchName, error) {
-	replacer := strings.NewReplacer(" ", "-", ":", "-", "/", "-", "..", "-", "(", "", ")", "")
+	replacer := strings.NewReplacer(
+		" ", "-",
+		".", "",
+		"@{", "",
+		":", "-",
+		"/", "-",
+		"..", "-",
+		"(", "",
+		")", "",
+		".lock", "",
+		"?", "",
+		"*", "",
+		"[", "",
+	)
+
 	err := ValidateBranch(replacer.Replace(name))
 	if err != nil {
 		return "", err
