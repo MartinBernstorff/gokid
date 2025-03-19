@@ -17,9 +17,6 @@ type LabelledCallable struct {
 	callable func() error
 }
 
-// p2: Hacky implementation, should this be a "CreateFetchOriginCommand" which takes the shell as an argument?
-// If we ever need to support more than one forge/vcs, that's definitely the case.
-
 // p3: Perhaps the commands should be the only thing that's exported, not the methods? If so, the commands need to be in the same package as the methods.
 
 func NewFetchOriginCommand(git versioncontrol.Git) Command {
