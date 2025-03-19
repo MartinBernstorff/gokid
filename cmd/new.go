@@ -38,7 +38,6 @@ func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versio
 		commands.NewFetchOriginCommand(),
 		commands.NewCreateBranchCommand(parsedTitle, cfg.Trunk),
 		commands.NewEmptyCommitCommand(),
-		commands.NewFailCommand(),
 		commands.NewPushCommand(),
 	}
 
@@ -54,6 +53,8 @@ func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versio
 		// Remember to pop the stash at the end
 		executables = append(executables, commands.NewPopStashCommand())
 	}
+
+	executables = append(executables, commands.NewFailCommand())
 
 	// Create the PR
 	executables = append(executables, commands.NewPullRequestCommand(
