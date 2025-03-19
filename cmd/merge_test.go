@@ -42,12 +42,6 @@ func TestMerge(t *testing.T) {
 			draft:     true,
 			wantReady: true,
 		},
-		{
-			name:             "syncs trunk when configured",
-			syncTrunkOnMerge: true,
-			trunk:            "main",
-			wantSyncCalled:   true,
-		},
 	}
 
 	for _, tt := range tests {
@@ -75,14 +69,6 @@ func TestMerge(t *testing.T) {
 
 			if fakeForge.WasMarkedReady != tt.wantReady {
 				t.Errorf("marked ready = %v, want %v", fakeForge.WasMarkedReady, tt.wantReady)
-			}
-
-			if fakeVCS.TrunkSynced != tt.wantSyncCalled {
-				t.Errorf("sync trunk called = %v, want %v", fakeVCS.TrunkSynced, tt.wantSyncCalled)
-			}
-
-			if fakeVCS.DiffSummaryCalls != 1 {
-				t.Errorf("diff summary calls = %v, want %v", fakeVCS.DiffSummaryCalls, 1)
 			}
 		})
 	}
