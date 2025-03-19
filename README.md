@@ -41,6 +41,6 @@ Gokid looks for configuration files in the current directory, or any parent dire
 * p3: Support creating a PR from an existing branch. Prompt for confirmation.
 
 * p2: Plan-execute-rollback. 
-    * Sketch out the "command" struct
-    * Write a CommandHandler which can check the assumptions
-    * Each command can have flightplan-checks. E.g. for "create branch" that the branch does not already exist. This means we can fail gracefully before we have made any state-changes.
+    * Print out the plan before executing
+    * Print the name of each step as it's executing
+    * Print the name of a command when rolling back
