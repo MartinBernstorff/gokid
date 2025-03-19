@@ -6,8 +6,6 @@ import (
 	"gokid/forge"
 )
 
-// p3: Perhaps the commands should be the only thing that's exported, not the methods? If so, the commands need to be in the same package as the methods.
-
 func NewFetchOriginCommand(git Git) commands.Command {
 	return commands.Command{
 		Assumptions: []commands.NamedCallable{},
