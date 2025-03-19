@@ -1,6 +1,7 @@
 package forge
 
 import (
+	"fmt"
 	"gokid/shell"
 	"regexp"
 	"strings"
@@ -63,7 +64,7 @@ func (i IssueTitle) ToBranchName() (BranchName, error) {
 
 func ValidateBranch(branch string) error {
 	s := shell.New()
-	_, err := s.Run("git check-ref-format --branch " + branch)
+	_, err := s.Run(fmt.Sprintf("git check-ref-format --branch %s", branch))
 	return err
 }
 

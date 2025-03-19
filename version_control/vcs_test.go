@@ -45,7 +45,7 @@ func TestBranchTitle(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := tt.issueTitle.ToBranchName()
 			if err != nil {
-				t.Errorf("branchTitle() error = %v", err)
+				t.Errorf("error = %v", err)
 			}
 
 			if got.String() != tt.expectedTitle {
