@@ -44,7 +44,6 @@ func Execute(commands []Command) []error {
 					fmt.Println("Error reverting: " + err.Error())
 					return []error{err}
 				}
-				// p2: if the revert fails, error out
 			}
 
 			return []error{err}
