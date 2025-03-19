@@ -54,8 +54,6 @@ func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versio
 		executables = append(executables, commands.NewPopStashCommand())
 	}
 
-	executables = append(executables, commands.NewFailCommand())
-
 	// Create the PR
 	executables = append(executables, commands.NewPullRequestCommand(
 		parsedTitle,

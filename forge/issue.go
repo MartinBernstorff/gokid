@@ -57,6 +57,10 @@ func (i IssueTitle) String() string {
 	return i.Prefix + ": " + i.Content
 }
 
+func (i IssueTitle) ToBranchName() BranchName {
+	return NewBranchName(i.Content)
+}
+
 type Issue struct {
 	Title IssueTitle
 	Body  string
@@ -69,4 +73,30 @@ type RemoteIssue struct {
 
 type LocalIssue struct {
 	Title IssueTitle
+}
+
+type BranchName string
+
+func NewBranchName(name string) BranchName {
+	replacer := strings.NewReplacer(
+		" ", "-",
+		".", "",
+		"@{", "",
+		":", "-",
+		"/", "-",
+		"..", "-",
+		"(", "",
+		")", "",
+		".lock", "",
+		"?", "",
+		"*", "",
+		"[", "",
+	)
+
+	replacedName := replacer.Replace(name)
+	return BranchName(replacedName)
+}
+
+func (b BranchName) String() string {
+	return string(b)
 }
