@@ -32,10 +32,7 @@ func NewFetchOriginCommand() Command {
 
 func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) Command {
 	// Parse the branch title in the same way as currently
-	newBranchName, err := forge.NewBranchName(issueTitle.Content)
-	if err != nil {
-		fmt.Errorf("error creating branch name: %s", err)
-	}
+	newBranchName := forge.NewBranchName(issueTitle.Content)
 
 	return Command{
 		description: fmt.Sprintf("Create branch %s", newBranchName),

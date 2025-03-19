@@ -1,7 +1,6 @@
 package forge
 
 import (
-	"fmt"
 	"gokid/shell"
 	"regexp"
 	"strings"
@@ -58,14 +57,8 @@ func (i IssueTitle) String() string {
 	return i.Prefix + ": " + i.Content
 }
 
-func (i IssueTitle) ToBranchName() (BranchName, error) {
+func (i IssueTitle) ToBranchName() BranchName {
 	return NewBranchName(i.Content)
-}
-
-func ValidateBranch(branch string) error {
-	s := shell.New()
-	_, err := s.Run(fmt.Sprintf("git check-ref-format --branch %s", branch))
-	return err
 }
 
 type Issue struct {
@@ -84,7 +77,7 @@ type LocalIssue struct {
 
 type BranchName string
 
-func NewBranchName(name string) (BranchName, error) {
+func NewBranchName(name string) BranchName {
 	replacer := strings.NewReplacer(
 		" ", "-",
 		".", "",
@@ -101,11 +94,7 @@ func NewBranchName(name string) (BranchName, error) {
 	)
 
 	replacedName := replacer.Replace(name)
-	err := ValidateBranch(replacedName)
-	if err != nil {
-		return "", err
-	}
-	return BranchName(replacedName), nil
+	return BranchName(replacedName)
 }
 
 func (b BranchName) String() string {
