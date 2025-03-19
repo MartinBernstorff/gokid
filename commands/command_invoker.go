@@ -57,5 +57,7 @@ func Execute(commands []Command) []error {
 		completedCommands = append(completedCommands, command)
 	}
 
+	fmt.Println("All commands executed successfully")
+
 	return nil
 }
