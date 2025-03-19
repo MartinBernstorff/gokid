@@ -37,6 +37,8 @@ Gokid looks for configuration files in the current directory, or any parent dire
     * Write a test that does input -> branch name, and validates that the branch name is valid
     * Example failure: `migrate-telecom-cardinality-to-0..1`
 
+* p1: Ensure shell run returns err if exit code is not 0
+
 * Error if un-quoted "$(some_command_here)" in config
 
 * p3: Support creating a PR from an existing branch. Prompt for confirmation.
