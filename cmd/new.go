@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"gokid/commands"
 	"gokid/config"
 	"gokid/forge"
 	"gokid/shell"
@@ -33,12 +34,30 @@ func changeNamePrompt() string {
 func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versionControl version_control.VCS) error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 
-	if err := versionControl.NewChange(forge.Issue{Title: parsedTitle}, cfg.Trunk, true, cfg.BranchPrefix, cfg.BranchSuffix); err != nil {
-		return err
+	// p1: How do I carry the "needsMigration" state?
+	// Perhaps I can check whether it's needed and, if it's the case, add both the stash and pop to the list of items
+	//
+	// p1: Pop the stash
+	//
+	executables := []commands.Command{
+		commands.NewFetchOriginCommand(),
+		commands.NewCreateBranchCommand(parsedTitle, cfg.Trunk),
+		commands.NewEmptyCommitCommand(),
+		commands.NewPushCommand(),
+		commands.NewPullRequestCommand(
+			parsedTitle,
+			cfg.Trunk,
+			cfg.Draft,
+		),
 	}
 
-	return f.CreatePullRequest(forge.Issue{Title: parsedTitle}, cfg.Trunk, cfg.Draft)
+	errors := commands.Execute(executables)
+	if len(errors) > 0 {
+		return errors[0]
+	}
+	return nil
 }
+
 func init() {
 	newCmd := &cobra.Command{
 		Use:   "new [title]",

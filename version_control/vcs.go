@@ -12,8 +12,8 @@ type VCS interface {
 	ShowDiffSummary(branch string) error
 }
 
-// branchTitle creates a branch name from an issue title
-func branchTitle(issueTitle forge.IssueTitle, prefix string, suffix string) string {
+// BranchTitle creates a branch name from an issue title
+func BranchTitle(issueTitle forge.IssueTitle, prefix string, suffix string) string {
 	title := prefix + issueTitle.Content + suffix
 	// Using a single strings.NewReplacer
 	replacer := strings.NewReplacer(

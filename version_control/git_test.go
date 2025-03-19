@@ -12,7 +12,7 @@ func TestNewChange(t *testing.T) {
 
 	t.Run("creates new branch with empty commit", func(t *testing.T) {
 		git := NewFakeGit()
-		expectedBranchName := branchTitle(issue.Title, "prefix-", "-suffix")
+		expectedBranchName := BranchTitle(issue.Title, "prefix-", "-suffix")
 
 		git.NewChange(issue, "main", false, "prefix-", "-suffix")
 
@@ -27,7 +27,7 @@ func TestNewChange(t *testing.T) {
 		assert.True(t, commits[0].Empty)
 
 		assert.Equal(t, expectedBranchName, git.CurrentBranch())
-		assert.True(t, git.isClean())
+		assert.True(t, git.IsClean())
 	})
 
 	t.Run("migrates dirty changes", func(t *testing.T) {
@@ -37,7 +37,7 @@ func TestNewChange(t *testing.T) {
 		git.NewChange(issue, "main", true, "", "")
 
 		assert.Equal(t, 0, git.StashCount()) // Stashed and popped
-		assert.False(t, git.isClean())       // Stash is applied
+		assert.False(t, git.IsClean())       // Stash is applied
 		assert.Len(t, git.Commits(), 1)      // Has only the initial commit
 	})
 }

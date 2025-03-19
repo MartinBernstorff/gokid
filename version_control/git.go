@@ -8,38 +8,39 @@ import (
 	"strings"
 )
 
-// gitOperations defines the interface for git operations that can be implemented differently by Git and GitStub
+// p2: Change these methods to return errors, rather than panic on error
 type gitOperations interface {
-	isClean() bool
-	fetch(remote string)
-	branchFromOrigin(branchName string, defaultBranch string)
-	emptyCommit(message string)
-	push()
+	IsClean() bool
+	Fetch(remote string)
+	BranchFromOrigin(branchName string, defaultBranch string)
+	BranchExists(branchName string) bool
+	EmptyCommit(message string)
+	Push()
 }
 
 // BaseGit implements common git functionality
 type BaseGit struct {
-	ops   gitOperations
+	Ops   gitOperations
 	stash Stasher
 }
 
 // NewChange implements VCS interface
 func (g *BaseGit) NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error {
-	needsMigration := migrateChanges && !g.ops.isClean()
+	needsMigration := migrateChanges && !g.Ops.IsClean()
 	if needsMigration {
 		g.stash.Save()
 	}
 
-	branchTitle := branchTitle(issue.Title, branchPrefix, branchSuffix)
-	g.ops.fetch("origin")
-	g.ops.branchFromOrigin(branchTitle, defaultBranch)
+	branchTitle := BranchTitle(issue.Title, branchPrefix, branchSuffix)
+	g.Ops.Fetch("origin")
+	g.Ops.BranchFromOrigin(branchTitle, defaultBranch)
 
 	if needsMigration {
 		g.stash.Pop()
 	}
 
-	g.ops.emptyCommit("Initial commit")
-	g.ops.push()
+	g.Ops.EmptyCommit("Initial commit")
+	g.Ops.Push()
 	return nil
 }
 
@@ -79,7 +80,7 @@ func NewGit(s shell.Shell) *Git {
 	g := &Git{
 		shell: s,
 	}
-	g.ops = g
+	g.Ops = g
 	g.stash = NewStash(s)
 	return g
 }
@@ -89,25 +90,25 @@ func (g *Git) ShowDiffSummary(branch string) error {
 	return nil
 }
 
-func (g *Git) isClean() bool {
+func (g *Git) IsClean() bool {
 	cmd := exec.Command("git", "status", "--porcelain")
 	output, err := cmd.Output()
 	return err != nil || strings.TrimSpace(string(output)) == ""
 }
 
-func (g *Git) fetch(remote string) {
+func (g *Git) Fetch(remote string) {
 	g.shell.Run(fmt.Sprintf("git fetch %s", remote))
 }
 
-func (g *Git) branchFromOrigin(branchName string, defaultBranch string) {
+func (g *Git) BranchFromOrigin(branchName string, defaultBranch string) {
 	g.shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchName, defaultBranch))
 }
 
-func (g *Git) emptyCommit(message string) {
+func (g *Git) EmptyCommit(message string) {
 	g.shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
 }
 
-func (g *Git) push() {
+func (g *Git) Push() {
 	g.shell.Run("git push")
 }
 

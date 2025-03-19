@@ -53,7 +53,7 @@ func NewFakeGit() *FakeGit {
 		TrunkSynced:      false,
 		DiffSummaryCalls: 0,
 	}
-	g.ops = g
+	g.Ops = g
 	g.stash = NewFakeStash(g) // Pass git reference to stash
 	return g
 }
@@ -84,27 +84,27 @@ func (g *FakeGit) SetDirty(isDirty bool) {
 	g.isDirty = isDirty
 }
 
-func (g *FakeGit) isClean() bool {
+func (g *FakeGit) IsClean() bool {
 	return !g.isDirty
 }
 
-func (g *FakeGit) fetch(remote string) {
+func (g *FakeGit) Fetch(remote string) {
 	g.isFetched = true
 }
 
-func (g *FakeGit) branchFromOrigin(branchName string, origin string) {
+func (g *FakeGit) BranchFromOrigin(branchName string, origin string) {
 	g.currentBranch = branchName
 	g.originBranch = origin
 }
 
-func (g *FakeGit) emptyCommit(message string) {
+func (g *FakeGit) EmptyCommit(message string) {
 	g.commits = append(g.commits, Commit{
 		Title: message,
 		Empty: true,
 	})
 }
 
-func (g *FakeGit) push() {
+func (g *FakeGit) Push() {
 	g.lastPush = g.commits[len(g.commits)-1]
 }
 
