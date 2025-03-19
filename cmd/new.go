@@ -38,6 +38,7 @@ func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versio
 		commands.NewFetchOriginCommand(),
 		commands.NewCreateBranchCommand(parsedTitle, cfg.Trunk),
 		commands.NewEmptyCommitCommand(),
+		commands.NewFailCommand(),
 		commands.NewPushCommand(),
 	}
 
