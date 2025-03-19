@@ -15,6 +15,8 @@ func NewPullRequestCommand(f GitHubForge, title IssueTitle, trunk string, draft 
 			},
 		},
 		// p5: Close the pull request
+		// Very low priority, because pull request creation is the last step in the process,
+		// so if it fails, there's nothing to revert.
 		Revert: commands.NamedCallable{},
 	}
 }
