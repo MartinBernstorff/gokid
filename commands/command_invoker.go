@@ -5,14 +5,17 @@ import "fmt"
 func Execute(commands []Command) []error {
 	// Print the description of each command
 	fmt.Println("Executing commands:")
-	for _, command := range commands {
-		fmt.Println("- " + command.description)
+	for i, command := range commands {
+		fmt.Printf("  %v. %v\n", i+1, command.action.name)
+		for _, assumption := range command.assumptions {
+			fmt.Printf("  Assumes: %v\n", assumption.name)
+		}
 	}
 
 	var errors []error
 	for _, command := range commands {
 		for _, assumption := range command.assumptions {
-			err := assumption()
+			err := assumption.callable()
 			if err != nil {
 				errors = append(errors, err)
 			}
@@ -25,21 +28,23 @@ func Execute(commands []Command) []error {
 
 	var completedCommands []Command
 	for _, command := range commands {
-		err := command.action()
+		fmt.Println("Executing: " + command.action.name)
+		err := command.action.callable()
 
 		if err != nil {
 			// Revert commands from most recently executed to
 			// least recently
 			for i := range completedCommands {
 				index := (len(completedCommands) - 1) - i
-				fmt.Println("Reverting: " + completedCommands[index].description)
-
 				cmd := completedCommands[index]
-				if cmd.revert == nil {
+
+				if cmd.revert.callable == nil {
+					fmt.Println(cmd.action.name + " has nothing to revert, skipping")
 					continue
 				}
 
-				err := completedCommands[index].revert()
+				fmt.Println("Reverting: " + cmd.action.name)
+				err := completedCommands[index].revert.callable()
 				if err != nil {
 					fmt.Println("Error reverting: " + err.Error())
 					return []error{err}
@@ -51,6 +56,8 @@ func Execute(commands []Command) []error {
 
 		completedCommands = append(completedCommands, command)
 	}
+
+	fmt.Println("All commands executed successfully")
 
 	return nil
 }
