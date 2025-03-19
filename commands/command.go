@@ -65,9 +65,11 @@ func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) C
 			},
 		},
 		revert: LabelledCallable{
-			name: "delete branch",
+			name: "Delete branch",
 			callable: func() error {
 				git := versioncontrol.NewGit(shell.New())
+
+				// p2: Switch to the branch we were on when we created the command
 				err := git.Ops.SwitchBranch(defaultBranch)
 				if err != nil {
 					return err
