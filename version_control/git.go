@@ -12,6 +12,7 @@ type gitOperations interface {
 	Fetch(remote string) error
 	BranchFromOrigin(branchName string, defaultBranch string) error
 	BranchExists(branchName string) (bool, error)
+	DeleteBranch(branchName string) error
 	EmptyCommit(message string) error
 	Push() error
 }
@@ -75,6 +76,11 @@ func (g *Git) BranchExists(branchName string) (bool, error) {
 	}
 
 	return strings.TrimSpace(string(output)) != "", err
+}
+
+func (g *Git) DeleteBranch(branchName string) error {
+	_, err := g.shell.Run(fmt.Sprintf("git branch -D %s", branchName))
+	return err
 }
 
 func (g *Git) IsClean() (bool, error) {

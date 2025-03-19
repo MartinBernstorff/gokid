@@ -63,6 +63,11 @@ func (g *FakeGit) BranchExists(branchName string) (bool, error) {
 	return g.currentBranch != "", nil
 }
 
+func (g *FakeGit) DeleteBranch(branchName string) error {
+	g.currentBranch = ""
+	return nil
+}
+
 // Helper methods to inspect repository state
 func (g *FakeGit) CurrentBranch() string {
 	return g.currentBranch

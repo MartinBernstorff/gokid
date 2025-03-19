@@ -53,7 +53,11 @@ func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) C
 			return nil
 		},
 		// p2: Delete the branch
-		revert: nil,
+		revert: func() error {
+			git := version_control.NewGit(shell.New())
+			git.Ops.DeleteBranch(branchName)
+			return nil
+		},
 	}
 }
 
