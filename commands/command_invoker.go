@@ -1,6 +1,14 @@
 package commands
 
+import "fmt"
+
 func Execute(commands []Command) []error {
+	// Print the description of each command
+	fmt.Println("Executing commands:")
+	for _, command := range commands {
+		fmt.Println("- " + command.description)
+	}
+
 	var errors []error
 	for _, command := range commands {
 		for _, assumption := range command.assumptions {
@@ -23,6 +31,7 @@ func Execute(commands []Command) []error {
 			// Revert commands from most recently executed to
 			// least recently
 			for i := range completedCommands {
+				fmt.Println("Reverting: " + completedCommands[i].description)
 				index := (len(completedCommands) - 1) - i
 				completedCommands[index].revert()
 				// p2: if the revert fails, error out
