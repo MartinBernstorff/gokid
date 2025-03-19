@@ -35,8 +35,12 @@ Gokid looks for configuration files in the current directory, or any parent dire
 * p1: Make branch name creation more robust
     * Perhaps Git has a regex to validate them?
     * Example failure: `migrate-telecom-cardinality-to-0..1`
+
 * Error if un-quoted "$(some_command_here)" in config
+
 * p3: Support creating a PR from an existing branch. Prompt for confirmation.
+
 * p2: Plan-execute-rollback. 
-    * Architecture is likely a command-pattern.
+    * Sketch out the "command" struct
+    * Write a CommandHandler which can check the assumptions
     * Each command can have flightplan-checks. E.g. for "create branch" that the branch does not already exist. This means we can fail gracefully before we have made any state-changes.

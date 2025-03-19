@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"gokid/commands"
 	"gokid/config"
 	"gokid/forge"
 	"gokid/shell"
@@ -33,12 +34,40 @@ func changeNamePrompt() string {
 func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versionControl version_control.VCS) error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 
-	if err := versionControl.NewChange(forge.Issue{Title: parsedTitle}, cfg.Trunk, true, cfg.BranchPrefix, cfg.BranchSuffix); err != nil {
+	executables := []commands.Command{
+		commands.NewFetchOriginCommand(),
+		commands.NewCreateBranchCommand(parsedTitle, cfg.Trunk),
+		commands.NewEmptyCommitCommand(),
+		commands.NewPushCommand(),
+	}
+
+	clean, err := versionControl.IsClean()
+	if err != nil {
 		return err
 	}
 
-	return f.CreatePullRequest(forge.Issue{Title: parsedTitle}, cfg.Trunk, cfg.Draft)
+	if !clean {
+		// Add to the stash first
+		executables = append([]commands.Command{commands.NewStashCommand()}, executables...)
+
+		// Remember to pop the stash at the end
+		executables = append(executables, commands.NewPopStashCommand())
+	}
+
+	// Create the PR
+	executables = append(executables, commands.NewPullRequestCommand(
+		parsedTitle,
+		cfg.Trunk,
+		cfg.Draft,
+	))
+
+	errors := commands.Execute(executables)
+	if len(errors) > 0 {
+		return errors[0]
+	}
+	return nil
 }
+
 func init() {
 	newCmd := &cobra.Command{
 		Use:   "new [title]",

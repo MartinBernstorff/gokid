@@ -44,7 +44,7 @@ func TestBranchTitle(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := branchTitle(tt.issueTitle, tt.prefix, tt.suffix)
+			got := BranchTitle(tt.issueTitle, tt.prefix, tt.suffix)
 			if got != tt.expectedTitle {
 				t.Errorf("branchTitle() = %v, want %v", got, tt.expectedTitle)
 			}

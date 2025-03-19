@@ -2,48 +2,25 @@ package version_control
 
 import (
 	"fmt"
-	"gokid/forge"
 	"gokid/shell"
 	"os/exec"
 	"strings"
 )
 
-// gitOperations defines the interface for git operations that can be implemented differently by Git and GitStub
 type gitOperations interface {
-	isClean() bool
-	fetch(remote string)
-	branchFromOrigin(branchName string, defaultBranch string)
-	emptyCommit(message string)
-	push()
+	IsClean() (bool, error)
+	Fetch(remote string) error
+	BranchFromOrigin(branchName string, defaultBranch string) error
+	BranchExists(branchName string) (bool, error)
+	EmptyCommit(message string) error
+	Push() error
 }
 
-// BaseGit implements common git functionality
 type BaseGit struct {
-	ops   gitOperations
-	stash Stasher
+	Ops   gitOperations
+	Stash Stasher
 }
 
-// NewChange implements VCS interface
-func (g *BaseGit) NewChange(issue forge.Issue, defaultBranch string, migrateChanges bool, branchPrefix string, branchSuffix string) error {
-	needsMigration := migrateChanges && !g.ops.isClean()
-	if needsMigration {
-		g.stash.Save()
-	}
-
-	branchTitle := branchTitle(issue.Title, branchPrefix, branchSuffix)
-	g.ops.fetch("origin")
-	g.ops.branchFromOrigin(branchTitle, defaultBranch)
-
-	if needsMigration {
-		g.stash.Pop()
-	}
-
-	g.ops.emptyCommit("Initial commit")
-	g.ops.push()
-	return nil
-}
-
-// Stasher defines the interface for stash operations
 type Stasher interface {
 	Save()
 	Pop()
@@ -79,8 +56,8 @@ func NewGit(s shell.Shell) *Git {
 	g := &Git{
 		shell: s,
 	}
-	g.ops = g
-	g.stash = NewStash(s)
+	g.Ops = g
+	g.Stash = NewStash(s)
 	return g
 }
 
@@ -89,26 +66,45 @@ func (g *Git) ShowDiffSummary(branch string) error {
 	return nil
 }
 
-func (g *Git) isClean() bool {
+func (g *Git) BranchExists(branchName string) (bool, error) {
+	cmd := exec.Command("git", "branch", "--list", branchName)
+	output, err := cmd.Output()
+
+	if err != nil {
+		return false, err
+	}
+
+	return strings.TrimSpace(string(output)) != "", err
+}
+
+func (g *Git) IsClean() (bool, error) {
 	cmd := exec.Command("git", "status", "--porcelain")
 	output, err := cmd.Output()
-	return err != nil || strings.TrimSpace(string(output)) == ""
+	if err != nil {
+		return false, err
+	}
+	return strings.TrimSpace(string(output)) == "", nil
 }
 
-func (g *Git) fetch(remote string) {
-	g.shell.Run(fmt.Sprintf("git fetch %s", remote))
+func (g *Git) Fetch(remote string) error {
+	_, err := g.shell.Run(fmt.Sprintf("git fetch %s", remote))
+	return err
 }
 
-func (g *Git) branchFromOrigin(branchName string, defaultBranch string) {
-	g.shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchName, defaultBranch))
+func (g *Git) BranchFromOrigin(branchName string, defaultBranch string) error {
+	_, err := g.shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchName, defaultBranch))
+	return err
 }
 
-func (g *Git) emptyCommit(message string) {
-	g.shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
+func (g *Git) EmptyCommit(message string) error {
+	_, err := g.shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
+	return err
+
 }
 
-func (g *Git) push() {
-	g.shell.Run("git push")
+func (g *Git) Push() error {
+	_, err := g.shell.Run("git push")
+	return err
 }
 
 func (g *Git) SyncTrunk(defaultBranch string) error {

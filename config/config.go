@@ -97,7 +97,7 @@ func Load(configName string) GokidConfig {
 	replaceWithShellCommand := func(value string) string {
 		if strings.HasPrefix(value, "$(") && strings.HasSuffix(value, ")") {
 			cmd := value[2 : len(value)-1]
-			val, err := shell.RunWithOutput(cmd)
+			val, err := shell.Run(cmd)
 			if err != nil {
 				panic(err)
 			}

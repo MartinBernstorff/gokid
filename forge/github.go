@@ -24,15 +24,29 @@ func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) er
 
 	cmd += fmt.Sprintf(" --title \"%s\" --body \"\"", issue.Title.String())
 
-	return g.shell.Run(cmd)
+	output, err := g.shell.Run(cmd)
+
+	if err != nil {
+		return fmt.Errorf("error creating pull request: %s", output)
+	}
+
+	return nil
 }
 
 func (g *GitHubForge) ViewPullRequest() error {
-	return g.shell.Run("gh pr view --web || gh repo view --web")
+	_, err := g.shell.Run("gh pr view --web || gh repo view --web")
+	if err != nil {
+		return fmt.Errorf("error viewing pull request: %s", err)
+	}
+	return nil
 }
 
 func (g *GitHubForge) MarkPullRequestReady() error {
-	return g.shell.Run("gh pr ready")
+	_, err := g.shell.Run("gh pr ready")
+	if err != nil {
+		return fmt.Errorf("error marking pull request as ready: %s", err)
+	}
+	return nil
 }
 
 func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMerge bool) error {
@@ -44,5 +58,10 @@ func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMer
 		cmd += " --admin"
 	}
 
-	return g.shell.Run(cmd)
+	_, err := g.shell.Run(cmd)
+
+	if err != nil {
+		return fmt.Errorf("error merging pull request: %s", err)
+	}
+	return nil
 }
