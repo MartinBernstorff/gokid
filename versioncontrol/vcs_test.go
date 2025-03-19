@@ -1,4 +1,4 @@
-package version_control
+package versioncontrol
 
 import (
 	"gokid/forge"

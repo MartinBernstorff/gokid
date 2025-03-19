@@ -43,3 +43,5 @@ Gokid looks for configuration files in the current directory, or any parent dire
     * Print out the plan before executing
     * Print the name of each step as it's executing
     * Print the name of a command when rolling back
+
+* p3: Add plan-execute-rollback to all commands

@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"gokid/forge"
-	"gokid/version_control"
+	"gokid/versioncontrol"
 	"testing"
 )
 
@@ -54,11 +54,11 @@ func TestMerge(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Setup fake forge and VCS
 			fakeForge := forge.NewFakeForge()
-			fakeVCS := version_control.NewFakeGit()
+			fakeVCS := versioncontrol.NewFakeGit()
 			merger := NewMerger(fakeForge, fakeVCS)
 
 			// Run merge command
-			merger.merge(tt.preMergeCmd, tt.autoMerge, tt.forceMerge, tt.draft, tt.mergeStrategy, tt.trunk, tt.syncTrunkOnMerge)
+			merger.merge(tt.preMergeCmd, tt.autoMerge, tt.forceMerge, tt.draft, tt.mergeStrategy)
 
 			// Verify forge calls
 			if fakeForge.LastMergeStrategy != tt.wantStrategy {

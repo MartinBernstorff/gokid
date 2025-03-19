@@ -1,31 +1,27 @@
 linters:
+  disable-all: true
   enable:
-    - golint
-    - govet
-    - errcheck
-    - staticcheck
-    - gosimple
-    - ineffassign
-    - unconvert
-    - goconst
-    - goimports
-    - misspell
-    - unparam
+    # Defaults:
+    - errcheck # errcheck is a program for checking for unchecked errors in Go code. These unchecked errors can be critical bugs in some cases
+    - gosimple # Linter for Go source code that specializes in simplifying code
+    - govet # Vet examines Go source code and reports suspicious constructs
+    - ineffassign # Detects when assignments to existing variables are not used
+    - staticcheck # It's a set of rules from staticcheck. It's not the same thing as the staticcheck binary.
+    - typecheck # Like the front-end of a Go compiler, parses and type-checks Go code
+    - unused # Checks Go code for unused constants, variables, functions and types
 
-run:
-  tests: true
-
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - golint
-
-linters-settings:
-  goconst:
-    min-len: 3
-    min-occurrences: 3
-
-output:
-  print-issued-lines: true
-  print-linter-name: true
+    # Extras:
+    - bodyclose # checks whether HTTP response body is closed successfully
+    - dogsled # Checks assignments with too many blank identifiers (e.g. x, , , _, := f())
+    - goconst # Finds repeated strings that could be replaced by a constant
+    - gocritic # Provides diagnostics that check for bugs, performance and style issues.
+    - gofmt # See https://pkg.go.dev/cmd/gofmt
+    - goprintffuncname # Checks that printf-like functions are named with f at the end
+    - gosec # Inspects source code for security problems
+    - nakedret # Finds naked returns in functions greater than a specified function length
+    - noctx # noctx finds sending http request without session.Context
+    - nolintlint # Reports ill-formed or insufficient nolint directives
+    - revive # Fast, configurable, extensible, flexible, and beautiful linter for Go. Drop-in replacement of golint.
+    - stylecheck # Stylecheck is a replacement for golint
+    - unconvert # Remove unnecessary type conversions
+    - whitespace # Tool for detection of leading and trailing whitespace

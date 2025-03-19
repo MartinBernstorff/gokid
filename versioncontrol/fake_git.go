@@ -1,4 +1,4 @@
-package version_control
+package versioncontrol
 
 // FakeStash maintains a simple stash counter and manages dirty state
 type FakeStash struct {
@@ -12,16 +12,18 @@ func NewFakeStash(git *FakeGit) *FakeStash {
 	}
 }
 
-func (s *FakeStash) Save() {
+func (s *FakeStash) Save() error {
 	s.stashCount++
 	s.git.isDirty = false // Stashing makes working directory clean
+	return nil
 }
 
-func (s *FakeStash) Pop() {
+func (s *FakeStash) Pop() error {
 	if s.stashCount > 0 {
 		s.stashCount--
 		s.git.isDirty = true // Popping makes working directory dirty again
 	}
+	return nil
 }
 
 // Commit represents a git commit with minimal information
@@ -58,12 +60,12 @@ func NewFakeGit() *FakeGit {
 	return g
 }
 
-func (g *FakeGit) BranchExists(branchName string) (bool, error) {
+func (g *FakeGit) BranchExists(_ string) (bool, error) {
 	// p2: Improve the fake implementation; add a list of all branches, which we can then test here
 	return g.currentBranch != "", nil
 }
 
-func (g *FakeGit) DeleteBranch(branchName string) error {
+func (g *FakeGit) DeleteBranch(_ string) error {
 	g.currentBranch = ""
 	return nil
 }
@@ -103,7 +105,7 @@ func (g *FakeGit) IsClean() (bool, error) {
 	return !g.isDirty, nil
 }
 
-func (g *FakeGit) Fetch(remote string) error {
+func (g *FakeGit) Fetch(_ string) error {
 	g.isFetched = true
 	return nil
 }
@@ -134,16 +136,7 @@ func (g *FakeGit) AddCommit(title string, empty bool) {
 	})
 }
 
-func (g *FakeGit) remoteIsUpdated() bool {
-	return g.lastPush.Title == g.commits[len(g.commits)-1].Title
-}
-
-func (g *FakeGit) SyncTrunk(defaultBranch string) error {
+func (g *FakeGit) SyncTrunk(_ string) error {
 	g.TrunkSynced = true
-	return nil
-}
-
-func (g *FakeGit) ShowDiffSummary(branch string) error {
-	g.DiffSummaryCalls += 1
 	return nil
 }

@@ -17,8 +17,8 @@ func NewReady(s shell.Shell) *Ready {
 	}
 }
 
-func (r *Ready) markReady() {
-	r.forge.MarkPullRequestReady()
+func (r *Ready) markReady() error {
+	return r.forge.MarkPullRequestReady()
 }
 
 func init() {
@@ -26,9 +26,12 @@ func init() {
 		Use:   "ready",
 		Short: "Mark a change as ready for review",
 		Long:  "",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			ready := NewReady(shell.New())
-			ready.markReady()
+			err := ready.markReady()
+			if err != nil {
+				panic(err)
+			}
 		},
 		Aliases: []string{"r"},
 	})

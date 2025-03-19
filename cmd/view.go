@@ -7,8 +7,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func view(forge forge.Forge) {
-	forge.ViewPullRequest()
+func view(forge forge.Forge) error {
+	return forge.ViewPullRequest()
 }
 
 func init() {
@@ -16,8 +16,11 @@ func init() {
 		Use:   "view",
 		Short: "View the change at the forge",
 		Long:  "",
-		Run: func(cmd *cobra.Command, args []string) {
-			view(forge.NewGitHub(shell.New()))
+		Run: func(_ *cobra.Command, _ []string) {
+			err := view(forge.NewGitHub(shell.New()))
+			if err != nil {
+				panic(err)
+			}
 		},
 		Aliases: []string{"v"},
 	})

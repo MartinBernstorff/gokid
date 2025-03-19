@@ -55,7 +55,7 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize gokid configuration",
 	Long:  "Creates a default configuration file and updates .gitignore",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		config.Load(config.DefaultFileName) // Load or create default config
 
 		if err := viper.WriteConfigAs(config.DefaultFileName + ".yml"); err != nil {

@@ -1,4 +1,4 @@
-package version_control
+package versioncontrol
 
 import (
 	"fmt"
@@ -24,8 +24,8 @@ type BaseGit struct {
 }
 
 type Stasher interface {
-	Save()
-	Pop()
+	Save() error
+	Pop() error
 }
 
 // Stash handles git stash operations
@@ -39,12 +39,14 @@ func NewStash(s shell.Shell) *Stash {
 	}
 }
 
-func (s *Stash) Save() {
-	s.shell.Run("git stash")
+func (s *Stash) Save() error {
+	_, err := s.shell.Run("git stash")
+	return err
 }
 
-func (s *Stash) Pop() {
-	s.shell.Run("git stash pop")
+func (s *Stash) Pop() error {
+	_, err := s.shell.Run("git stash pop")
+	return err
 }
 
 // Git implements the VCS interface
@@ -65,8 +67,8 @@ func NewGit(s shell.Shell) *Git {
 }
 
 func (g *Git) ShowDiffSummary(branch string) error {
-	g.shell.Run(fmt.Sprintf("git diff --stat %s", branch))
-	return nil
+	_, err := g.shell.Run(fmt.Sprintf("git diff --stat %s", branch))
+	return err
 }
 
 func (g *Git) BranchExists(branchName string) (bool, error) {
@@ -112,16 +114,9 @@ func (g *Git) BranchFromOrigin(branchName string, defaultBranch string) error {
 func (g *Git) EmptyCommit(message string) error {
 	_, err := g.shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
 	return err
-
 }
 
 func (g *Git) Push() error {
 	_, err := g.shell.Run("git push")
 	return err
-}
-
-func (g *Git) SyncTrunk(defaultBranch string) error {
-	g.shell.Run(fmt.Sprintf("git fetch origin %s", defaultBranch))
-	g.shell.Run(fmt.Sprintf("git merge origin/%s", defaultBranch))
-	return nil
 }

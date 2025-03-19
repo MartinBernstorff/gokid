@@ -15,7 +15,7 @@ var cfgCmd = &cobra.Command{
 	Use:   "cfg",
 	Short: "Print the identified config",
 	Long:  "",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		showDefaults, _ := cmd.Flags().GetBool("defaults")
 
 		var cfg config.GokidConfig
