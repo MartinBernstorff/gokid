@@ -25,7 +25,9 @@ func Execute(commands []Command) []error {
 			for i := range completedCommands {
 				index := (len(completedCommands) - 1) - i
 				completedCommands[index].revert()
+				// p2: if the revert fails, error out
 			}
+
 			return []error{err}
 		}
 
