@@ -55,6 +55,7 @@ type Git struct {
 
 // NewGit creates a new Git VCS instance
 func NewGit(s shell.Shell) *Git {
+	// p2: Check shell is in a Git repository
 	g := &Git{
 		shell: s,
 	}
