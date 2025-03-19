@@ -31,8 +31,6 @@ gk init
 Gokid looks for configuration files in the current directory, or any parent directory. It uses the values from the first config it encounters.
 
 ## Roadmap
-* p1: Ensure shell run returns err if exit code is not 0
-
 * p2: Setup golint with reasonable rules
 
 * p2: Error if un-quoted "$(some_command_here)" in config
