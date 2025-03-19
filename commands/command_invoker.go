@@ -6,16 +6,16 @@ func Execute(commands []Command) []error {
 	// Print the description of each command
 	fmt.Println("Plan:")
 	for i, command := range commands {
-		fmt.Printf("  %v. %v\n", i+1, command.action.name)
-		for _, assumption := range command.assumptions {
-			fmt.Printf("  Assumes: %v\n", assumption.name)
+		fmt.Printf("  %v. %v\n", i+1, command.Action.Name)
+		for _, assumption := range command.Assumptions {
+			fmt.Printf("  Assumes: %v\n", assumption.Name)
 		}
 	}
 
 	var errors []error
 	for _, command := range commands {
-		for _, assumption := range command.assumptions {
-			err := assumption.callable()
+		for _, assumption := range command.Assumptions {
+			err := assumption.Callable()
 			if err != nil {
 				errors = append(errors, err)
 			}
@@ -28,8 +28,8 @@ func Execute(commands []Command) []error {
 
 	var completedCommands []Command
 	for _, command := range commands {
-		fmt.Println("\nExecuting: " + command.action.name)
-		err := command.action.callable()
+		fmt.Println("\nExecuting: " + command.Action.Name)
+		err := command.Action.Callable()
 
 		if err != nil {
 			// Revert commands from most recently executed to
@@ -38,13 +38,13 @@ func Execute(commands []Command) []error {
 				index := (len(completedCommands) - 1) - i
 				cmd := completedCommands[index]
 
-				if cmd.revert.callable == nil {
-					fmt.Println(cmd.action.name + " has nothing to revert, skipping")
+				if cmd.Revert.Callable == nil {
+					fmt.Println(cmd.Action.Name + " has nothing to revert, skipping")
 					continue
 				}
 
-				fmt.Println("Reverting: " + cmd.action.name)
-				err := completedCommands[index].revert.callable()
+				fmt.Println("Reverting: " + cmd.Action.Name)
+				err := completedCommands[index].Revert.Callable()
 				if err != nil {
 					fmt.Println("Error reverting: " + err.Error())
 					return []error{err}

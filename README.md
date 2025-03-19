@@ -31,8 +31,4 @@ gk init
 Gokid looks for configuration files in the current directory, or any parent directory. It uses the values from the first config it encounters.
 
 ## Roadmap
-* p3: Support creating a PR from an existing branch. Prompt for confirmation.
-
-* p4: Support deleting the current change
-
 * p4: Go through the code and see if we use pointers where it makes sense

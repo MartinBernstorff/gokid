@@ -35,10 +35,10 @@ func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.Gok
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 
 	executables := []commands.Command{
-		commands.NewFetchOriginCommand(git),
-		commands.NewCreateBranchCommand(git, parsedTitle, cfg.Trunk),
-		commands.NewEmptyCommitCommand(git),
-		commands.NewPushCommand(git),
+		versioncontrol.NewFetchOriginCommand(git),
+		versioncontrol.NewCreateBranchCommand(git, parsedTitle, cfg.Trunk),
+		versioncontrol.NewEmptyCommitCommand(git),
+		versioncontrol.NewPushCommand(git),
 	}
 
 	clean, err := versionControl.IsClean()
@@ -48,14 +48,14 @@ func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.Gok
 
 	if !clean {
 		// Add to the stash first
-		executables = append([]commands.Command{commands.NewStashCommand(git)}, executables...)
+		executables = append([]commands.Command{versioncontrol.NewStashCommand(git)}, executables...)
 
 		// Remember to pop the stash at the end
-		executables = append(executables, commands.NewPopStashCommand(git))
+		executables = append(executables, versioncontrol.NewPopStashCommand(git))
 	}
 
 	// Create the PR
-	executables = append(executables, commands.NewPullRequestCommand(
+	executables = append(executables, forge.NewPullRequestCommand(
 		github,
 		parsedTitle,
 		cfg.Trunk,

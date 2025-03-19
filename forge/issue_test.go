@@ -33,8 +33,8 @@ func TestParseIssueTitle(t *testing.T) {
 		},
 		{
 			name:     "Only prefix, no description",
-			input:    "TODO:",
-			expected: IssueTitle{Prefix: "TODO", Content: ""},
+			input:    "PREFIX:",
+			expected: IssueTitle{Prefix: "PREFIX", Content: ""},
 		},
 		{
 			name:     "Monorepo-style",

@@ -43,15 +43,15 @@ type FakeGit struct {
 	BaseGit
 
 	// Repository state
-	currentBranch    string
-	originBranch     string
-	branches         []string
-	isDirty          bool
-	commits          []Commit
-	lastPush         Commit
-	isFetched        bool
-	TrunkSynced      bool
-	DiffSummaryCalls int
+	currentBranchField string
+	originBranch       string
+	branches           []string
+	isDirty            bool
+	commits            []Commit
+	lastPush           Commit
+	isFetched          bool
+	TrunkSynced        bool
+	DiffSummaryCalls   int
 }
 
 func NewFakeGit() *FakeGit {
@@ -62,12 +62,12 @@ func NewFakeGit() *FakeGit {
 		TrunkSynced:      false,
 		DiffSummaryCalls: 0,
 	}
-	g.Ops = g
+	g.ops = g
 	g.Stash = NewFakeStash(g) // Pass git reference to stash
 	return g
 }
 
-func (g *FakeGit) BranchExists(branchName string) (bool, error) {
+func (g *FakeGit) branchExists(branchName string) (bool, error) {
 	for _, branch := range g.branches {
 		if branch == branchName {
 			return true, nil
@@ -76,7 +76,7 @@ func (g *FakeGit) BranchExists(branchName string) (bool, error) {
 	return false, nil
 }
 
-func (g *FakeGit) DeleteBranch(branchName string) error {
+func (g *FakeGit) deleteBranch(branchName string) error {
 	filteredBranches := lo.Filter(g.branches, func(branch string, _ int) bool {
 		return branch != branchName
 	})
@@ -86,16 +86,16 @@ func (g *FakeGit) DeleteBranch(branchName string) error {
 	}
 
 	g.branches = filteredBranches
-	g.currentBranch = ""
+	g.currentBranchField = ""
 	return nil
 }
 
-func (g *FakeGit) CurrentBranch() (string, error) {
-	return g.currentBranch, nil
+func (g *FakeGit) currentBranch() (string, error) {
+	return g.currentBranchField, nil
 }
 
-func (g *FakeGit) SwitchBranch(branchName string) error {
-	exists, err := g.BranchExists(branchName)
+func (g *FakeGit) switchBranch(branchName string) error {
+	exists, err := g.branchExists(branchName)
 
 	if err != nil {
 		return err
@@ -105,7 +105,7 @@ func (g *FakeGit) SwitchBranch(branchName string) error {
 		return fmt.Errorf("branch %s not found", branchName)
 	}
 
-	g.currentBranch = branchName
+	g.currentBranchField = branchName
 	return nil
 }
 
@@ -134,20 +134,20 @@ func (g *FakeGit) IsClean() (bool, error) {
 	return !g.isDirty, nil
 }
 
-func (g *FakeGit) Fetch(_ string) error {
+func (g *FakeGit) fetch(_ string) error {
 	g.isFetched = true
 	return nil
 }
 
-func (g *FakeGit) BranchFromOrigin(branchName string, origin string) error {
+func (g *FakeGit) branchFromOrigin(branchName string, origin string) error {
 	g.branches = append(g.branches, branchName)
-	g.currentBranch = branchName
+	g.currentBranchField = branchName
 	g.originBranch = origin
 
 	return nil
 }
 
-func (g *FakeGit) EmptyCommit(message string) error {
+func (g *FakeGit) emptyCommit(message string) error {
 	g.commits = append(g.commits, Commit{
 		Title: message,
 		Empty: true,
@@ -155,7 +155,7 @@ func (g *FakeGit) EmptyCommit(message string) error {
 	return nil
 }
 
-func (g *FakeGit) Push() error {
+func (g *FakeGit) push() error {
 	g.lastPush = g.commits[len(g.commits)-1]
 	return nil
 }
