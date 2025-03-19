@@ -7,8 +7,8 @@ import (
 )
 
 type Shell interface {
-	Run(cmd string) error
-	RunWithOutput(cmd string) (string, error)
+	Run(cmd string) (string, error)
+	RunQuietly(cmd string) (string, error)
 }
 
 type RealShell struct{}
@@ -17,32 +17,29 @@ func New() Shell {
 	return &RealShell{}
 }
 
-func (s *RealShell) Run(cmd string) error {
+func (s *RealShell) RunQuietly(cmd string) (string, error) {
+	return s.run(cmd, true)
+}
+
+func (s *RealShell) Run(cmd string) (string, error) {
+	return s.run(cmd, false)
+}
+
+func (s *RealShell) run(cmd string, quiet bool) (string, error) {
 	// Figure out the calling shell
 	fmt.Printf("%s\n", cmd)
 	shell := os.Getenv("SHELL")
-	command := exec.Command(shell, "-c", cmd)
 
 	// Set up pipes for standard input, output, and error
-	command.Stdin = os.Stdin
-	command.Stdout = os.Stdout
-	command.Stderr = os.Stderr
-
-	// Execute the command
-	err := command.Run()
-	if err != nil {
-		panic(err)
-	}
-	return nil
-}
-func (s *RealShell) RunWithOutput(cmd string) (string, error) {
-	shell := os.Getenv("SHELL")
 	command := exec.Command(shell, "-c", cmd)
 
-	// Set up pipes for standard output and error
-	output, err := command.Output()
-	if err != nil {
-		return "", err
+	if !quiet {
+		command.Stdin = os.Stdin
+		command.Stdout = os.Stdout
+		command.Stderr = os.Stderr
 	}
-	return string(output), nil
+
+	// Execute the command
+	output, err := command.Output()
+	return string(output), err
 }

@@ -13,10 +13,6 @@ type Command struct {
 	inverse     func() error
 }
 
-// How do I want to handle setting up the commands?
-// Likely want them all to be build within the shell command, and then delegate onwards.
-// This means less abstraction at the level of "versionControl" and "forge" and more at the level of "commands"
-
 func NewFetchOriginCommand() Command {
 	return Command{
 		assumptions: []func() error{},
@@ -40,7 +36,12 @@ func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) C
 		assumptions: []func() error{
 			func() error {
 				git := version_control.NewGit(shell.New())
-				if git.Ops.BranchExists(branchName) {
+				exists, err := git.Ops.BranchExists(branchName)
+				if err != nil {
+					return err
+				}
+
+				if exists {
 					return fmt.Errorf("branch %s already exists", issueTitle)
 				}
 				return nil

@@ -41,7 +41,12 @@ func newChange(f forge.Forge, cfg *config.GokidConfig, inputTitle string, versio
 		commands.NewPushCommand(),
 	}
 
-	if !versionControl.IsClean() {
+	clean, err := versionControl.IsClean()
+	if err != nil {
+		return err
+	}
+
+	if !clean {
 		// Add to the stash first
 		executables = append([]commands.Command{commands.NewStashCommand()}, executables...)
 

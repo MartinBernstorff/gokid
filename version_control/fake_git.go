@@ -58,9 +58,9 @@ func NewFakeGit() *FakeGit {
 	return g
 }
 
-func (g *FakeGit) BranchExists(branchName string) bool {
+func (g *FakeGit) BranchExists(branchName string) (bool, error) {
 	// p2: Improve the fake implementation; add a list of all branches, which we can then test here
-	return g.currentBranch != ""
+	return g.currentBranch != "", nil
 }
 
 // Helper methods to inspect repository state
@@ -89,28 +89,32 @@ func (g *FakeGit) SetDirty(isDirty bool) {
 	g.isDirty = isDirty
 }
 
-func (g *FakeGit) IsClean() bool {
-	return !g.isDirty
+func (g *FakeGit) IsClean() (bool, error) {
+	return !g.isDirty, nil
 }
 
-func (g *FakeGit) Fetch(remote string) {
+func (g *FakeGit) Fetch(remote string) error {
 	g.isFetched = true
+	return nil
 }
 
-func (g *FakeGit) BranchFromOrigin(branchName string, origin string) {
+func (g *FakeGit) BranchFromOrigin(branchName string, origin string) error {
 	g.currentBranch = branchName
 	g.originBranch = origin
+	return nil
 }
 
-func (g *FakeGit) EmptyCommit(message string) {
+func (g *FakeGit) EmptyCommit(message string) error {
 	g.commits = append(g.commits, Commit{
 		Title: message,
 		Empty: true,
 	})
+	return nil
 }
 
-func (g *FakeGit) Push() {
+func (g *FakeGit) Push() error {
 	g.lastPush = g.commits[len(g.commits)-1]
+	return nil
 }
 
 func (g *FakeGit) AddCommit(title string, empty bool) {
