@@ -39,7 +39,11 @@ func Execute(commands []Command) []error {
 					continue
 				}
 
-				completedCommands[index].revert()
+				err := completedCommands[index].revert()
+				if err != nil {
+					fmt.Println("Error reverting: " + err.Error())
+					return []error{err}
+				}
 				// p2: if the revert fails, error out
 			}
 
