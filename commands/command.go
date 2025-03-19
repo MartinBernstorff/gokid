@@ -7,12 +7,12 @@ import (
 )
 
 type Command struct {
-	assumptions []LabelledCallable
-	action      LabelledCallable
-	revert      LabelledCallable
+	assumptions []NamedCallable
+	action      NamedCallable
+	revert      NamedCallable
 }
 
-type LabelledCallable struct {
+type NamedCallable struct {
 	name     string
 	callable func() error
 }
@@ -21,14 +21,14 @@ type LabelledCallable struct {
 
 func NewFetchOriginCommand(git versioncontrol.Git) Command {
 	return Command{
-		assumptions: []LabelledCallable{},
-		action: LabelledCallable{
+		assumptions: []NamedCallable{},
+		action: NamedCallable{
 			name: "fetch origin",
 			callable: func() error {
 				return git.Ops.Fetch("origin")
 			},
 		},
-		revert: LabelledCallable{},
+		revert: NamedCallable{},
 	}
 }
 
@@ -41,7 +41,7 @@ func NewCreateBranchCommand(git versioncontrol.Git, issueTitle forge.IssueTitle,
 	}
 
 	return Command{
-		assumptions: []LabelledCallable{
+		assumptions: []NamedCallable{
 			{
 				name: fmt.Sprintf("%s does not exist", newBranchName),
 				callable: func() error {
@@ -56,13 +56,13 @@ func NewCreateBranchCommand(git versioncontrol.Git, issueTitle forge.IssueTitle,
 				},
 			},
 		},
-		action: LabelledCallable{
+		action: NamedCallable{
 			name: fmt.Sprintf("Create branch %s", newBranchName),
 			callable: func() error {
 				return git.Ops.BranchFromOrigin(newBranchName.String(), defaultBranch)
 			},
 		},
-		revert: LabelledCallable{
+		revert: NamedCallable{
 			name: "Delete branch",
 			callable: func() error {
 				err := git.Ops.SwitchBranch(startingBranch)
@@ -77,40 +77,40 @@ func NewCreateBranchCommand(git versioncontrol.Git, issueTitle forge.IssueTitle,
 
 func NewEmptyCommitCommand(git versioncontrol.Git) Command {
 	return Command{
-		assumptions: []LabelledCallable{},
-		action: LabelledCallable{
+		assumptions: []NamedCallable{},
+		action: NamedCallable{
 			name: "Create an empty commit",
 			callable: func() error {
 				return git.Ops.EmptyCommit("Initial commit")
 			},
 		},
-		revert: LabelledCallable{},
+		revert: NamedCallable{},
 	}
 }
 
 func NewPushCommand(git versioncontrol.Git) Command {
 	return Command{
-		assumptions: []LabelledCallable{},
-		action: LabelledCallable{
+		assumptions: []NamedCallable{},
+		action: NamedCallable{
 			name: "Push",
 			callable: func() error {
 				return git.Ops.Push()
 			},
 		},
-		revert: LabelledCallable{},
+		revert: NamedCallable{},
 	}
 }
 
 func NewStashCommand(git versioncontrol.Git) Command {
 	return Command{
-		assumptions: []LabelledCallable{},
-		action: LabelledCallable{
+		assumptions: []NamedCallable{},
+		action: NamedCallable{
 			name: "Stash changes",
 			callable: func() error {
 				return git.Stash.Save()
 			},
 		},
-		revert: LabelledCallable{
+		revert: NamedCallable{
 			name: "Pop stash",
 			callable: func() error {
 				return git.Stash.Pop()
@@ -121,14 +121,14 @@ func NewStashCommand(git versioncontrol.Git) Command {
 
 func NewPopStashCommand(git versioncontrol.Git) Command {
 	return Command{
-		assumptions: []LabelledCallable{},
-		action: LabelledCallable{
+		assumptions: []NamedCallable{},
+		action: NamedCallable{
 			name: "Pop stash",
 			callable: func() error {
 				return git.Stash.Pop()
 			},
 		},
-		revert: LabelledCallable{
+		revert: NamedCallable{
 			name: "Stash changes",
 			callable: func() error {
 				return git.Stash.Save()
@@ -139,27 +139,27 @@ func NewPopStashCommand(git versioncontrol.Git) Command {
 
 func NewPullRequestCommand(f forge.GitHubForge, title forge.IssueTitle, trunk string, draft bool) Command {
 	return Command{
-		assumptions: []LabelledCallable{},
-		action: LabelledCallable{
-			name: fmt.Sprintf("Create pull request %s", title),
+		assumptions: []NamedCallable{},
+		action: NamedCallable{
+			name: fmt.Sprintf("Create pull request '%s'", title),
 			callable: func() error {
 				return f.CreatePullRequest(forge.Issue{Title: title}, trunk, draft)
 			},
 		},
-		// p3: Close the pull request
-		revert: LabelledCallable{},
+		// p5: Close the pull request
+		revert: NamedCallable{},
 	}
 }
 
 func NewFailCommand() Command {
 	return Command{
-		assumptions: []LabelledCallable{},
-		action: LabelledCallable{
+		assumptions: []NamedCallable{},
+		action: NamedCallable{
 			name: "Fail",
 			callable: func() error {
 				return fmt.Errorf("fail")
 			},
 		},
-		revert: LabelledCallable{},
+		revert: NamedCallable{},
 	}
 }

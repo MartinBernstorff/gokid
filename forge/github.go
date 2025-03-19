@@ -34,7 +34,6 @@ func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) er
 }
 
 func (g *GitHubForge) ViewPullRequest() error {
-	// p3: Can we make this faster by inferring the PR URL from something on disk?
 	_, err := g.shell.Run("gh pr view --web || gh repo view --web")
 	if err != nil {
 		return fmt.Errorf("error viewing pull request: %s", err)

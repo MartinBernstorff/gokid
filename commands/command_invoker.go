@@ -4,7 +4,7 @@ import "fmt"
 
 func Execute(commands []Command) []error {
 	// Print the description of each command
-	fmt.Println("Executing commands:")
+	fmt.Println("Plan:")
 	for i, command := range commands {
 		fmt.Printf("  %v. %v\n", i+1, command.action.name)
 		for _, assumption := range command.assumptions {
@@ -28,7 +28,7 @@ func Execute(commands []Command) []error {
 
 	var completedCommands []Command
 	for _, command := range commands {
-		fmt.Println("Executing: " + command.action.name)
+		fmt.Println("\nExecuting: " + command.action.name)
 		err := command.action.callable()
 
 		if err != nil {

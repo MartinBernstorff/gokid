@@ -35,6 +35,4 @@ Gokid looks for configuration files in the current directory, or any parent dire
 
 * p4: Support deleting the current change
 
-* p3: Add plan-execute-rollback to all commands
-
 * p4: Go through the code and see if we use pointers where it makes sense
