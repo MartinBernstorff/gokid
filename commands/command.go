@@ -8,6 +8,7 @@ import (
 )
 
 type Command struct {
+	description string
 	assumptions []func() error
 	action      func() error
 	revert      func() error
@@ -15,6 +16,7 @@ type Command struct {
 
 func NewFetchOriginCommand() Command {
 	return Command{
+		description: "Fetch origin",
 		assumptions: []func() error{},
 		action: func() error {
 			// p2: Hacky implementation, should this be a "CreateFetchOriginCommand" which takes the shell as an argument?
@@ -33,6 +35,7 @@ func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) C
 	branchName := version_control.BranchTitle(issueTitle, "", "")
 
 	return Command{
+		description: fmt.Sprintf("Create branch %s", branchName),
 		assumptions: []func() error{
 			func() error {
 				git := version_control.NewGit(shell.New())
@@ -63,6 +66,7 @@ func NewCreateBranchCommand(issueTitle forge.IssueTitle, defaultBranch string) C
 
 func NewEmptyCommitCommand() Command {
 	return Command{
+		description: "Create an empty commit",
 		assumptions: []func() error{},
 		action: func() error {
 			git := version_control.NewGit(shell.New())
@@ -75,6 +79,7 @@ func NewEmptyCommitCommand() Command {
 
 func NewPushCommand() Command {
 	return Command{
+		description: "Push to origin",
 		assumptions: []func() error{},
 		action: func() error {
 			git := version_control.NewGit(shell.New())
@@ -87,6 +92,7 @@ func NewPushCommand() Command {
 
 func NewStashCommand() Command {
 	return Command{
+		description: "Stash changes",
 		assumptions: []func() error{},
 		action: func() error {
 			git := version_control.NewGit(shell.New())
@@ -103,6 +109,7 @@ func NewStashCommand() Command {
 
 func NewPopStashCommand() Command {
 	return Command{
+		description: "Pop stash",
 		assumptions: []func() error{},
 		action: func() error {
 			git := version_control.NewGit(shell.New())
@@ -117,6 +124,7 @@ func NewPullRequestCommand(title forge.IssueTitle, trunk string, draft bool) Com
 	f := forge.NewGitHub(shell.New())
 
 	return Command{
+		description: fmt.Sprintf("Create pull request %s", title),
 		assumptions: []func() error{},
 		action: func() error {
 			f.CreatePullRequest(forge.Issue{Title: title}, trunk, draft)
@@ -129,6 +137,7 @@ func NewPullRequestCommand(title forge.IssueTitle, trunk string, draft bool) Com
 
 func NewFailCommand() Command {
 	return Command{
+		description: "Fail",
 		assumptions: []func() error{},
 		action: func() error {
 			return fmt.Errorf("fail")
