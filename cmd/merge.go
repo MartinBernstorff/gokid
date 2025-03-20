@@ -50,6 +50,7 @@ func (m *Merger) merge(preMergeCommand string, autoMerge bool, forceMerge bool, 
 		fmt.Println("Error merging PR:", err)
 		return
 	}
+	fmt.Println("Executed merge strategy")
 }
 
 func init() {
