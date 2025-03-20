@@ -64,6 +64,5 @@ func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMer
 	if err != nil {
 		return fmt.Errorf("error merging pull request: %s", err)
 	}
-
 	return nil
 }
