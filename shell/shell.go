@@ -1,7 +1,9 @@
 package shell
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 )
@@ -33,12 +35,22 @@ func (s *RealShell) run(cmd string, quiet bool) (string, error) {
 	// Set up pipes for standard input, output, and error
 	command := exec.Command(shell, "-c", cmd)
 
+	// Create a buffer to store the output
+	var buf bytes.Buffer
+
+	// Create a multi-writer to write to both the terminal and the buffer
 	if !quiet {
-		command.Stdin = os.Stdin
-		command.Stderr = os.Stderr
+		command.Stdout = io.MultiWriter(os.Stdout, &buf)
+		command.Stderr = io.MultiWriter(os.Stderr, &buf)
+	} else {
+		command.Stdout = &buf
+		command.Stderr = &buf
 	}
 
 	// Execute the command
-	output, err := command.Output()
-	return string(output), err
+	err := command.Run()
+	if err != nil {
+		return buf.String(), fmt.Errorf("%s", buf.String())
+	}
+	return buf.String(), err
 }

@@ -30,7 +30,7 @@ func NewCreateBranchCommand(git Git, issueTitle forge.IssueTitle, defaultBranch 
 	return commands.Command{
 		Assumptions: []commands.NamedCallable{
 			{
-				Name: fmt.Sprintf("Branch '%s' does not exist", newBranchName),
+				Name: fmt.Sprintf("Branch does not exist", newBranchName),
 				Callable: func() error {
 					exists, err := git.ops.branchExists(newBranchName.String())
 					if err != nil {
@@ -44,7 +44,7 @@ func NewCreateBranchCommand(git Git, issueTitle forge.IssueTitle, defaultBranch 
 			},
 		},
 		Action: commands.NamedCallable{
-			Name: fmt.Sprintf("Create branch %s", newBranchName),
+			Name: fmt.Sprintf("Create branch '%s'", newBranchName),
 			Callable: func() error {
 				return git.ops.branchFromOrigin(newBranchName.String(), defaultBranch)
 			},

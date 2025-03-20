@@ -57,7 +57,7 @@ gk --help
 
 ## Roadmap
 * p4: Go through the code and see if we use pointers where it makes sense
-* p1: Go through Uber's Error style-guide and follow it
+* p1: Go through Uber's Error style-guide and follow it. In particular, check that the shell's error output is sent as a string, not bytes.
 * p3: Go through the tdd-course and apply lessons?
 * p2: Make the output more quiet
 * p2: Output the URL to the PR on creation
