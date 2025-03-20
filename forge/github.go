@@ -59,10 +59,12 @@ func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMer
 		cmd += " --admin"
 	}
 
-	_, err := g.shell.Run(cmd)
+	output, err := g.shell.RunQuietly(cmd)
 
 	if err != nil {
 		return fmt.Errorf("error merging pull request: %s", err)
 	}
+
+	fmt.Println(output)
 	return nil
 }
