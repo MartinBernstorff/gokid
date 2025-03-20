@@ -33,8 +33,8 @@ or, using aliases:
 gk n "my new PR"
 ```
 
-## Usage
-Write the default config to the current directory, and you are ready to go! 🚀
+## Settings
+Write the default config to the current directory:
 
 ```bash
 gk init
