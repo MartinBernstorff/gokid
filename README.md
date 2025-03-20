@@ -23,6 +23,20 @@ cd gokid && go install .
 
 ## Usage
 
+To create your first change (branch + PR):
+
+```bash
+gokid new "feat: my new feature"
+```
+
+or, using aliases:
+
+```bash
+gk n "feat: my new feature"
+```
+
+To get an overview of commands:
+
 ```bash
 gk --help
 ```
@@ -38,3 +52,6 @@ Gokid looks for configuration files in the current directory, or any parent dire
 
 ## Roadmap
 * p4: Go through the code and see if we use pointers where it makes sense
+* p2: Go through Uber's Error style-guide and follow it
+* p3: Go through the tdd-course and apply lessons?
+* p3: Rename to warpgate?
