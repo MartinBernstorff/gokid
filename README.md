@@ -26,13 +26,13 @@ cd gokid && go install .
 To create your first change (branch + PR):
 
 ```bash
-gokid new "feat: my new feature"
+gokid new "my new PR"
 ```
 
 or, using aliases:
 
 ```bash
-gk n "feat: my new feature"
+gk n "my new PR"
 ```
 
 ## Usage
@@ -56,8 +56,5 @@ gk --help
 ```
 
 ## Roadmap
-* p4: Go through the code and see if we use pointers where it makes sense
 * p3: Go through the tdd-course and apply lessons?
-* p2: Output the URL to the PR on creation
 * p3: Rename to warpgate?
-* p1: Setup integator
