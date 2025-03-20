@@ -65,12 +65,12 @@ func (g *Git) currentBranch() (string, error) {
 }
 
 func (g *Git) switchBranch(branchName string) error {
-	_, err := g.shell.Run(fmt.Sprintf("git checkout %s", branchName))
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git checkout %s", branchName))
 	return err
 }
 
 func (g *Git) deleteBranch(branchName string) error {
-	_, err := g.shell.Run(fmt.Sprintf("git branch -D %s", branchName))
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git branch -D %s", branchName))
 	return err
 }
 
@@ -84,21 +84,21 @@ func (g *Git) IsClean() (bool, error) {
 }
 
 func (g *Git) fetch(remote string) error {
-	_, err := g.shell.Run(fmt.Sprintf("git fetch %s", remote))
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git fetch %s", remote))
 	return err
 }
 
 func (g *Git) branchFromOrigin(branchName string, defaultBranch string) error {
-	_, err := g.shell.Run(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchName, defaultBranch))
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git checkout -b %s --no-track origin/%s", branchName, defaultBranch))
 	return err
 }
 
 func (g *Git) emptyCommit(message string) error {
-	_, err := g.shell.Run(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
 	return err
 }
 
 func (g *Git) push() error {
-	_, err := g.shell.Run("git push")
+	_, err := g.shell.RunQuietly("git push")
 	return err
 }
