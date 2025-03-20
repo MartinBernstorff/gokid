@@ -2,7 +2,7 @@
 
 GoKid is a CLI tool for managing changes, designed to remove the boilerplate work from creating branches and pull requests.
 
-## Installation
+## Quick-start
 1. Install the [GitHub CLI](https://cli.github.com/)
 
 ```bash
@@ -20,8 +20,6 @@ or by cloning the repository, and:
 ```bash
 cd gokid && go install .
 ```
-
-## Quick-start
 
 To create your first change (branch + PR):
 
