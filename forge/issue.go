@@ -76,6 +76,7 @@ func NewBranchName(name string) BranchName {
 		"?", "",
 		"*", "",
 		"[", "",
+		"'", "",
 	)
 
 	replacedName := replacer.Replace(name)
