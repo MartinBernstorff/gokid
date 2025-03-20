@@ -10,7 +10,7 @@ func NewFetchOriginCommand(git Git) commands.Command {
 	return commands.Command{
 		Assumptions: []commands.NamedCallable{},
 		Action: commands.NamedCallable{
-			Name: "fetch origin",
+			Name: "Fetch origin",
 			Callable: func() error {
 				return git.ops.fetch("origin")
 			},
@@ -30,7 +30,7 @@ func NewCreateBranchCommand(git Git, issueTitle forge.IssueTitle, defaultBranch 
 	return commands.Command{
 		Assumptions: []commands.NamedCallable{
 			{
-				Name: fmt.Sprintf("%s does not exist", newBranchName),
+				Name: fmt.Sprintf("Branch '%s' does not exist", newBranchName),
 				Callable: func() error {
 					exists, err := git.ops.branchExists(newBranchName.String())
 					if err != nil {

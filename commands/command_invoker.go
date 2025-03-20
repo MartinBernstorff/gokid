@@ -8,7 +8,7 @@ func Execute(commands []Command) []error {
 	for i, command := range commands {
 		fmt.Printf("  %v. %v\n", i+1, command.Action.Name)
 		for _, assumption := range command.Assumptions {
-			fmt.Printf("  Assumes: %v\n", assumption.Name)
+			fmt.Printf("    Assumes: %v\n", assumption.Name)
 		}
 	}
 
@@ -32,25 +32,28 @@ func Execute(commands []Command) []error {
 		err := command.Action.Callable()
 
 		if err != nil {
+			fmt.Println("Error executing: " + err.Error())
+			fmt.Println("––– Reverting –––")
 			// Revert commands from most recently executed to
 			// least recently
 			for i := range completedCommands {
 				index := (len(completedCommands) - 1) - i
 				cmd := completedCommands[index]
 
+				fmt.Println("Reverting: " + cmd.Action.Name)
 				if cmd.Revert.Callable == nil {
 					fmt.Println(cmd.Action.Name + " has nothing to revert, skipping")
 					continue
 				}
 
-				fmt.Println("Reverting: " + cmd.Action.Name)
 				err := completedCommands[index].Revert.Callable()
 				if err != nil {
-					fmt.Println("Error reverting: " + err.Error())
+					fmt.Println("––– Error reverting: " + err.Error() + " –––")
 					return []error{err}
 				}
 			}
 
+			fmt.Println("––– Reverted succesfully –––")
 			return []error{err}
 		}
 
