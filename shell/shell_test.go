@@ -7,13 +7,13 @@ import (
 
 func TestError(t *testing.T) {
 	shell := New()
-	output, err := shell.Run("ls /nonexistent")
+	output, err := shell.Run("blajk")
 
 	if err == nil {
 		t.Fatal("expected error for nonexistent directory")
 	}
 
-	expectedErr := "ls: /nonexistent: No such file or directory"
+	expectedErr := "blajk"
 	if !strings.Contains(output, expectedErr) {
 		t.Errorf("got output %q, want output containing %q", output, expectedErr)
 	}
