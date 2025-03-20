@@ -28,7 +28,7 @@ func Execute(commands []Command) []error {
 
 	var completedCommands []Command
 	for _, command := range commands {
-		fmt.Println("\nExecuting: " + command.Action.Name)
+		fmt.Println("Executing: " + command.Action.Name)
 		err := command.Action.Callable()
 
 		if err != nil {
@@ -59,8 +59,6 @@ func Execute(commands []Command) []error {
 
 		completedCommands = append(completedCommands, command)
 	}
-
-	fmt.Println("All commands executed successfully")
 
 	return nil
 }

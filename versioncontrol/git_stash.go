@@ -19,11 +19,11 @@ func NewStash(s shell.Shell) *Stash {
 }
 
 func (s *Stash) Save() error {
-	_, err := s.shell.Run("git stash")
+	_, err := s.shell.RunQuietly("git stash")
 	return err
 }
 
 func (s *Stash) Pop() error {
-	_, err := s.shell.Run("git stash pop")
+	_, err := s.shell.RunQuietly("git stash pop")
 	return err
 }

@@ -24,7 +24,7 @@ func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) er
 
 	cmd += fmt.Sprintf(" --title \"%s\" --body \"\"", issue.Title.String())
 
-	output, err := g.shell.RunQuietly(cmd)
+	output, err := g.shell.Run(cmd)
 
 	if err != nil {
 		return fmt.Errorf("error creating pull request: %s", output)
