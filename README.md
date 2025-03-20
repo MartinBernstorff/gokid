@@ -3,13 +3,13 @@
 GoKid is a CLI tool for managing changes, designed to remove the boilerplate work from creating branches and pull requests.
 
 ## Installation
-Requires the [GitHub CLI](https://cli.github.com/) to be installed under `gh`, e.g.
+1. Install the [GitHub CLI](https://cli.github.com/)
 
 ```bash
 brew install gh && gh auth login
 ```
 
-Can then be installed by:
+2. Install `gokid`:
 
 ```bash
 brew update && brew install martinbernstorff/homebrew-tap/gk
