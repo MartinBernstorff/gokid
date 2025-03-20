@@ -17,9 +17,4 @@
 dist/
 gokid
 .gokid*
-
-.gokid.*
-.gokid.*
-.gokid.*
-.gokid.*
-.gokid.*
+.logs
