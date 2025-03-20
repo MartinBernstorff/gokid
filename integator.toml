@@ -1,0 +1,23 @@
+[integator]
+fail_fast = true
+push_on_success = true
+root_worktree_dir = "/Users/mabe/Git/gokid"
+[[integator.steps]]
+name = "T"
+cmd = "go test ./..."
+max_staleness_seconds = 0
+
+[[integator.steps]]
+name = "L"
+cmd = "golangci-lint run"
+max_staleness_seconds = 0
+
+[[integator.steps]]
+name = "X"
+cmd = "! rg -g '!integator.toml' XXX: ."
+max_staleness_seconds = 0
+
+[[integator.steps]]
+name = "I"
+cmd = "go install ."
+max_staleness_seconds = 0

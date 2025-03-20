@@ -29,7 +29,6 @@ func (s *RealShell) Run(cmd string) (string, error) {
 
 func (s *RealShell) run(cmd string, quiet bool) (string, error) {
 	// Figure out the calling shell
-	fmt.Printf("%s\n", cmd)
 	shellEnv := os.Getenv("SHELL")
 
 	var shell string
@@ -47,6 +46,7 @@ func (s *RealShell) run(cmd string, quiet bool) (string, error) {
 
 	// Create a multi-writer to write to both the terminal and the buffer
 	if !quiet {
+		fmt.Printf("%s\n", cmd)
 		command.Stdout = io.MultiWriter(os.Stdout, &buf)
 		command.Stderr = io.MultiWriter(os.Stderr, &buf)
 	} else {
