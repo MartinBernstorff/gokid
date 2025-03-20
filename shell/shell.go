@@ -30,9 +30,16 @@ func (s *RealShell) Run(cmd string) (string, error) {
 func (s *RealShell) run(cmd string, quiet bool) (string, error) {
 	// Figure out the calling shell
 	fmt.Printf("%s\n", cmd)
-	shell := os.Getenv("SHELL")
+	shellEnv := os.Getenv("SHELL")
 
-	// Set up pipes for standard input, output, and error
+	var shell string
+	switch shellEnv {
+	case "":
+		shell = "/bin/sh"
+	default:
+		shell = shellEnv
+	}
+
 	command := exec.Command(shell, "-c", cmd)
 
 	// Create a buffer to store the output
