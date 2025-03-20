@@ -2,6 +2,7 @@ package versioncontrol
 
 import (
 	"fmt"
+	"gokid/forge"
 	"gokid/shell"
 	"os/exec"
 	"strings"
@@ -17,7 +18,7 @@ type gitOperations interface {
 	deleteBranch(branchName string) error
 	switchBranch(branchName string) error
 	emptyCommit(message string) error
-	push() error
+	push(branchName forge.BranchName) error
 }
 
 type BaseGit struct {
@@ -98,7 +99,8 @@ func (g *Git) emptyCommit(message string) error {
 	return err
 }
 
-func (g *Git) push() error {
-	_, err := g.shell.RunQuietly("git push")
+// `git push --set-upstream origin {branch_name}`
+func (g *Git) push(branchName forge.BranchName) error {
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git push --set-upstream origin %s", branchName.String()))
 	return err
 }

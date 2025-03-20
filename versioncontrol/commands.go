@@ -75,13 +75,13 @@ func NewEmptyCommitCommand(git Git) commands.Command {
 	}
 }
 
-func NewPushCommand(git Git) commands.Command {
+func NewPushCommand(git Git, branchName forge.BranchName) commands.Command {
 	return commands.Command{
 		Assumptions: []commands.NamedCallable{},
 		Action: commands.NamedCallable{
 			Name: "Push",
 			Callable: func() error {
-				return git.ops.push()
+				return git.ops.push(branchName)
 			},
 		},
 		Revert: commands.NamedCallable{},

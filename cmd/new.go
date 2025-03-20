@@ -38,7 +38,7 @@ func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.Gok
 		versioncontrol.NewFetchOriginCommand(git),
 		versioncontrol.NewCreateBranchCommand(git, parsedTitle, cfg.Trunk),
 		versioncontrol.NewEmptyCommitCommand(git),
-		versioncontrol.NewPushCommand(git),
+		versioncontrol.NewPushCommand(git, parsedTitle.ToBranchName()),
 	}
 
 	clean, err := versionControl.IsClean()
