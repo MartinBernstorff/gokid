@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// p3: This function can likely be refactored
 func updateGitignore() error {
 	gitignorePath := ".gitignore"
 	ignoreString := ".gokid.*"
@@ -23,7 +24,7 @@ func updateGitignore() error {
 		}
 		defer file.Close()
 		_, err = file.WriteString(ignoreString + "\n")
-		return err
+		return fmt.Errorf("error writing to .gitignore file: %w", err)
 	}
 
 	// Update existing .gitignore

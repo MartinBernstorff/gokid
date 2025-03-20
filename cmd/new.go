@@ -17,7 +17,7 @@ import (
 func changeNamePrompt() string {
 	validate := func(input string) error {
 		if len(input) < 1 {
-			return errors.New("invalid change")
+			return errors.New("change name cannot be empty")
 		}
 		return nil
 	}
@@ -31,7 +31,7 @@ func changeNamePrompt() string {
 	return result
 }
 
-func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, versionControl versioncontrol.VCS) error {
+func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, versionControl versioncontrol.VCS) []error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 
 	executables := []commands.Command{
@@ -43,7 +43,7 @@ func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.Gok
 
 	clean, err := versionControl.IsClean()
 	if err != nil {
-		return err
+		return []error{fmt.Errorf("could not determine vcs status: %v", err)}
 	}
 
 	if !clean {
@@ -64,7 +64,7 @@ func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.Gok
 
 	errors := commands.Execute(executables)
 	if len(errors) > 0 {
-		return errors[0]
+		return errors
 	}
 	return nil
 }
@@ -85,14 +85,14 @@ func init() {
 			case 1:
 				title = args[0]
 			default:
-				fmt.Fprintf(os.Stderr, "Error: Too many arguments\n")
+				fmt.Fprintf(os.Stderr, "too many arguments\n")
 				os.Exit(1)
 			}
 
 			git := versioncontrol.NewGit(shell)
 			github := forge.NewGitHub(shell)
 			if err := newChange(*git, *github, &cfg, title, versioncontrol.NewGit(shell)); err != nil {
-				fmt.Fprintf(os.Stderr, "Error creating change: %v\n", err)
+				fmt.Fprintf(os.Stderr, "creating change: %v\n", err)
 				os.Exit(1)
 			}
 		},
