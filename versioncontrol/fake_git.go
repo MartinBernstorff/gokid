@@ -2,6 +2,7 @@ package versioncontrol
 
 import (
 	"fmt"
+	"gokid/forge"
 
 	"github.com/samber/lo"
 )
@@ -155,7 +156,7 @@ func (g *FakeGit) emptyCommit(message string) error {
 	return nil
 }
 
-func (g *FakeGit) push() error {
+func (g *FakeGit) push(_ forge.BranchName) error {
 	g.lastPush = g.commits[len(g.commits)-1]
 	return nil
 }
