@@ -62,3 +62,4 @@ gk --help
 * p2: Make the output more quiet. Make sure to output the relevant sections.
 * p2: Output the URL to the PR on creation
 * p3: Rename to warpgate?
+* p1: Setup integator
