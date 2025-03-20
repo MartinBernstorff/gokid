@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"gokid/commands"
 	"gokid/forge"
+
+	"github.com/pkg/errors"
 )
 
 func NewFetchOriginCommand(git Git) commands.Command {
@@ -30,11 +32,11 @@ func NewCreateBranchCommand(git Git, issueTitle forge.IssueTitle, defaultBranch 
 	return commands.Command{
 		Assumptions: []commands.NamedCallable{
 			{
-				Name: fmt.Sprintf("Branch does not exist", newBranchName),
+				Name: "Branch does not exist",
 				Callable: func() error {
 					exists, err := git.ops.branchExists(newBranchName.String())
 					if err != nil {
-						return err
+						return errors.New("creating branch", err)
 					}
 					if exists {
 						return fmt.Errorf("branch %s already exists", issueTitle)
