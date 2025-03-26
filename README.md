@@ -1,6 +1,6 @@
 # GoKid
 
-GoKid is a CLI tool for managing changes, designed to remove the boilerplate work from creating branches and pull requests.
+GoKid is an opinionated CLI for managing code changes as one unit. It remove the boilerplate work from creating branches and pull requests.
 
 ## Quick-start
 1. Install the [GitHub CLI](https://cli.github.com/)
@@ -32,6 +32,13 @@ or, using aliases:
 ```bash
 gk n "my new PR"
 ```
+
+## Workflow
+Gokid assumes you name your changes before you start working on them, so:
+1. `gokid new "name of change`
+2. Branch and PR are created
+3. Work on change
+4. `gokid merge`, or review/merge through GitHub 
 
 ## Settings
 Write the default config to the current directory:
