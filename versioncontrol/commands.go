@@ -44,7 +44,7 @@ func NewCreateBranchCommand(git Git, issueTitle forge.IssueTitle, defaultBranch 
 			},
 		},
 		Action: commands.NamedCallable{
-			Name: fmt.Sprintf("Create branch '%s'", newBranchName),
+			Name: fmt.Sprintf("Branch out from trunk with '%s'", newBranchName),
 			Callable: func() error {
 				return git.ops.branchFromOrigin(newBranchName.String(), defaultBranch)
 			},
