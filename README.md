@@ -63,3 +63,5 @@ gk --help
 ## Roadmap
 * p3: Go through the tdd-course and apply lessons?
 * p3: Rename to warpgate?
+* p2: Add "gokid list", which shows all PRs for current repository
+* p2: Add "gokid close", which closes a PR without merging it
