@@ -11,6 +11,7 @@ func Execute(commands []Command) []error {
 			fmt.Printf("    Assumes: %v\n", assumption.Name)
 		}
 	}
+	fmt.Println("")
 
 	var errors []error
 	for _, command := range commands {
