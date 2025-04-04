@@ -33,7 +33,6 @@ var cfgCmd = &cobra.Command{
 
 		fmt.Println(string(prettyJSON))
 	},
-	Aliases: []string{"c"},
 }
 
 func init() {

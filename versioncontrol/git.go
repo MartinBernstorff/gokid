@@ -10,7 +10,7 @@ import (
 
 type gitOperations interface {
 	IsClean() (bool, error)
-	currentBranch() (string, error)
+	CurrentBranch() (string, error)
 
 	fetch(remote string) error
 	branchFromOrigin(branchName string, defaultBranch string) error
@@ -22,7 +22,7 @@ type gitOperations interface {
 }
 
 type BaseGit struct {
-	ops   gitOperations
+	Ops   gitOperations
 	Stash Stasher
 }
 
@@ -35,7 +35,7 @@ func NewGit(s shell.Shell) *Git {
 	g := &Git{
 		shell: s,
 	}
-	g.ops = g
+	g.Ops = g
 	g.Stash = NewStash(s)
 	return g
 }
@@ -56,7 +56,7 @@ func (g *Git) branchExists(branchName string) (bool, error) {
 	return strings.TrimSpace(string(output)) != "", err
 }
 
-func (g *Git) currentBranch() (string, error) {
+func (g *Git) CurrentBranch() (string, error) {
 	cmd := exec.Command("git", "branch", "--show-current")
 	output, err := cmd.Output()
 	if err != nil {

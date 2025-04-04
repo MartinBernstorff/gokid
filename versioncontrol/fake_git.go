@@ -63,7 +63,7 @@ func NewFakeGit() *FakeGit {
 		TrunkSynced:      false,
 		DiffSummaryCalls: 0,
 	}
-	g.ops = g
+	g.Ops = g
 	g.Stash = NewFakeStash(g) // Pass git reference to stash
 	return g
 }
@@ -91,7 +91,7 @@ func (g *FakeGit) deleteBranch(branchName string) error {
 	return nil
 }
 
-func (g *FakeGit) currentBranch() (string, error) {
+func (g *FakeGit) CurrentBranch() (string, error) {
 	return g.currentBranchField, nil
 }
 

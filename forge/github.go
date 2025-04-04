@@ -9,6 +9,18 @@ type GitHubForge struct {
 	shell shell.Shell
 }
 
+func (g *GitHubForge) CloseChange(comment string, branch string) error {
+	cmd := fmt.Sprintf("gh pr close \"%s\"", branch)
+	if comment != "" {
+		cmd += fmt.Sprintf(" --comment \"%s\"", comment)
+	}
+	_, err := g.shell.Run(cmd)
+	if err != nil {
+		return fmt.Errorf("github CLI errored: %w", err)
+	}
+	return nil
+}
+
 func NewGitHub(s shell.Shell) *GitHubForge {
 	return &GitHubForge{
 		shell: s,

@@ -12,7 +12,7 @@ func NewFetchOriginCommand(git Git) commands.Command {
 		Action: commands.NamedCallable{
 			Name: "Fetch origin",
 			Callable: func() error {
-				return git.ops.fetch("origin")
+				return git.Ops.fetch("origin")
 			},
 		},
 		Revert: commands.NamedCallable{},
@@ -22,7 +22,7 @@ func NewFetchOriginCommand(git Git) commands.Command {
 func NewCreateBranchCommand(git Git, issueTitle forge.IssueTitle, defaultBranch string) commands.Command {
 	newBranchName := forge.NewBranchName(issueTitle.Content)
 
-	startingBranch, err := git.ops.currentBranch()
+	startingBranch, err := git.Ops.CurrentBranch()
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +32,7 @@ func NewCreateBranchCommand(git Git, issueTitle forge.IssueTitle, defaultBranch 
 			{
 				Name: "Branch does not exist",
 				Callable: func() error {
-					exists, err := git.ops.branchExists(newBranchName.String())
+					exists, err := git.Ops.branchExists(newBranchName.String())
 					if err != nil {
 						return fmt.Errorf("creating branch: %s", err)
 					}
@@ -46,17 +46,17 @@ func NewCreateBranchCommand(git Git, issueTitle forge.IssueTitle, defaultBranch 
 		Action: commands.NamedCallable{
 			Name: fmt.Sprintf("Branch out from trunk with '%s'", newBranchName),
 			Callable: func() error {
-				return git.ops.branchFromOrigin(newBranchName.String(), defaultBranch)
+				return git.Ops.branchFromOrigin(newBranchName.String(), defaultBranch)
 			},
 		},
 		Revert: commands.NamedCallable{
 			Name: "Delete branch",
 			Callable: func() error {
-				err := git.ops.switchBranch(startingBranch)
+				err := git.Ops.switchBranch(startingBranch)
 				if err != nil {
 					return err
 				}
-				return git.ops.deleteBranch(newBranchName.String())
+				return git.Ops.deleteBranch(newBranchName.String())
 			},
 		},
 	}
@@ -68,7 +68,7 @@ func NewEmptyCommitCommand(git Git) commands.Command {
 		Action: commands.NamedCallable{
 			Name: "Create an empty commit",
 			Callable: func() error {
-				return git.ops.emptyCommit("Initial commit")
+				return git.Ops.emptyCommit("Initial commit")
 			},
 		},
 		Revert: commands.NamedCallable{},
@@ -81,7 +81,7 @@ func NewPushCommand(git Git, branchName forge.BranchName) commands.Command {
 		Action: commands.NamedCallable{
 			Name: "Push",
 			Callable: func() error {
-				return git.ops.push(branchName)
+				return git.Ops.push(branchName)
 			},
 		},
 		Revert: commands.NamedCallable{},
