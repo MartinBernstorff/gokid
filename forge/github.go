@@ -34,7 +34,7 @@ func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) er
 		cmd += " --draft"
 	}
 
-	cmd += fmt.Sprintf(" --title \"%s\" --body \"\"", issue.Title.String())
+	cmd += fmt.Sprintf(" --title \"%s\" --body \"%s\"", issue.Title.String(), issue.Body)
 
 	output, err := g.shell.RunQuietly(cmd)
 	if err != nil {

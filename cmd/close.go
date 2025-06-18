@@ -31,14 +31,13 @@ func init() {
 		Run: func(_ *cobra.Command, args []string) {
 			shell := shell.New()
 
-			comment := ""
+			var comment string
 			switch len(args) {
 			case 0:
 				comment = ""
 			case 1:
 				comment = args[0]
 			default:
-				comment = args[0]
 				fmt.Println("Too many arguments")
 				os.Exit(1)
 			}
