@@ -14,7 +14,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func changeNamePrompt() string {
+func changeNamePrompt(label string) string {
 	validate := func(input string) error {
 		if len(input) < 1 {
 			return errors.New("change name cannot be empty")
@@ -23,7 +23,7 @@ func changeNamePrompt() string {
 	}
 
 	prompt := promptui.Prompt{
-		Label:    "Title of change",
+		Label:    label,
 		Validate: validate,
 	}
 
@@ -31,7 +31,7 @@ func changeNamePrompt() string {
 	return result
 }
 
-func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, versionControl versioncontrol.VCS) []error {
+func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, description string, versionControl versioncontrol.VCS) []error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 
 	executables := []commands.Command{
@@ -58,6 +58,7 @@ func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.Gok
 	executables = append(executables, forge.NewPullRequestCommand(
 		github,
 		parsedTitle,
+		description,
 		cfg.Trunk,
 		cfg.Draft,
 	))
@@ -79,11 +80,17 @@ func init() {
 			shell := shell.New()
 
 			var title string
+			var description string
 			switch len(args) {
 			case 0:
-				title = changeNamePrompt()
+				title = changeNamePrompt("Title:")
+				description = ""
 			case 1:
 				title = args[0]
+				description = ""
+			case 2:
+				title = args[0]
+				description = args[1]
 			default:
 				fmt.Fprintf(os.Stderr, "too many arguments\n")
 				os.Exit(1)
@@ -91,7 +98,7 @@ func init() {
 
 			git := versioncontrol.NewGit(shell)
 			github := forge.NewGitHub(shell)
-			if err := newChange(*git, *github, &cfg, title, versioncontrol.NewGit(shell)); err != nil {
+			if err := newChange(*git, *github, &cfg, title, description, versioncontrol.NewGit(shell)); err != nil {
 				fmt.Fprintf(os.Stderr, "creating change: %v\n", err)
 				os.Exit(1)
 			}
