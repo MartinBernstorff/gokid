@@ -22,6 +22,11 @@ func (g *GitHubForge) CloseChange(comment string, branch string) error {
 }
 
 func NewGitHub(s shell.Shell) *GitHubForge {
+	// Check if GitHub CLI is installed
+	_, err := s.RunQuietly("gh --version")
+	if err != nil {
+		panic("GitHub CLI (gh) is not installed or not available in PATH")
+	}
 	return &GitHubForge{
 		shell: s,
 	}
