@@ -33,8 +33,9 @@ func Execute(commands []Command) []error {
 		err := command.Action.Callable()
 
 		if err != nil {
-			fmt.Println("Error executing: " + err.Error())
-			fmt.Println("––– Reverting –––")
+			fmt.Println("--- Error executing: " + command.Action.Name + " ---")
+			fmt.Printf("Error: %v", err)
+			fmt.Println("!!! Reverting")
 			// Revert commands from most recently executed to
 			// least recently
 			for i := range completedCommands {
@@ -54,7 +55,7 @@ func Execute(commands []Command) []error {
 				}
 			}
 
-			fmt.Println("––– Reverted succesfully –––")
+			fmt.Println("--- Reverted succesfully –––")
 			return []error{err}
 		}
 
