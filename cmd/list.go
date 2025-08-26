@@ -10,49 +10,55 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func humanCIState(state string) string {
-	switch strings.ToLower(state) {
-	case "success":
+// CIState is an enum representing overall CI status
+type CIState int
+
+const (
+	CIUnknown CIState = iota
+	CISuccess
+	CIPending
+	CIFailure
+)
+
+func humanCIState(state CIState) string {
+	switch state {
+	case CISuccess:
 		return "✓ success"
-	case "pending", "expected":
+	case CIPending:
 		return "… pending"
-	case "failure", "action_required", "cancelled", "error", "timed_out":
+	case CIFailure:
 		return "✗ failing"
 	default:
-		if state == "" {
-			return "?"
-		}
-		return state
+		return "?"
 	}
 }
 
-func summarizeCI(pr forge.PullRequest) string {
+func summarizeCI(pr forge.PullRequest) CIState {
 	if len(pr.StatusCheckRollup) == 0 {
-		return ""
+		return CIUnknown
 	}
 	// Determine worst status across items: any failure/error -> failure; any in-progress -> pending; else success if at least one success; else unknown
 	hasInProgress := false
 	hasSuccess := false
 	for _, c := range pr.StatusCheckRollup {
-		status := strings.ToLower(c.Status)
-		conclusion := strings.ToLower(c.Conclusion)
-		if conclusion == "failure" || conclusion == "cancelled" || conclusion == "timed_out" || conclusion == "action_required" || conclusion == "error" {
-			return "failure"
+		status := strings.ToLower(string(c.Status))
+		if c.Conclusion == forge.CheckConclusionFailure || c.Conclusion == forge.CheckConclusionCancelled || c.Conclusion == forge.CheckConclusionTimedOut || c.Conclusion == forge.CheckConclusionActionRequired || c.Conclusion == forge.CheckConclusionError {
+			return CIFailure
 		}
 		if status == "in_progress" || status == "queued" { // queued treated as pending
 			hasInProgress = true
 		}
-		if conclusion == "success" {
+		if c.Conclusion == forge.CheckConclusionSuccess {
 			hasSuccess = true
 		}
 	}
 	if hasInProgress {
-		return "pending"
+		return CIPending
 	}
 	if hasSuccess {
-		return "success"
+		return CISuccess
 	}
-	return ""
+	return CIUnknown
 }
 
 const PRstr = "#%-5d  %-50s  %-10s  %s"
