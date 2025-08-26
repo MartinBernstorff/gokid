@@ -1,7 +1,10 @@
 package forge
 
 import (
+	"encoding/json"
 	"fmt"
+	"strings"
+
 	"gokid/shell"
 )
 
@@ -82,4 +85,23 @@ func (g *GitHubForge) MergePullRequest(strategy string, autoMerge bool, forceMer
 		return fmt.Errorf("error merging pull request: %s", err)
 	}
 	return nil
+}
+
+// ListPullRequests returns open PRs for the current repo including CI status
+func (g *GitHubForge) ListPullRequests() ([]PullRequest, error) {
+	// Use gh to list PRs with JSON output. The fields chosen include CI status and URL.
+	// Note: statusCheckRollup is available via the GraphQL backing API used by gh.
+	fields := []string{"number", "title", "state", "url", "statusCheckRollup"}
+	cmd := fmt.Sprintf("gh pr list --state open --json %s", strings.Join(fields, ","))
+
+	out, err := g.shell.RunQuietly(cmd)
+	if err != nil {
+		return nil, fmt.Errorf("error listing pull requests: %s", out)
+	}
+
+	var prs []PullRequest
+	if err := json.Unmarshal([]byte(out), &prs); err != nil {
+		return nil, fmt.Errorf("failed to parse gh output: %w", err)
+	}
+	return prs, nil
 }

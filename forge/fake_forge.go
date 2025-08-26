@@ -9,24 +9,16 @@ type FakeForge struct {
 	WasMarkedReady    bool
 }
 
-type PullRequest struct {
-	Title string
-	Base  string
-	Draft bool
-}
-
 func NewFakeForge() *FakeForge {
 	return &FakeForge{
 		PRs: make([]PullRequest, 0),
 	}
 }
 
-func (f *FakeForge) CreatePullRequest(issue Issue, base string, draft bool) error {
-	pr := PullRequest{
-		Title: issue.Title.String(),
-		Base:  base,
-		Draft: draft,
-	}
+func (f *FakeForge) CreatePullRequest(issue Issue, _ string, draft bool) error {
+	pr := PullRequest{}
+	pr.Title = issue.Title.String()
+	pr.Draft = draft
 
 	f.LastCreatedPR = pr
 	f.PRs = append(f.PRs, pr)
@@ -47,4 +39,8 @@ func (f *FakeForge) MergePullRequest(strategy string, autoMerge bool, forceMerge
 	f.LastAutoMerge = autoMerge
 	f.LastForceMerge = forceMerge
 	return nil
+}
+
+func (f *FakeForge) ListPullRequests() ([]PullRequest, error) {
+	return f.PRs, nil
 }

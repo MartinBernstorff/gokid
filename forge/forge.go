@@ -6,4 +6,5 @@ type Forge interface {
 	ViewPullRequest() error
 	MarkPullRequestReady() error
 	MergePullRequest(strategy string, autoMerge bool, forceMerge bool) error
+	ListPullRequests() ([]PullRequest, error)
 }
