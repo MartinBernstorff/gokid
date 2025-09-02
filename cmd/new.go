@@ -31,7 +31,7 @@ func changeNamePrompt(label string) string {
 	return result
 }
 
-func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, description string, versionControl versioncontrol.VCS) []error {
+func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, description string, versionControl versioncontrol.VCS, commitChanges bool) []error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 
 	executables := []commands.Command{
@@ -46,7 +46,7 @@ func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.Gok
 		return []error{fmt.Errorf("could not determine vcs status: %v", err)}
 	}
 
-	if !clean {
+	if !clean && !commitChanges {
 		// Add to the stash first
 		executables = append([]commands.Command{versioncontrol.NewStashCommand(git)}, executables...)
 
@@ -71,6 +71,8 @@ func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.Gok
 }
 
 func init() {
+	var commitChanges bool
+
 	newCmd := &cobra.Command{
 		Use:   "new [title]",
 		Short: "Create a new change",
@@ -98,12 +100,14 @@ func init() {
 
 			git := versioncontrol.NewGit(shell)
 			github := forge.NewGitHub(shell)
-			if err := newChange(*git, *github, &cfg, title, description, versioncontrol.NewGit(shell)); err != nil {
+			if err := newChange(*git, *github, &cfg, title, description, versioncontrol.NewGit(shell), commitChanges); err != nil {
 				// Errors are logged previously
 				os.Exit(1)
 			}
 		},
 		Aliases: []string{"n"},
 	}
+
+	newCmd.Flags().BoolVar(&commitChanges, "commit-changes", false, "Commit current changes instead of stashing")
 	rootCmd.AddCommand(newCmd)
 }
