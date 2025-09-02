@@ -99,7 +99,7 @@ func init() {
 			git := versioncontrol.NewGit(shell)
 			github := forge.NewGitHub(shell)
 			if err := newChange(*git, *github, &cfg, title, description, versioncontrol.NewGit(shell)); err != nil {
-				fmt.Fprintf(os.Stderr, "creating change: %v\n", err)
+				// Errors are logged previously
 				os.Exit(1)
 			}
 		},
