@@ -135,7 +135,7 @@ func (g *FakeGit) IsClean() (bool, error) {
 	return !g.isDirty, nil
 }
 
-func (g *FakeGit) fetch(_ string, branch string) error {
+func (g *FakeGit) fetch(_ string, _ string) error {
 	g.isFetched = true
 	return nil
 }
