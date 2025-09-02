@@ -66,9 +66,9 @@ func NewEmptyCommitCommand(git Git) commands.Command {
 	return commands.Command{
 		Assumptions: []commands.NamedCallable{},
 		Action: commands.NamedCallable{
-			Name: "Create an empty commit",
+			Name: "Create a commit",
 			Callable: func() error {
-				return git.Ops.emptyCommit("Initial commit")
+				return git.Ops.commit("Initial commit")
 			},
 		},
 		Revert: commands.NamedCallable{},

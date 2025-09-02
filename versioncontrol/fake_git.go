@@ -148,7 +148,7 @@ func (g *FakeGit) branchFromOrigin(branchName string, origin string) error {
 	return nil
 }
 
-func (g *FakeGit) emptyCommit(message string) error {
+func (g *FakeGit) commit(message string) error {
 	g.commits = append(g.commits, Commit{
 		Title: message,
 		Empty: true,

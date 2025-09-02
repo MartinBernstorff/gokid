@@ -17,7 +17,7 @@ type gitOperations interface {
 	branchExists(branchName string) (bool, error)
 	deleteBranch(branchName string) error
 	switchBranch(branchName string) error
-	emptyCommit(message string) error
+	commit(message string) error
 	push(branchName forge.BranchName) error
 }
 
@@ -94,7 +94,7 @@ func (g *Git) branchFromOrigin(branchName string, defaultBranch string) error {
 	return err
 }
 
-func (g *Git) emptyCommit(message string) error {
+func (g *Git) commit(message string) error {
 	_, err := g.shell.RunQuietly(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
 	return err
 }
