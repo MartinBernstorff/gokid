@@ -108,6 +108,6 @@ func init() {
 		Aliases: []string{"n"},
 	}
 
-	newCmd.Flags().BoolVar(&commitChanges, "commit-changes", false, "Commit current changes instead of stashing")
+	newCmd.Flags().BoolVar(&commitChanges, "commit", false, "Commit current changes instead of stashing")
 	rootCmd.AddCommand(newCmd)
 }
