@@ -35,7 +35,7 @@ func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.Gok
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 
 	executables := []commands.Command{
-		versioncontrol.NewFetchOriginCommand(git),
+		versioncontrol.NewFetchOriginCommand(git, cfg.Trunk),
 		versioncontrol.NewCreateBranchCommand(git, parsedTitle, cfg.Trunk),
 		versioncontrol.NewEmptyCommitCommand(git),
 		versioncontrol.NewPushCommand(git, parsedTitle.ToBranchName()),

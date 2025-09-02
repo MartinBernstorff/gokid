@@ -12,7 +12,7 @@ type gitOperations interface {
 	IsClean() (bool, error)
 	CurrentBranch() (string, error)
 
-	fetch(remote string) error
+	fetch(remote string, branch string) error
 	branchFromOrigin(branchName string, defaultBranch string) error
 	branchExists(branchName string) (bool, error)
 	deleteBranch(branchName string) error
@@ -84,8 +84,8 @@ func (g *Git) IsClean() (bool, error) {
 	return strings.TrimSpace(string(output)) == "", nil
 }
 
-func (g *Git) fetch(remote string) error {
-	_, err := g.shell.RunQuietly(fmt.Sprintf("git fetch %s", remote))
+func (g *Git) fetch(remote string, branch string) error {
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git fetch %s %s", remote, branch))
 	return err
 }
 

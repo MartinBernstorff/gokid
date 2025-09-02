@@ -6,13 +6,13 @@ import (
 	"gokid/forge"
 )
 
-func NewFetchOriginCommand(git Git) commands.Command {
+func NewFetchOriginCommand(git Git, branch string) commands.Command {
 	return commands.Command{
 		Assumptions: []commands.NamedCallable{},
 		Action: commands.NamedCallable{
 			Name: "Fetch origin",
 			Callable: func() error {
-				return git.Ops.fetch("origin")
+				return git.Ops.fetch("origin", branch)
 			},
 		},
 		Revert: commands.NamedCallable{},
