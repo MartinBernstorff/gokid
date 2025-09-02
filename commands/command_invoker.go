@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"time"
 )
 
 func Execute(commands []Command) []error {
@@ -32,9 +31,7 @@ func Execute(commands []Command) []error {
 
 	var completedCommands []Command
 	for _, command := range commands {
-		start := time.Now()
 		err := command.Action.Callable()
-		duration := time.Since(start)
 
 		if err != nil {
 			fmt.Println("--- Error executing: " + command.Action.Name + " ---")
