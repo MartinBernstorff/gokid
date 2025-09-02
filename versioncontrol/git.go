@@ -95,7 +95,11 @@ func (g *Git) branchFromOrigin(branchName string, defaultBranch string) error {
 }
 
 func (g *Git) commit(message string) error {
-	_, err := g.shell.RunQuietly(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
+	_, err := g.shell.RunQuietly("git add .")
+	if err != nil {
+		return err
+	}
+	_, err = g.shell.RunQuietly(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
 	return err
 }
 
