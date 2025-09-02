@@ -12,12 +12,12 @@ type gitOperations interface {
 	IsClean() (bool, error)
 	CurrentBranch() (string, error)
 
-	fetch(remote string) error
+	fetch(remote string, branch string) error
 	branchFromOrigin(branchName string, defaultBranch string) error
 	branchExists(branchName string) (bool, error)
 	deleteBranch(branchName string) error
 	switchBranch(branchName string) error
-	emptyCommit(message string) error
+	commit(message string) error
 	push(branchName forge.BranchName) error
 }
 
@@ -84,8 +84,8 @@ func (g *Git) IsClean() (bool, error) {
 	return strings.TrimSpace(string(output)) == "", nil
 }
 
-func (g *Git) fetch(remote string) error {
-	_, err := g.shell.RunQuietly(fmt.Sprintf("git fetch %s", remote))
+func (g *Git) fetch(remote string, branch string) error {
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git fetch %s %s", remote, branch))
 	return err
 }
 
@@ -94,8 +94,12 @@ func (g *Git) branchFromOrigin(branchName string, defaultBranch string) error {
 	return err
 }
 
-func (g *Git) emptyCommit(message string) error {
-	_, err := g.shell.RunQuietly(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
+func (g *Git) commit(message string) error {
+	_, err := g.shell.RunQuietly("git add .")
+	if err != nil {
+		return err
+	}
+	_, err = g.shell.RunQuietly(fmt.Sprintf("git commit --allow-empty -m '%s'", message))
 	return err
 }
 

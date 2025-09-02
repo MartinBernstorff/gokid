@@ -135,7 +135,7 @@ func (g *FakeGit) IsClean() (bool, error) {
 	return !g.isDirty, nil
 }
 
-func (g *FakeGit) fetch(_ string) error {
+func (g *FakeGit) fetch(_ string, _ string) error {
 	g.isFetched = true
 	return nil
 }
@@ -148,7 +148,7 @@ func (g *FakeGit) branchFromOrigin(branchName string, origin string) error {
 	return nil
 }
 
-func (g *FakeGit) emptyCommit(message string) error {
+func (g *FakeGit) commit(message string) error {
 	g.commits = append(g.commits, Commit{
 		Title: message,
 		Empty: true,
