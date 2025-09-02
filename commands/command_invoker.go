@@ -63,8 +63,6 @@ func Execute(commands []Command) []error {
 			return []error{err}
 		}
 
-		fmt.Printf("Completed: %s (took %v)\n", command.Action.Name, duration)
-
 		completedCommands = append(completedCommands, command)
 	}
 
