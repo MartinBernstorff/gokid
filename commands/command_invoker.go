@@ -1,6 +1,9 @@
 package commands
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func Execute(commands []Command) []error {
 	// Print the description of each command
@@ -29,8 +32,9 @@ func Execute(commands []Command) []error {
 
 	var completedCommands []Command
 	for _, command := range commands {
-		fmt.Println("Executing: " + command.Action.Name)
+		start := time.Now()
 		err := command.Action.Callable()
+		duration := time.Since(start)
 
 		if err != nil {
 			fmt.Println("--- Error executing: " + command.Action.Name + " ---")
@@ -58,6 +62,8 @@ func Execute(commands []Command) []error {
 			fmt.Println("--- Reverted succesfully –––")
 			return []error{err}
 		}
+
+		fmt.Printf("Completed: %s (took %v)\n", command.Action.Name, duration)
 
 		completedCommands = append(completedCommands, command)
 	}
