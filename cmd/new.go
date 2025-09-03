@@ -54,7 +54,7 @@ func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.Gok
 
 	executables := []commands.Command{
 		versioncontrol.NewCreateBranchCommand(git, parsedTitle, cfg.Trunk),
-		versioncontrol.NewEmptyCommitCommand(git),
+		versioncontrol.NewCommitCommand(git, inputTitle),
 		NewPrintStatusCommand("Ready to accept commits on: " + parsedTitle.ToBranchName().String()),
 		versioncontrol.NewFetchOriginCommand(git, cfg.Trunk),
 		versioncontrol.NewRebaseCommand(git, cfg.Trunk, currentCommit),
