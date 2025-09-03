@@ -98,7 +98,7 @@ func NewCommitCommand(git Git, title string) commands.Command {
 	return commands.Command{
 		Assumptions: []commands.NamedCallable{},
 		Action: commands.NamedCallable{
-			Name: "Create a commit",
+			Name: "Create commit titled '" + title + "'",
 			Callable: func() error {
 				return git.Ops.commit(title)
 			},
