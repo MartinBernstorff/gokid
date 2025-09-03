@@ -13,6 +13,10 @@ type gitOperations interface {
 	CurrentBranch() (string, error)
 
 	CurrentCommit() (string, error)
+
+	Reset(commit string) error
+
+	Rebase(branch string) error
 	fetch(remote string, branch string) error
 	branchFromOrigin(branchName string, defaultBranch string) error
 	branchExists(branchName string) (bool, error)
@@ -20,7 +24,6 @@ type gitOperations interface {
 	switchBranch(branchName string) error
 	commit(message string) error
 	push(branchName forge.BranchName) error
-	rebase(branch string) error
 }
 
 type BaseGit struct {
@@ -67,8 +70,13 @@ func (g *Git) branchExists(branchName string) (bool, error) {
 	return strings.TrimSpace(string(output)) != "", err
 }
 
-func (g *Git) rebase(branch string) error {
+func (g *Git) Rebase(branch string) error {
 	_, err := g.shell.RunQuietly(fmt.Sprintf("git rebase %s", branch))
+	return err
+}
+
+func (g *Git) Reset(commit string) error {
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git reset --hard %s", commit))
 	return err
 }
 

@@ -68,6 +68,16 @@ func NewFakeGit() *FakeGit {
 	return g
 }
 
+func (g *FakeGit) Reset(commit string) error {
+	for i := range g.commits {
+		if fmt.Sprintf("commit-%d", i) == commit {
+			g.commits = g.commits[:i+1]
+			return nil
+		}
+	}
+	return fmt.Errorf("commit %s not found", commit)
+}
+
 func (g *FakeGit) branchExists(branchName string) (bool, error) {
 	for _, branch := range g.branches {
 		if branch == branchName {
@@ -148,12 +158,13 @@ func (g *FakeGit) fetch(_ string, _ string) error {
 	return nil
 }
 
-func (g *FakeGit) rebase(branch string) error {
+func (g *FakeGit) Rebase(branch string) error {
 	// p2: Implement basic rebase simulation
 	_, err := g.branchExists(branch)
 	if err != nil {
 		return fmt.Errorf("checking branch existence: %v", err)
 	}
+	return nil
 }
 
 func (g *FakeGit) branchFromOrigin(branchName string, origin string) error {

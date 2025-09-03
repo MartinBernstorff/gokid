@@ -39,13 +39,13 @@ func NewRebaseCommand(git Git, branch string, startingCommit string) commands.Co
 		Action: commands.NamedCallable{
 			Name: fmt.Sprintf("Rebase onto '%s'", branch),
 			Callable: func() error {
-				return git.Ops.rebase(branch)
+				return git.Ops.Rebase(branch)
 			},
 		},
 		Revert: commands.NamedCallable{
 			Name: "Restore original commit",
 			Callable: func() error {
-				return git.Ops.reset(startingCommit)
+				return git.Ops.Reset(startingCommit)
 			},
 		},
 	}
