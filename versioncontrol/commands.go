@@ -94,13 +94,13 @@ func NewCreateBranchCommand(git Git, issueTitle forge.IssueTitle, defaultBranch 
 	}
 }
 
-func NewEmptyCommitCommand(git Git) commands.Command {
+func NewCommitCommand(git Git, title string) commands.Command {
 	return commands.Command{
 		Assumptions: []commands.NamedCallable{},
 		Action: commands.NamedCallable{
 			Name: "Create a commit",
 			Callable: func() error {
-				return git.Ops.commit("Initial commit")
+				return git.Ops.commit(title)
 			},
 		},
 		Revert: commands.NamedCallable{},
