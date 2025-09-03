@@ -32,6 +32,14 @@ func NewGitHub(s shell.Shell) *GitHubForge {
 	}
 }
 
+func (g *GitHubForge) PeekPullRequest() error {
+	_, err := g.shell.RunQuietly("gh pr view")
+	if err != nil {
+		return fmt.Errorf("error peeking at pull request: %s", err)
+	}
+	return nil
+}
+
 func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) error {
 	cmd := fmt.Sprintf("gh pr create --base %s", base)
 
@@ -52,7 +60,7 @@ func (g *GitHubForge) CreatePullRequest(issue Issue, base string, draft bool) er
 }
 
 func (g *GitHubForge) ViewPullRequest() error {
-	_, err := g.shell.Run("gh pr view --web || gh repo view --web")
+	_, err := g.shell.RunQuietly("gh pr view --web || gh repo view --web")
 	if err != nil {
 		return fmt.Errorf("error viewing pull request: %s", err)
 	}

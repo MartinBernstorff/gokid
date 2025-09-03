@@ -4,6 +4,7 @@ package forge
 type Forge interface {
 	CreatePullRequest(issue Issue, base string, draft bool) error
 	ViewPullRequest() error
+	PeekPullRequest() error
 	MarkPullRequestReady() error
 	MergePullRequest(strategy string, autoMerge bool, forceMerge bool) error
 }
