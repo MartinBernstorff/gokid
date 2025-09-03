@@ -91,6 +91,14 @@ func (g *FakeGit) deleteBranch(branchName string) error {
 	return nil
 }
 
+func (g *FakeGit) CurrentCommit() (string, error) {
+	if len(g.commits) == 0 {
+		return "", fmt.Errorf("no commits in repository")
+	}
+	// Simulate commit hash as "commit-<index>"
+	return fmt.Sprintf("commit-%d", len(g.commits)-1), nil
+}
+
 func (g *FakeGit) CurrentBranch() (string, error) {
 	return g.currentBranchField, nil
 }
@@ -138,6 +146,14 @@ func (g *FakeGit) IsClean() (bool, error) {
 func (g *FakeGit) fetch(_ string, _ string) error {
 	g.isFetched = true
 	return nil
+}
+
+func (g *FakeGit) rebase(branch string) error {
+	// p2: Implement basic rebase simulation
+	_, err := g.branchExists(branch)
+	if err != nil {
+		return fmt.Errorf("checking branch existence: %v", err)
+	}
 }
 
 func (g *FakeGit) branchFromOrigin(branchName string, origin string) error {

@@ -33,12 +33,16 @@ func changeNamePrompt(label string) string {
 
 func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, description string, versionControl versioncontrol.VCS, commitChanges bool) []error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
+	currentCommit, err := git.Ops.CurrentCommit()
+	if err != nil {
+		return []error{fmt.Errorf("could not determine current commit: %v", err)}
+	}
 
 	executables := []commands.Command{
 		versioncontrol.NewCreateBranchCommand(git, parsedTitle, cfg.Trunk),
 		versioncontrol.NewEmptyCommitCommand(git),
 		versioncontrol.NewFetchOriginCommand(git, cfg.Trunk),
-		versioncontrol.NewRebaseCommand(git, cfg.Trunk),
+		versioncontrol.NewRebaseCommand(git, cfg.Trunk, currentCommit),
 		versioncontrol.NewPushCommand(git, parsedTitle.ToBranchName()),
 	}
 

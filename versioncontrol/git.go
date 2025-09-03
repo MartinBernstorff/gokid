@@ -12,6 +12,7 @@ type gitOperations interface {
 	IsClean() (bool, error)
 	CurrentBranch() (string, error)
 
+	CurrentCommit() (string, error)
 	fetch(remote string, branch string) error
 	branchFromOrigin(branchName string, defaultBranch string) error
 	branchExists(branchName string) (bool, error)
@@ -44,6 +45,15 @@ func NewGit(s shell.Shell) *Git {
 func (g *Git) ShowDiffSummary(branch string) error {
 	_, err := g.shell.Run(fmt.Sprintf("git diff --stat %s", branch))
 	return err
+}
+
+func (g *Git) CurrentCommit() (string, error) {
+	cmd := exec.Command("git", "rev-parse", "HEAD")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(output)), nil
 }
 
 func (g *Git) branchExists(branchName string) (bool, error) {
