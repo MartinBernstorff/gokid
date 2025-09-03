@@ -31,12 +31,29 @@ func changeNamePrompt(label string) string {
 	return result
 }
 
+func NewPrintStatusCommand(status string) commands.Command {
+	return commands.Command{
+		Assumptions: []commands.NamedCallable{
+			{},
+		},
+		Action: commands.NamedCallable{
+			Name: fmt.Sprintf("Print '%s' status", status),
+			Callable: func() error {
+				_, err := fmt.Println(status)
+				return err
+			},
+		},
+		Revert: commands.NamedCallable{},
+	}
+}
+
 func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, description string, versionControl versioncontrol.VCS, commitChanges bool) []error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 
 	executables := []commands.Command{
 		versioncontrol.NewFetchOriginCommand(git, cfg.Trunk),
 		versioncontrol.NewCreateBranchCommand(git, parsedTitle, cfg.Trunk),
+		NewPrintStatusCommand("✅ Branch is ready for changes"),
 		versioncontrol.NewEmptyCommitCommand(git),
 		versioncontrol.NewPushCommand(git, parsedTitle.ToBranchName()),
 	}
