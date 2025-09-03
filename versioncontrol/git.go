@@ -19,6 +19,7 @@ type gitOperations interface {
 	switchBranch(branchName string) error
 	commit(message string) error
 	push(branchName forge.BranchName) error
+	rebase(branch string) error
 }
 
 type BaseGit struct {
@@ -54,6 +55,11 @@ func (g *Git) branchExists(branchName string) (bool, error) {
 	}
 
 	return strings.TrimSpace(string(output)) != "", err
+}
+
+func (g *Git) rebase(branch string) error {
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git rebase %s", branch))
+	return err
 }
 
 func (g *Git) CurrentBranch() (string, error) {
