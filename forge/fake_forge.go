@@ -37,6 +37,10 @@ func (f *FakeForge) ViewPullRequest() error {
 	return nil
 }
 
+func (f *FakeForge) PeekPullRequest() error {
+	return nil
+}
+
 func (f *FakeForge) MarkPullRequestReady() error {
 	f.WasMarkedReady = true
 	return nil
