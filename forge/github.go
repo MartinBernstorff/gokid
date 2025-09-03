@@ -33,7 +33,7 @@ func NewGitHub(s shell.Shell) *GitHubForge {
 }
 
 func (g *GitHubForge) PeekPullRequest() error {
-	_, err := g.shell.RunQuietly("gh pr view")
+	_, err := g.shell.Run("gh pr view")
 	if err != nil {
 		return fmt.Errorf("error peeking at pull request: %s", err)
 	}
