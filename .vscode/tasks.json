@@ -3,20 +3,14 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "test and approve",
-			"command": "${workspaceFolder}/.vscode/approve.sh",
-			"problemMatcher": [
-				"$go"
-			],
+			"label": "integator",
+			"command": "integator tui",
 			"presentation": {
 				"reveal": "always",
-				"panel": "shared",
+				"panel": "dedicated",
 				"clear": true
 			},
-			"group": {
-				"kind": "test",
-				"isDefault": true
-			},
+			"problemMatcher": []
 		},
 		{
 			"type": "shell",
@@ -30,7 +24,7 @@
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
+			}
 		}
 	]
 }
