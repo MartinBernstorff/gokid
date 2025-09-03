@@ -106,6 +106,12 @@ func init() {
 			git := versioncontrol.NewGit(shell)
 			github := forge.NewGitHub(shell)
 			if err := newChange(*git, *github, &cfg, title, description, versioncontrol.NewGit(shell), commitChanges); err != nil {
+				if len(err) != 0 {
+					fmt.Fprintf(os.Stderr, "Errors occurred during execution:\n")
+					for _, e := range err {
+						fmt.Fprintf(os.Stderr, "- %v\n", e)
+					}
+				}
 				// Errors are logged previously
 				os.Exit(1)
 			}
