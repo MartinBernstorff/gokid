@@ -31,6 +31,20 @@ func changeNamePrompt(label string) string {
 	return result
 }
 
+func NewPrintStatusCommand(status string) commands.Command {
+	return commands.Command{
+		Assumptions: []commands.NamedCallable{},
+		Action: commands.NamedCallable{
+			Name: "Print status",
+			Callable: func() error {
+				fmt.Println(status)
+				return nil
+			},
+		},
+		Revert: commands.NamedCallable{},
+	}
+}
+
 func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, description string, versionControl versioncontrol.VCS, commitChanges bool) []error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
 	currentCommit, err := git.Ops.CurrentCommit()
