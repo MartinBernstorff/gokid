@@ -68,6 +68,16 @@ func NewFakeGit() *FakeGit {
 	return g
 }
 
+func (g *FakeGit) Reset(commit string) error {
+	for i := range g.commits {
+		if fmt.Sprintf("commit-%d", i) == commit {
+			g.commits = g.commits[:i+1]
+			return nil
+		}
+	}
+	return fmt.Errorf("commit %s not found", commit)
+}
+
 func (g *FakeGit) branchExists(branchName string) (bool, error) {
 	for _, branch := range g.branches {
 		if branch == branchName {
@@ -89,6 +99,14 @@ func (g *FakeGit) deleteBranch(branchName string) error {
 	g.branches = filteredBranches
 	g.currentBranchField = ""
 	return nil
+}
+
+func (g *FakeGit) CurrentCommit() (string, error) {
+	if len(g.commits) == 0 {
+		return "", fmt.Errorf("no commits in repository")
+	}
+	// Simulate commit hash as "commit-<index>"
+	return fmt.Sprintf("commit-%d", len(g.commits)-1), nil
 }
 
 func (g *FakeGit) CurrentBranch() (string, error) {
@@ -137,6 +155,15 @@ func (g *FakeGit) IsClean() (bool, error) {
 
 func (g *FakeGit) fetch(_ string, _ string) error {
 	g.isFetched = true
+	return nil
+}
+
+func (g *FakeGit) Rebase(branch string) error {
+	// p2: Implement basic rebase simulation
+	_, err := g.branchExists(branch)
+	if err != nil {
+		return fmt.Errorf("checking branch existence: %v", err)
+	}
 	return nil
 }
 

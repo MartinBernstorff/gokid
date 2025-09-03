@@ -12,6 +12,11 @@ type gitOperations interface {
 	IsClean() (bool, error)
 	CurrentBranch() (string, error)
 
+	CurrentCommit() (string, error)
+
+	Reset(commit string) error
+
+	Rebase(branch string) error
 	fetch(remote string, branch string) error
 	branchFromOrigin(branchName string, defaultBranch string) error
 	branchExists(branchName string) (bool, error)
@@ -45,6 +50,15 @@ func (g *Git) ShowDiffSummary(branch string) error {
 	return err
 }
 
+func (g *Git) CurrentCommit() (string, error) {
+	cmd := exec.Command("git", "rev-parse", "HEAD")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(output)), nil
+}
+
 func (g *Git) branchExists(branchName string) (bool, error) {
 	cmd := exec.Command("git", "branch", "--list", branchName)
 	output, err := cmd.Output()
@@ -54,6 +68,16 @@ func (g *Git) branchExists(branchName string) (bool, error) {
 	}
 
 	return strings.TrimSpace(string(output)) != "", err
+}
+
+func (g *Git) Rebase(branch string) error {
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git rebase %s", branch))
+	return err
+}
+
+func (g *Git) Reset(commit string) error {
+	_, err := g.shell.RunQuietly(fmt.Sprintf("git reset --hard %s", commit))
+	return err
 }
 
 func (g *Git) CurrentBranch() (string, error) {

@@ -11,7 +11,8 @@
                 "new",
             ],
             "env": {},
-            "showLog": true
+            "showLog": true,
+            "preLaunchTask": "integator"
         }
     ]
 }

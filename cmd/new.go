@@ -31,13 +31,33 @@ func changeNamePrompt(label string) string {
 	return result
 }
 
+func NewPrintStatusCommand(status string) commands.Command {
+	return commands.Command{
+		Assumptions: []commands.NamedCallable{},
+		Action: commands.NamedCallable{
+			Name: "Print status",
+			Callable: func() error {
+				fmt.Println(status)
+				return nil
+			},
+		},
+		Revert: commands.NamedCallable{},
+	}
+}
+
 func newChange(git versioncontrol.Git, github forge.GitHubForge, cfg *config.GokidConfig, inputTitle string, description string, versionControl versioncontrol.VCS, commitChanges bool) []error {
 	parsedTitle := forge.ParseIssueTitle(inputTitle)
+	currentCommit, err := git.Ops.CurrentCommit()
+	if err != nil {
+		return []error{fmt.Errorf("could not determine current commit: %v", err)}
+	}
 
 	executables := []commands.Command{
-		versioncontrol.NewFetchOriginCommand(git, cfg.Trunk),
 		versioncontrol.NewCreateBranchCommand(git, parsedTitle, cfg.Trunk),
 		versioncontrol.NewEmptyCommitCommand(git),
+		NewPrintStatusCommand("Ready to accept commits on: " + parsedTitle.ToBranchName().String()),
+		versioncontrol.NewFetchOriginCommand(git, cfg.Trunk),
+		versioncontrol.NewRebaseCommand(git, cfg.Trunk, currentCommit),
 		versioncontrol.NewPushCommand(git, parsedTitle.ToBranchName()),
 	}
 
@@ -101,6 +121,12 @@ func init() {
 			git := versioncontrol.NewGit(shell)
 			github := forge.NewGitHub(shell)
 			if err := newChange(*git, *github, &cfg, title, description, versioncontrol.NewGit(shell), commitChanges); err != nil {
+				if len(err) != 0 {
+					fmt.Fprintf(os.Stderr, "Errors occurred during execution:\n")
+					for _, e := range err {
+						fmt.Fprintf(os.Stderr, "- %v\n", e)
+					}
+				}
 				// Errors are logged previously
 				os.Exit(1)
 			}

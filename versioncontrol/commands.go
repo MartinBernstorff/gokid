@@ -19,6 +19,38 @@ func NewFetchOriginCommand(git Git, branch string) commands.Command {
 	}
 }
 
+func NewRebaseCommand(git Git, branch string, startingCommit string) commands.Command {
+	return commands.Command{
+		Assumptions: []commands.NamedCallable{
+			{
+				Name: "Branch exists",
+				Callable: func() error {
+					exists, err := git.Ops.branchExists(branch)
+					if err != nil {
+						return fmt.Errorf("creating branch: %s", err)
+					}
+					if !exists {
+						return fmt.Errorf("branch %s does not exist, cannot rebase", branch)
+					}
+					return nil
+				},
+			},
+		},
+		Action: commands.NamedCallable{
+			Name: fmt.Sprintf("Rebase onto '%s'", branch),
+			Callable: func() error {
+				return git.Ops.Rebase(branch)
+			},
+		},
+		Revert: commands.NamedCallable{
+			Name: "Restore original commit",
+			Callable: func() error {
+				return git.Ops.Reset(startingCommit)
+			},
+		},
+	}
+}
+
 func NewCreateBranchCommand(git Git, issueTitle forge.IssueTitle, defaultBranch string) commands.Command {
 	newBranchName := forge.NewBranchName(issueTitle.Content)
 
