@@ -17,5 +17,16 @@
 dist/
 gokid
 .gokid*
+<<<<<<< Updated upstream
 .logs
 .idea
+||||||| Stash base
+
+.gokid.*
+.gokid.*
+.gokid.*
+.gokid.*
+.gokid.*
+=======
+.logs/**
+>>>>>>> Stashed changes
