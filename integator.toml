@@ -5,7 +5,7 @@ root_worktree_dir = "/Users/mabe/Git/gokid"
 
 [[integator.steps]]
 name = "T"
-cmd = "go test ./... && sleep 10"
+cmd = "go test ./..."
 max_staleness_seconds = 0
 
 [[integator.steps]]
