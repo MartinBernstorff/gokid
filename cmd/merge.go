@@ -25,7 +25,7 @@ func NewMerger(f forge.Forge, v versioncontrol.VCS) *Merger {
 	}
 }
 
-func (m *Merger) merge(preMergeCommand string, autoMerge bool, forceMerge bool, draft bool, mergeStrategy string) {
+func (m *Merger) merge(preMergeCommand string, autoMerge bool, forceMerge bool, draft bool, mergeStrategy string, postMergeCommand string) {
 	// Execute pre-merge command if set
 	if preMergeCommand != "" {
 		fmt.Println("Running pre-merge command:", preMergeCommand)
@@ -52,6 +52,19 @@ func (m *Merger) merge(preMergeCommand string, autoMerge bool, forceMerge bool, 
 	}
 	fmt.Printf("Merge initiated - Strategy: %s, AutoMerge: %t, ForceMerge: %t",
 		mergeStrategy, autoMerge, forceMerge)
+
+	// Execute post-merge command if set
+	if preMergeCommand != "" {
+		fmt.Println("Running post-merge command:", postMergeCommand)
+		shell := shell.New()
+		_, err := shell.Run(preMergeCommand)
+		if err != nil {
+			fmt.Println("Error running pre-merge command:", err)
+			return
+		}
+
+		fmt.Println("Post-merge command completed")
+	}
 }
 
 func init() {
@@ -64,7 +77,7 @@ func init() {
 			shell := shell.New()
 			git := versioncontrol.NewGit(shell)
 			merger := NewMerger(forge.NewGitHub(shell), git)
-			merger.merge(cfg.PreMergeCommand, cfg.AutoMerge, cfg.ForceMerge, cfg.Draft, cfg.MergeStrategy)
+			merger.merge(cfg.PreMergeCommand, cfg.AutoMerge, cfg.ForceMerge, cfg.Draft, cfg.MergeStrategy, cfg.PostMergeCommand)
 		},
 		Aliases: []string{"m"},
 	})

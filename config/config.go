@@ -13,16 +13,17 @@ import (
 )
 
 type GokidConfig struct {
-	AutoMerge       bool
-	BranchPrefix    string
-	BranchSuffix    string
-	Draft           bool
-	ForceMerge      bool
-	MergeStrategy   string
-	PreMergeCommand string
-	PreYoloCommand  string
-	Trunk           string
-	Yolo            bool
+	AutoMerge        bool
+	BranchPrefix     string
+	BranchSuffix     string
+	Draft            bool
+	ForceMerge       bool
+	MergeStrategy    string
+	PreMergeCommand  string
+	PostMergeCommand string
+	PreYoloCommand   string
+	Trunk            string
+	Yolo             bool
 }
 
 func NewConfig(autoMerge bool, branchPrefix string, branchSuffix string, draft bool, forceMerge bool, mergeStrategy string, preMergeCommand string, preYoloCommand string, trunk string, yolo bool) GokidConfig {

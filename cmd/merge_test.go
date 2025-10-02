@@ -10,6 +10,7 @@ func TestMerge(t *testing.T) {
 	tests := []struct {
 		name             string
 		preMergeCmd      string
+		postMergeCmd     string
 		autoMerge        bool
 		forceMerge       bool
 		draft            bool
@@ -52,7 +53,7 @@ func TestMerge(t *testing.T) {
 			merger := NewMerger(fakeForge, fakeVCS)
 
 			// Run merge command
-			merger.merge(tt.preMergeCmd, tt.autoMerge, tt.forceMerge, tt.draft, tt.mergeStrategy)
+			merger.merge(tt.preMergeCmd, tt.autoMerge, tt.forceMerge, tt.draft, tt.mergeStrategy, tt.postMergeCmd)
 
 			// Verify forge calls
 			if fakeForge.LastMergeStrategy != tt.wantStrategy {
