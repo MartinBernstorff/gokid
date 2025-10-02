@@ -50,7 +50,7 @@ func TestYolo(t *testing.T) {
 			yoloer := NewYoloer(merger)
 
 			// Run yolo command
-			yoloer.yolo(tt.draft, tt.mergeStrategy, tt.userConfirmed, "")
+			yoloer.yolo(tt.draft, tt.mergeStrategy, tt.userConfirmed, "", "")
 
 			// Check if merge was called when it shouldn't have been
 			if !tt.userConfirmed && fakeForge.LastMergeStrategy != "" {
