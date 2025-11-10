@@ -9,6 +9,18 @@ type GitHubForge struct {
 	shell shell.Shell
 }
 
+func (g *GitHubForge) ListPullRequests(author string) {
+	if author == "me" {
+		author = "--author @me"
+	} else {
+		author = ""
+	}
+	_, err := g.shell.Run("gh pr list " + author)
+	if err != nil {
+		fmt.Printf("error listing pull requests: %s\n", err)
+	}
+}
+
 func (g *GitHubForge) CloseChange(comment string, branch string) error {
 	cmd := fmt.Sprintf("gh pr close \"%s\"", branch)
 	if comment != "" {
